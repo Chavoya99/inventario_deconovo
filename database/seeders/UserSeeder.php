@@ -17,5 +17,11 @@ class UserSeeder extends Seeder
             'username' => 'admin',
             'tipo' => 'admin',
         ]);
+
+        User::factory()->create([
+            'username' => 'oscar',
+            'tipo' => 'empleado',
+        ]);
+
     }
 }

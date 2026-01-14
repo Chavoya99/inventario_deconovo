@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('producto');
+            $table->smallInteger('maximo')->default(1);
+            $table->smallInteger('existencia')->default(0);
+            $table->smallInteger('pedir')->default(0);
+            $table->smallInteger('precio_venta')->default(0);
+            $table->string('proveedor')->default('general');
+            $table->timestamp('ultima_actualizacion')->nullable();
         });
     }
 
