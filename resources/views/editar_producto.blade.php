@@ -1,14 +1,13 @@
 <x-app-layout>
     <div class="px-4 md:px-8 lg:px-12 max-w-4xl mx-auto">
     <div class="bg-white rounded-lg shadow border border-gray-200 p-6 mt-6">
-
         <x-slot name="header">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Agregar nuevo producto') }}
+                {{ __('Editar producto') }}
             </h2>
         </x-slot>
 
-        <form method="POST" action="{{ route('guardar_producto') }}" class="space-y-6">
+        <form method="POST" action="{{ route('editar_producto', $producto) }}" class="space-y-6">
             @csrf
 
             <!-- Nombre -->
@@ -16,7 +15,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">
                     Nombre del producto
                 </label>
-                <input type="text" name="nombre" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
+                <input type="text" value="{{$producto->producto}}" name="nombre" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
                 <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
             </div>
 
@@ -41,7 +40,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Stock actual
                     </label>
-                    <input type="number" name="stock" min="0" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    <input type="number" value="{{$producto->existencia}}" name="stock" min="0" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     required>
                     <x-input-error :messages="$errors->get('stock')" class="mt-2" />
                 </div>
@@ -50,7 +49,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Stock máximo
                     </label>
-                    <input type="number" name="stock_max" min="1" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    <input type="number" value="{{$producto->maximo}}" name="stock_max" min="1" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     required>
                     <x-input-error :messages="$errors->get('stock_max')" class="mt-2" />
                 </div>
@@ -61,7 +60,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">
                     Precio
                 </label>
-                <input type="number" step="0.01" name="precio" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                <input type="number" step="0.01" value="{{$producto->precio_venta}}" name="precio" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 required>
                 <x-input-error :messages="$errors->get('precio')" class="mt-2" />
             </div>

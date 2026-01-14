@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ProveedorController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\EmpleadoMiddleware;
 
@@ -37,9 +38,15 @@ Route::middleware('auth')->group(function () {
     Route::middleware(AdminMiddleware::class)->group(function(){});
     Route::controller(ProductoController::class)->group(function(){
         Route::get('lista_productos', 'index')->name('lista_productos');
-        Route::get('nuevo_producto', 'create')->name('nuevo_producto');
-        Route::post('guardar_producto', 'store')->name('guardar_producto');
+        Route::get('nuevo_producto', 'create')->name('nuevo_producto')->middleware(AdminMiddleware::class);
+        Route::post('guardar_producto', 'store')->name('guardar_producto')->middleware(AdminMiddleware::class);
+        Route::get('editar_producto/{producto}', 'edit')->name('editar_producto')->middleware(AdminMiddleware::class);
+        Route::post('editar_producto/{producto}', 'update')->name('editar_producto')->middleware(AdminMiddleware::class);
+        Route::delete('eliminar_producto/{producto}', 'destroy')->name('eliminar_producto')->middleware(AdminMiddleware::class);
+    });
 
+    Route::controller(ProveedorController::class)->group(function(){
+        Route::get('lista_proveedores', 'index')->name('lista_proveedores')->middleware(AdminMiddleware::class);
     });
     
     Route::middleware(EmpleadoMiddleware::class)->group(function(){});

@@ -48,10 +48,10 @@
             
             <tbody>
                 
-                @foreach ($productos as $producto)
+                @foreach ($proveedores as $proveedor)
                     <tr class="border-b hover:bg-gray-50">
                     <td id=nombre class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        {{$producto->producto}}
+                        {{$proveedor->producto}}
                     </td>
                     <td id=stock class="px-6 py-4">{{$producto->proveedor}}</td>
                     <td id=stock_max class="px-6 py-4">{{$producto->maximo}}</td>

@@ -12,7 +12,9 @@ class ProductoController extends Controller
      */
     public function index()
     {   
-        return view('lista_productos');
+        
+        $productos = Producto::orderBy('proveedor')->orderBy('producto')->get();
+        return view('lista_productos', compact('productos'));
     }
 
     /**
@@ -37,7 +39,7 @@ class ProductoController extends Controller
                 'precio' => 'required',
             ]
         );
-
+        //dd($request);
         $pedir = $request->stock_max - $request->stock;
         $producto = Producto::create([
             'producto' => $request->nombre,
@@ -46,7 +48,6 @@ class ProductoController extends Controller
             'maximo' => $request->stock_max,
             'pedir' => $pedir,
             'precio_venta' => $request->precio,
-            'ultima_actualizacion' => now('America/Belize'),
         ]);
 
         return redirect()->route('lista_productos')->with('success', 'Producto agregado con éxito');
@@ -64,8 +65,8 @@ class ProductoController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Producto $producto)
-    {
-        //
+    {       
+        return view('editar_producto', compact('producto'));
     }
 
     /**
@@ -73,7 +74,27 @@ class ProductoController extends Controller
      */
     public function update(Request $request, Producto $producto)
     {
-        //
+        $request->validate(
+            [
+                'nombre' => 'required',
+                'proveedor' => 'required',
+                'stock' => 'required|integer|min:0',
+                'stock_max' => 'required|integer|min:1',
+                'precio' => 'required',
+            ]
+        );
+
+        $pedir = $request->stock_max - $request->stock;
+        $producto->update([
+            'producto' => $request->nombre,
+            'proveedor' => $request->proveedor,
+            'existencia' => $request->stock,
+            'maximo' => $request->stock_max,
+            'pedir' => $pedir,
+            'precio_venta' => $request->precio,
+        ]);
+
+        return redirect()->route('lista_productos')->with('success', 'Producto actualizado con éxito');
     }
 
     /**
@@ -81,6 +102,7 @@ class ProductoController extends Controller
      */
     public function destroy(Producto $producto)
     {
-        //
+        $producto->delete();
+        return redirect()->route('lista_productos')->with('success', 'Producto eliminado con éxito');
     }
 }

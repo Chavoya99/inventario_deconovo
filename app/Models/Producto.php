@@ -14,7 +14,13 @@ class Producto extends Model
             'existencia',
             'maximo',
             'pedir',
-            'ultima_actualizacion'];
+            'precio_venta',
+            'ultimo_reporte'];
 
     public $timestamps = false;
+    protected $casts = ['ultimo_reporte' => 'datetime:d-m-Y H:i:s'];
+
+    public function proveedor(){
+        return $this->belongsTo(Proveedor::class);
+    }
 }
