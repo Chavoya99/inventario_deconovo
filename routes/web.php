@@ -43,13 +43,13 @@ Route::middleware('auth')->group(function () {
         Route::get('editar_producto/{producto}', 'edit')->name('editar_producto')->middleware(AdminMiddleware::class);
         Route::post('editar_producto/{producto}', 'update')->name('editar_producto')->middleware(AdminMiddleware::class);
         Route::delete('eliminar_producto/{producto}', 'destroy')->name('eliminar_producto')->middleware(AdminMiddleware::class);
+        Route::get('productos_proveedor', 'filtro_proveedor')->name('filtro_proveedor')->middleware(AdminMiddleware::class);
     });
 
     Route::controller(ProveedorController::class)->group(function(){
         Route::get('lista_proveedores', 'index')->name('lista_proveedores')->middleware(AdminMiddleware::class);
         Route::post('guardar_proveedor', 'store')->name('guardar_proveedor')->middleware(AdminMiddleware::class);
         Route::put('editar_proveedor/{proveedor}', 'update')->name('editar_proveedor')->middleware(AdminMiddleware::class);
-        Route::get('ver_productos', 'show')->name('ver_productos')->middleware(AdminMiddleware::class);
         Route::delete('eliminar_proveedor/{proveedor}', 'destroy')->name('eliminar_proveedor')->middleware(AdminMiddleware::class);
     });
     

@@ -15,7 +15,8 @@ class ProductoController extends Controller
     {   
         
         $productos = Producto::orderBy('producto')->get();
-        return view('lista_productos', compact('productos'));
+        $proveedores = Proveedor::orderBy('nombre')->get();
+        return view('lista_productos', compact('productos','proveedores'));
     }
 
     /**
@@ -97,7 +98,7 @@ class ProductoController extends Controller
             'precio_venta' => $request->precio,
         ]);
 
-        return redirect()->route('lista_productos')->with('success', 'Producto actualizado con éxito');
+        return redirect($request->redirect_to)->with('success', 'Producto actualizado correctamente');
     }
 
     /**
@@ -106,6 +107,14 @@ class ProductoController extends Controller
     public function destroy(Producto $producto)
     {
         $producto->delete();
-        return redirect()->route('lista_productos')->with('success', 'Producto eliminado con éxito');
+        return redirect()->back()->with('success', 'Producto eliminado con éxito');
+    }
+
+    public function filtro_proveedor(Request $request){
+        $proveedor = Proveedor::find($request->proveedor);
+        $proveedores = Proveedor::orderBy('nombre')->get();
+        $productos = $proveedor->productos;
+
+        return view('filtro_proveedor', compact('productos', 'proveedor', 'proveedores'));
     }
 }

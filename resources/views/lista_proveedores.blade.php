@@ -2,7 +2,11 @@
     
 
 <div class="bg-neutral-primary-soft shadow-xs rounded-base border border-default">
-    
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Lista de proveedores') }}
+        </h2>
+    </x-slot>
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
         @if (auth()->user()->isAdmin())
             <form action="{{route('guardar_proveedor')}}" method="POST">
@@ -110,7 +114,7 @@
 
                                         <!-- Ver productos -->
                                         <a
-                                            href="{{ route('ver_productos', $proveedor) }}"
+                                            href="{{ route('filtro_proveedor', ['proveedor' => $proveedor->id])}}"
                                             class="text-blue-600 hover:underline"
                                         >
                                             Ver productos

@@ -9,7 +9,7 @@
 
         <form method="POST" action="{{ route('editar_producto', $producto) }}" class="space-y-6">
             @csrf
-
+            <input type="hidden" name="redirect_to" value="{{ url()->previous() }}">
             <!-- Nombre -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
