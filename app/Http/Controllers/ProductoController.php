@@ -68,7 +68,8 @@ class ProductoController extends Controller
      */
     public function edit(Producto $producto)
     {       
-        return view('editar_producto', compact('producto'));
+        $proveedores = Proveedor::orderBy('nombre')->get();
+        return view('editar_producto', compact('producto', 'proveedores'));
     }
 
     /**
@@ -89,7 +90,7 @@ class ProductoController extends Controller
         $pedir = $request->stock_max - $request->stock;
         $producto->update([
             'producto' => $request->nombre,
-            'proveedor' => $request->proveedor,
+            'proveedor_id' => $request->proveedor,
             'existencia' => $request->stock,
             'maximo' => $request->stock_max,
             'pedir' => $pedir,

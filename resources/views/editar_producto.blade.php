@@ -26,10 +26,15 @@
                 </label>
                 <select name="proveedor" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 required>
-                    <option value="">Selecciona un proveedor</option>
-                    <option value="Perdura">Perdura</option>
-                    <option value="Pegaduro">Pegaduro</option>
-                    <option value="Hidroflud">Hidroflud</option>
+                    <option value="{{null}}">Selecciona un proveedor</option>
+                    
+
+                    @foreach ($proveedores as $proveedor)
+                        <option value="{{$proveedor->id}}"
+                        @if($proveedor->id == old('proveedor_id') || $proveedor->id == $producto->proveedor_id) selected @endif>
+                        {{$proveedor->nombre}}</option>
+                        
+                    @endforeach
                 </select>
                 <x-input-error :messages="$errors->get('proveedor')" class="mt-2" />
             </div>
