@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Producto;
+use App\Models\Proveedor;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
@@ -13,7 +14,7 @@ class ProductoController extends Controller
     public function index()
     {   
         
-        $productos = Producto::orderBy('proveedor')->orderBy('producto')->get();
+        $productos = Producto::orderBy('producto')->get();
         return view('lista_productos', compact('productos'));
     }
 
@@ -22,7 +23,8 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        return view('nuevo_producto');
+        $proveedores = Proveedor::orderBy('nombre')->get();
+        return view('nuevo_producto', compact('proveedores'));
     }
 
     /**
@@ -43,7 +45,7 @@ class ProductoController extends Controller
         $pedir = $request->stock_max - $request->stock;
         $producto = Producto::create([
             'producto' => $request->nombre,
-            'proveedor' => $request->proveedor,
+            'proveedor_id' => $request->proveedor,
             'existencia' => $request->stock,
             'maximo' => $request->stock_max,
             'pedir' => $pedir,

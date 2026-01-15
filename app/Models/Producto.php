@@ -14,6 +14,7 @@ class Producto extends Model
             'existencia',
             'maximo',
             'pedir',
+            'proveedor_id',
             'precio_venta',
             'ultimo_reporte'];
 

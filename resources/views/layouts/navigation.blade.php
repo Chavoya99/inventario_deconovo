@@ -19,17 +19,19 @@
                         {{ __('Productos') }}
                     </x-nav-link>
 
-                    @if (auth()->user()->isEmpleado())
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('generar_reporte')">
-                            {{ __('Generar reporte') }}
-                        </x-nav-link>
-                    @endif
-                    
                     @if (auth()->user()->isAdmin())
+                        <x-nav-link :href="route('lista_proveedores')" :active="request()->routeIs('ordenes_compra')">
+                            {{ __('Proveedores') }}
+                        </x-nav-link>
+
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('ordenes_compra')">
                             {{ __('Ordenes de compra') }}
                         </x-nav-link>
                     @endif
+
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('generar_reporte')">
+                        {{ __('Generar reporte') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -86,18 +88,21 @@
             <x-responsive-nav-link :href="route('lista_productos')" :active="request()->routeIs('lista_productos')">
                 {{ __('Productos') }}
             </x-responsive-nav-link>
-
-            @if (auth()->user()->isEmpleado())
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('generar_reporte')">
-                    {{ __('Generar reporte') }}
-                </x-responsive-nav-link>
-            @endif
             
             @if (auth()->user()->isAdmin())
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('ordenes_compra')">
+                    {{ __('Proveedores') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('ordenes_compra')">
                     {{ __('Ordenes de compra') }}
                 </x-responsive-nav-link>
+                
             @endif
+
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('generar_reporte')">
+                {{ __('Generar reporte') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->

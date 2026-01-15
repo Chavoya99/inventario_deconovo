@@ -11,8 +11,9 @@ class ProveedorController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
+    {   
+        $proveedores = Proveedor::orderBy('nombre')->get();
+        return view('lista_proveedores', compact('proveedores'));
     }
 
     /**
@@ -28,7 +29,12 @@ class ProveedorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(['nombre' => 'required',]);
+        
+
+        Proveedor::create(['nombre'=> $request->nombre]);
+    
+        return redirect()->route('lista_proveedores')->with('success', 'Proveedor guardado con éxito');
     }
 
     /**
@@ -52,7 +58,11 @@ class ProveedorController extends Controller
      */
     public function update(Request $request, Proveedor $proveedor)
     {
-        //
+        $request->validate(['nombre' => 'required']);
+
+        $proveedor->update(['nombre' => $request->nombre]);
+
+        return redirect()->route('lista_proveedores')->with('success', 'Proveedor actualizado con éxito');
     }
 
     /**
@@ -60,6 +70,8 @@ class ProveedorController extends Controller
      */
     public function destroy(Proveedor $proveedor)
     {
-        //
+        $proveedor->delete();
+        return redirect()->route('lista_proveedores')->with('success', 'Proveedor eliminado con éxito');
+
     }
 }
