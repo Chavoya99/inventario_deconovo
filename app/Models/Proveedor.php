@@ -12,6 +12,10 @@ class Proveedor extends Model
     protected $fillable = ['nombre'];
 
     public function productos(){
-        return $this->hasMany(Producto::class);
+        return $this->hasMany(Producto::class)->orderBy('producto');
+    }
+
+    public function ordenes_compra(){
+        return $this->hasMany(OrdenCompra::class)->orderBy('fecha_realizada');
     }
 }

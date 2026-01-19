@@ -8,8 +8,9 @@
         </h2>
     </x-slot>
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
+        <div class="flex items-end gap-4">
         @if (auth()->user()->isAdmin())
-            <div class="flex items-end gap-4">
+            
 
                 <!-- Botón nuevo producto -->
                 <a href="{{ route('nuevo_producto') }}"
@@ -18,7 +19,7 @@
                         hover:bg-teal-600 focus:outline-hidden focus:bg-teal-600 cursor-pointer">
                     Nuevo producto
                 </a>
-
+        @endif
                 <!-- Filtro por proveedor -->
                 <form action="{{ route('filtro_proveedor') }}" method="GET"
                     class="flex items-end gap-3">
@@ -46,7 +47,7 @@
             </div>  
             <br><br>
             
-        @endif
+        
         
 
         <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
