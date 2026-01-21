@@ -50,15 +50,27 @@
                 <x-input-error :messages="$errors->get('unidad')" class="mt-2" />
             </div>
 
-
-            <!-- Stock -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
+                x-data="{
+                    stock: 0,
+                    stock_max: 1
+                }">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Stock actual
                     </label>
-                    <input type="number" name="stock" min="0" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    required>
+
+                    <input
+                        type="number"
+                        name="stock"
+                        min="0"
+                        :max="stock_max"
+                        x-model.number="stock"
+                        @input="stock = Math.min(stock, stock_max)"
+                        class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        required
+                    >
+
                     <x-input-error :messages="$errors->get('stock')" class="mt-2" />
                 </div>
 
@@ -66,14 +78,20 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Stock máximo
                     </label>
-                    <input type="number" name="stock_max" min="1" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    required>
+
+                    <input
+                        type="number"
+                        name="stock_max"
+                        min="1"
+                        x-model.number="stock_max"
+                        class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        required
+                    >
+
                     <x-input-error :messages="$errors->get('stock_max')" class="mt-2" />
-                   
                 </div>
             </div>
 
-            <!-- Precio -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
                     Precio
@@ -83,7 +101,6 @@
                 <x-input-error :messages="$errors->get('precio')" class="mt-2" />
             </div>
 
-            <!-- Botones -->
             <div class="flex justify-end gap-3 pt-4">
                 <a href="{{ route('lista_productos') }}" class="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100">
                     Cancelar

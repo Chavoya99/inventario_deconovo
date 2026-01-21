@@ -54,14 +54,27 @@
                 <x-input-error :messages="$errors->get('unidad')" class="mt-2" />
             </div>
 
-            <!-- Stock -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
+                x-data="{
+                    stock: {{$producto->existencia}},
+                    stock_max: {{$producto->maximo}}
+                }">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Stock actual
                     </label>
-                    <input type="number" value="{{$producto->existencia}}" name="stock" min="0" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    required>
+
+                    <input
+                        type="number"
+                        name="stock"
+                        min="0"
+                        :max="stock_max"
+                        x-model.number="stock"
+                        @input="stock = Math.min(stock, stock_max)"
+                        class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        required
+                    >
+
                     <x-input-error :messages="$errors->get('stock')" class="mt-2" />
                 </div>
 
@@ -69,8 +82,16 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Stock máximo
                     </label>
-                    <input type="number" value="{{$producto->maximo}}" name="stock_max" min="1" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    required>
+
+                    <input
+                        type="number"
+                        name="stock_max"
+                        min="1"
+                        x-model.number="stock_max"
+                        class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        required
+                    >
+
                     <x-input-error :messages="$errors->get('stock_max')" class="mt-2" />
                 </div>
             </div>
