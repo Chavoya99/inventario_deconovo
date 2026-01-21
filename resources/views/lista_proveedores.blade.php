@@ -120,7 +120,7 @@
                                             Ver productos
                                         </a>
 
-                                        <!-- Borrar -->
+                                        <!-- Eliminar -->
                                         <form
                                             action="{{ route('eliminar_proveedor', $proveedor) }}"
                                             method="POST"
@@ -129,7 +129,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button class="text-red-600 hover:underline">
-                                                Borrar
+                                                Eliminar
                                             </button>
                                         </form>
 

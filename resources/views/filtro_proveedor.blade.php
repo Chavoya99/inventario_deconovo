@@ -106,7 +106,7 @@
                                     @method('DELETE')
                                     <button type="submit"
                                             class="text-red-600 hover:underline cursor-pointer">
-                                        Borrar
+                                        Eliminar
                                     </button>
                                 </form>
                             </div>
