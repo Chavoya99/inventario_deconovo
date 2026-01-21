@@ -14,14 +14,28 @@
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+<div class="relative mt-4">
+    <x-input-label for="password" value="Password" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-        </div>
+    <input
+        id="password"
+        type="password"
+        name="password"
+        class="block w-full mt-1 rounded-md border-gray-300 focus:border-teal-500 focus:ring-teal-500 pr-12 py-2"
+        required
+    >
+
+    <!-- Ojo -->
+    <button
+        type="button"
+        onclick="togglePassword()"
+        class="absolute right-3 top-1/2  text-gray-500 hover:text-gray-700"
+    >
+        <i id="eyeClosed" class="fa-solid fa-eye-slash"></i>
+        <i id="eyeOpen" class="fa-solid fa-eye hidden"></i>
+    </button>
+</div>
+
 
         {{--<div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
@@ -37,3 +51,21 @@
         </x-primary-button>
     </form>
 </x-guest-layout>
+
+<script>
+function togglePassword() {
+    const input = document.getElementById('password');
+    const eyeOpen = document.getElementById('eyeOpen');
+    const eyeClosed = document.getElementById('eyeClosed');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        eyeOpen.classList.remove('hidden');
+        eyeClosed.classList.add('hidden');
+    } else {
+        input.type = 'password';
+        eyeOpen.classList.add('hidden');
+        eyeClosed.classList.remove('hidden');
+    }
+}
+</script>
