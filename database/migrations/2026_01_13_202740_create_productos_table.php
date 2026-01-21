@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
             $table->string('producto');
+            $table->string('unidad');
             $table->smallInteger('maximo')->default(1);
             $table->smallInteger('existencia')->default(0);
             $table->smallInteger('pedir')->default(0);

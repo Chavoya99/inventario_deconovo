@@ -61,8 +61,9 @@
                 <thead class="bg-sky-400 text-black border-b">
                     <tr>
                         <th class="px-6 py-3 font-medium">Producto</th>
+                        <th class="px-6 py-3 font-medium">Unidad</th>
                         <th class="px-6 py-3 font-medium">Proveedor</th>
-                        <th class="px-6 py-3 font-medium">Maximo</th>
+                        <th class="px-6 py-3 font-medium">Máximo</th>
                         <th class="px-6 py-3 font-medium">Existencia</th> 
                         
                         @if(auth()->user()->isAdmin())
@@ -84,6 +85,7 @@
                     <td id=nombre class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                         {{$producto->producto}}
                     </td>
+                    <td id=unidad class="px-6 py-4">{{$producto->unidad}}</td>
                     <td id=stock class="px-6 py-4">{{$producto->proveedor->nombre}}</td>
                     <td id=stock_max class="px-6 py-4">{{$producto->maximo}}</td>
                     <td id=stock class="px-6 py-4">{{$producto->existencia}}</td>

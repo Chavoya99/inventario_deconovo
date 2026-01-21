@@ -12,9 +12,8 @@ class ProductoController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {   
-        
-        $productos = Producto::orderBy('producto')->get();
+    {    
+        $productos = Producto::with('proveedor')->orderBy('producto')->get();
         $proveedores = Proveedor::orderBy('nombre')->get();
         return view('lista_productos', compact('productos','proveedores'));
     }
@@ -37,6 +36,7 @@ class ProductoController extends Controller
             [
                 'nombre' => 'required',
                 'proveedor' => 'required',
+                'unidad' => 'required|in:Caja,Pza,Bulto',
                 'stock' => 'required|integer|min:0',
                 'stock_max' => 'required|integer|min:1',
                 'precio' => 'required',
@@ -47,6 +47,7 @@ class ProductoController extends Controller
         $producto = Producto::create([
             'producto' => $request->nombre,
             'proveedor_id' => $request->proveedor,
+            'unidad' => $request->unidad,
             'existencia' => $request->stock,
             'maximo' => $request->stock_max,
             'pedir' => $pedir,
@@ -82,6 +83,7 @@ class ProductoController extends Controller
             [
                 'nombre' => 'required',
                 'proveedor' => 'required',
+                'unidad' => 'required|in:Caja,Pza,Bulto',
                 'stock' => 'required|integer|min:0',
                 'stock_max' => 'required|integer|min:1',
                 'precio' => 'required',
@@ -92,6 +94,7 @@ class ProductoController extends Controller
         $producto->update([
             'producto' => $request->nombre,
             'proveedor_id' => $request->proveedor,
+            'unidad' => $request->unidad,
             'existencia' => $request->stock,
             'maximo' => $request->stock_max,
             'pedir' => $pedir,

@@ -31,12 +31,27 @@
 
                     @foreach ($proveedores as $proveedor)
                         <option value="{{$proveedor->id}}"
-                        @if($proveedor->id == old('proveedor_id') || $proveedor->id == $producto->proveedor_id) selected @endif>
+                        @if($proveedor->id == old('proveedor') || $proveedor->id == $producto->proveedor_id) selected @endif>
                         {{$proveedor->nombre}}</option>
                         
                     @endforeach
                 </select>
                 <x-input-error :messages="$errors->get('proveedor')" class="mt-2" />
+            </div>
+
+            <!-- Unidad -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Unidad
+                </label>
+                <select name="unidad" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                required>
+                    <option value="{{null}}">Selecciona una unidad</option>
+                        <option value="Caja" @if(old('unidad') == "Caja" || $producto->unidad == "Caja") selected @endif>Caja</option>
+                        <option value="Pza" @if(old('unidad') == "Pza" || $producto->unidad == "Pza") selected @endif>Pza</option>
+                        <option value="Bulto" @if(old('unidad') == "Bulto" || $producto->unidad == "Bulto") selected @endif>Bulto</option>
+                </select>
+                <x-input-error :messages="$errors->get('unidad')" class="mt-2" />
             </div>
 
             <!-- Stock -->
