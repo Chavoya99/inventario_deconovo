@@ -27,106 +27,111 @@
             </div>
 
             <!-- TABLAS -->
-            <form action="{{route('generar_reporte_inventario')}}" method="POST"
-            onsubmit="return confirm('Se generará el reporte, ¿continuar?')">
-                @csrf
+                
                 @foreach ($proveedores as $proveedor)
+                    
                     <div x-show="tab === {{ $proveedor->id }}" x-transition>
+                        <form action="{{route('generar_reporte_inventario')}}" method="POST"
+                        onsubmit="return confirm('Se generará el reporte, ¿continuar?')">
+                        @csrf
+                            <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
+                                <table class="w-full text-sm text-left text-gray-700">
 
-                        <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
-                            <table class="w-full text-sm text-left text-gray-700">
-
-                                <thead class="bg-sky-400 text-black border-b">
-                                    <tr>
-                                        <th class="px-6 py-3 font-medium">Producto</th>
-                                        <th class="px-6 py-3 font-medium">Unidad</th>
-                                        <th class="px-6 py-3 font-medium">Proveedor</th>
-                                        <th class="px-6 py-3 font-medium">Máximo</th>
-                                        <th class="px-6 py-3 font-medium">Existencia</th>
-                                        <th class="px-6 py-3 font-medium">Pedir</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @forelse ($proveedor->productos as $index => $producto)
-                                        <tr class="border-b hover:bg-gray-50"
-                                            x-data="{
-                                                maximo: {{ $producto->maximo }},
-                                                existencia: {{ old('productos.' . $index . '.existencia') != null 
-                                                ? old('productos.' . $index . '.existencia') : 'null' }},
-                                                get pedir() {
-                                                if (this.existencia === null || this.existencia === '') {
-                                                    return '-';
-                                                }
-                                                    return Math.max(this.maximo - this.existencia, 0);
-                                                }
-                                            }"
-                                        >
-                                        <input type="hidden" name="productos[{{$index}}][id]" value="{{$producto->id}}">
-                                        <input type="hidden" name="productos[{{$index}}][producto]" value="{{$producto->producto}}">
-                                        <input type="hidden" name="productos[{{$index}}][unidad]" value="{{$producto->unidad}}">
-                                        <input type="hidden" name="productos[{{$index}}][maximo]" value="{{$producto->maximo}}">
-                                            <td class="px-6 py-4 font-medium text-gray-900">
-                                                {{ $producto->producto }}
-                                            </td>
-
-                                            <td class="px-6 py-4 font-medium text-gray-900">
-                                                {{ $producto->unidad }}
-                                            </td>
-
-                                            <td class="px-6 py-4">
-                                                {{ $proveedor->nombre }}
-                                            </td>
-
-                                            <td class="px-6 py-4">
-                                                {{ $producto->maximo }}
-                                            </td>
-
-                                            <!-- EXISTENCIA -->
-                                            <td class="px-6 py-4">
-                                                <input type="number"
-                                                    min="0"
-                                                    max="{{$producto->maximo}}"
-                                                    x-model.number="existencia"
-                                                    name="productos[{{$index}}][existencia]"
-                                                    id="stock_{{$producto->id}}"
-                                                    class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                                    required>
-                                                     <x-input-error 
-                                                    :messages="$errors->get('productos.' . $index . '.existencia')" 
-                                                    class="mt-1" />
-                                            </td>
-                                           
-                                            <!-- PEDIR -->
-                                            <td class="px-6 py-4 font-semibold text-blue-600">
-                                                <span x-text="pedir"></span>
-                                            </td>
-                                        </tr>
-                                    @empty
+                                    <thead class="bg-sky-400 text-black border-b">
                                         <tr>
-                                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                                                No hay productos para este proveedor
-                                            </td>
+                                            <th class="px-6 py-3 font-medium">Producto</th>
+                                            <th class="px-6 py-3 font-medium">Unidad</th>
+                                            <th class="px-6 py-3 font-medium">Proveedor</th>
+                                            <th class="px-6 py-3 font-medium">Máximo</th>
+                                            <th class="px-6 py-3 font-medium">Existencia</th>
+                                            <th class="px-6 py-3 font-medium">Pedir</th>
                                         </tr>
-                                    @endforelse
-                                </tbody>
+                                    </thead>
 
-                            </table>
-                        </div>
+                                    <tbody>
+                                        @forelse ($proveedor->productos as $index => $producto)
+                                            <tr class="border-b hover:bg-gray-50"
+                                                x-data="{
+                                                    maximo: {{ $producto->maximo }},
+                                                    existencia: {{ old('productos.' . $index . '.existencia') != null 
+                                                    ? old('productos.' . $index . '.existencia') : 'null' }},
+                                                    get pedir() {
+                                                    if (this.existencia === null || this.existencia === '') {
+                                                        return '-';
+                                                    }
+                                                        return Math.max(this.maximo - this.existencia, 0);
+                                                    }
+                                                }"
+                                            >
+                                            <input type="hidden" name="productos[{{$index}}][id]" value="{{$producto->id}}">
+                                            <input type="hidden" name="productos[{{$index}}][producto]" value="{{$producto->producto}}">
+                                            <input type="hidden" name="productos[{{$index}}][unidad]" value="{{$producto->unidad}}">
+                                            <input type="hidden" name="productos[{{$index}}][maximo]" value="{{$producto->maximo}}">
+                                                <td class="px-6 py-4 font-medium text-gray-900">
+                                                    {{ $producto->producto }}
+                                                </td>
+
+                                                <td class="px-6 py-4 font-medium text-gray-900">
+                                                    {{ $producto->unidad }}
+                                                </td>
+
+                                                <td class="px-6 py-4">
+                                                    {{ $proveedor->nombre }}
+                                                </td>
+
+                                                <td class="px-6 py-4">
+                                                    {{ $producto->maximo }}
+                                                </td>
+
+                                                <!-- EXISTENCIA -->
+                                                <td class="px-6 py-4">
+                                                    <input type="number"
+                                                        min="0"
+                                                        max="{{$producto->maximo}}"
+                                                        x-model.number="existencia"
+                                                        name="productos[{{$index}}][existencia]"
+                                                        id="stock_{{$producto->id}}"
+                                                        class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                                        required>
+                                                        <x-input-error 
+                                                        :messages="$errors->get('productos.' . $index . '.existencia')" 
+                                                        class="mt-1" />
+                                                </td>
+                                            
+                                                <!-- PEDIR -->
+                                                <td class="px-6 py-4 font-semibold text-blue-600">
+                                                    <span x-text="pedir"></span>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                                    No hay productos para este proveedor
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+
+                                </table>
+                            </div>
+                            <br>
+                            <div class="flex justify-end">
+
+                        
+                                <button type="submit"
+                                    class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                                        rounded-lg border border-transparent bg-teal-500 text-white 
+                                        hover:bg-teal-600 focus:outline-hidden focus:bg-teal-600 cursor-pointer">
+                                    Generar reporte
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 @endforeach
             
-                <br>
-                <div class="flex justify-end">
-                <button type="submit"
-                    class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
-                        rounded-lg border border-transparent bg-teal-500 text-white 
-                        hover:bg-teal-600 focus:outline-hidden focus:bg-teal-600 cursor-pointer">
-                    Generar reporte
-                </button>
-            </form>
+                
             
-        </div>
+        
             
 
         </div>
