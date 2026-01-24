@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\EmpleadoMiddleware;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
-use App\Http\Middleware\AdminMiddleware;
-use App\Http\Middleware\EmpleadoMiddleware;
+use App\Http\Controllers\OrdenCompraController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +44,7 @@ Route::middleware('auth')->group(function () {
         Route::get('editar_producto/{producto}', 'edit')->name('editar_producto')->middleware(AdminMiddleware::class);
         Route::post('editar_producto/{producto}', 'update')->name('editar_producto')->middleware(AdminMiddleware::class);
         Route::delete('eliminar_producto/{producto}', 'destroy')->name('eliminar_producto')->middleware(AdminMiddleware::class);
-        Route::get('productos_proveedor', 'filtro_proveedor')->name('filtro_proveedor')->middleware(AdminMiddleware::class);
+        Route::get('productos_proveedor', 'filtro_proveedor')->name('filtro_proveedor');
     });
 
     Route::controller(ProveedorController::class)->group(function(){
@@ -52,8 +53,18 @@ Route::middleware('auth')->group(function () {
         Route::put('editar_proveedor/{proveedor}', 'update')->name('editar_proveedor')->middleware(AdminMiddleware::class);
         Route::delete('eliminar_proveedor/{proveedor}', 'destroy')->name('eliminar_proveedor')->middleware(AdminMiddleware::class);
     });
+
+    Route::controller(OrdenCompraController::class)->group(function(){
+        Route::get('lista_ordenes_compra', 'index')->name('lista_ordenes_compra')->middleware(AdminMiddleware::class);
+        Route::get('filtro_orden_proveedor', 'filtro_orden_proveedor')->name('filtro_orden_proveedor')->middleware(AdminMiddleWare::class);
+        Route::get('reporte_inventario', 'index_reporte')->name('reporte_inventario');
+        Route::post('generar_reporte_inventario', 'generar_reporte_inventario')->name('generar_reporte_inventario');
+        Route::get('ver_orden_compra', 'ver_orden_compra')->name('ver_orden_compra')->middleware(AdminMiddleware::class);
+        Route::get('descargar_orden_compra', 'descargar_orden_compra')->name('descargar_orden_compra')->middleware(AdminMiddleware::class);
+        Route::get('show', 'show');
+    });
     
-    Route::middleware(EmpleadoMiddleware::class)->group(function(){});
+    //Route::middleware(EmpleadoMiddleware::class)->group(function(){});
     
 
     

@@ -20,16 +20,16 @@
                     </x-nav-link>
 
                     @if (auth()->user()->isAdmin())
-                        <x-nav-link :href="route('lista_proveedores')" :active="request()->routeIs('ordenes_compra')">
+                        <x-nav-link :href="route('lista_proveedores')" :active="request()->routeIs('lista_proveedores')">
                             {{ __('Proveedores') }}
                         </x-nav-link>
 
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('ordenes_compra')">
+                        <x-nav-link :href="route('lista_ordenes_compra')" :active="request()->routeIs('lista_ordenes_compra')">
                             {{ __('Ordenes de compra') }}
                         </x-nav-link>
                     @endif
 
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('generar_reporte')">
+                    <x-nav-link :href="route('reporte_inventario')" :active="request()->routeIs('reporte_inventario')">
                         {{ __('Generar reporte') }}
                     </x-nav-link>
                 </div>
@@ -90,17 +90,17 @@
             </x-responsive-nav-link>
             
             @if (auth()->user()->isAdmin())
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('ordenes_compra')">
+                <x-responsive-nav-link :href="route('lista_proveedores')" :active="request()->routeIs('lista_proveedores')">
                     {{ __('Proveedores') }}
                 </x-responsive-nav-link>
 
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('ordenes_compra')">
+                <x-responsive-nav-link :href="route('lista_ordenes_compra')" :active="request()->routeIs('lista_ordenes_compra')">
                     {{ __('Ordenes de compra') }}
                 </x-responsive-nav-link>
                 
             @endif
 
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('generar_reporte')">
+            <x-responsive-nav-link :href="route('reporte_inventario')" :active="request()->routeIs('reporte_inventario')">
                 {{ __('Generar reporte') }}
             </x-responsive-nav-link>
         </div>

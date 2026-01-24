@@ -14,6 +14,8 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
+
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -43,9 +45,25 @@
                         </span>
                     </div>
                 @endif
+
+                @if (session('error'))
+                    <div id="success-alert" class="fixed top-5 right-5 bg-red-300 text-red-600 border px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 z-50">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                        class="lucide lucide-x-icon lucide-x text-red-600"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+
+                        <span class="text-sm font-medium">
+                            {{ session('error') }}
+                        </span>
+                    </div>
+                @endif
                 {{ $slot }}
             </main>
         </div>
+        
+        @livewireScripts
+
     </body>
 
     <script>

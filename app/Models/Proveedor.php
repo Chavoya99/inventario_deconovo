@@ -16,6 +16,6 @@ class Proveedor extends Model
     }
 
     public function ordenes_compra(){
-        return $this->hasMany(OrdenCompra::class)->orderBy('fecha_realizada');
+        return $this->hasMany(OrdenCompra::class)->orderBy('id');
     }
 }
