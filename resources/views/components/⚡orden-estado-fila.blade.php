@@ -162,15 +162,15 @@ new class extends Component
                     Descargar
                 </a>
 
-                {{--<form action="{{ route('eliminar_producto', $producto) }}" 
-                onsubmit="return confirm('Se eliminará el producto, ¿continuar?')" method="POST">
+                <form action="{{ route('eliminar_orden_compra', ['ordenCompra' => $orden]) }}" 
+                onsubmit="return confirm('Se eliminará la orden de compra de forma permanente, ¿continuar?')" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
                             class="text-red-600 hover:underline cursor-pointer">
                         Eliminar
                     </button>
-                </form>--}}
+                </form>
             </div>
         </td>
     @endif

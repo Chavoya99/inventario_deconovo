@@ -81,8 +81,6 @@ class OrdenCompraController extends Controller
 
         Storage::disk('public')->put($ruta, $pdf->output());
 
-        $rutaPublica = Storage::url($ruta);
-
         $orden_compra = OrdenCompra::create([
             'proveedor_id' => $producto_aux->proveedor_id,
             'fecha_generada' => now('America/Belize'),
@@ -148,7 +146,8 @@ class OrdenCompraController extends Controller
      */
     public function destroy(OrdenCompra $ordenCompra)
     {
-        //
+        $ordenCompra->delete();
+        return redirect()->back()->with('success', 'Orden de compra eliminada con éxito');
     }
 
     public function index_reporte(Request $request){
