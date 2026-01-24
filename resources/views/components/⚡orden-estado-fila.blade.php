@@ -9,6 +9,10 @@ new class extends Component
 
     public function toggleRealizada()
     {
+        if($this->orden->realizada == true){
+           $this->reiniciar_recibida();
+        }
+
         $fecha = (!$this->orden->realizada) ? now('America/Belize') : null;
 
         $this->orden->update([
@@ -20,7 +24,10 @@ new class extends Component
     }
 
     public function toggleRecibida()
-    {
+    {   
+        if (! $this->orden->realizada) {
+            return;
+        }
         $fecha = (!$this->orden->recibida) ? now('America/Belize') : null;
 
         $this->orden->update([
@@ -30,6 +37,14 @@ new class extends Component
 
         $this->orden->refresh();
 
+    }
+
+    public function reiniciar_recibida(){
+
+        $this->orden->update([
+            'recibida' => 0,
+            'fecha_recibida' => null,
+        ]);
     }
 };
 ?>
@@ -89,6 +104,7 @@ new class extends Component
         <button 
         onclick="confirm('¿Confirmar cambio?') || event.stopImmediatePropagation()"
         wire:click="toggleRecibida"
+        @disabled(! $orden->realizada)
         class="cursor-pointer"
         title="Cambiar estado"
         >
