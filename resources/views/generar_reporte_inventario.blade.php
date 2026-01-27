@@ -31,6 +31,13 @@
                 @foreach ($proveedores as $proveedor)
                     
                     <div x-show="tab === {{ $proveedor->id }}" x-transition>
+                        <span>
+                            Último reporte: @if ($proveedor->ordenes_compra_max_fecha_generada)
+                                {{ \Carbon\Carbon::parse($proveedor->ordenes_compra_max_fecha_generada)->format('d/m/Y') }}
+                            @else
+                                Sin reportes
+                            @endif
+                        </span>
                         <form action="{{route('generar_reporte_inventario')}}" method="POST"
                         onsubmit="return confirm('Se generará el reporte, ¿continuar?')">
                         @csrf
@@ -67,6 +74,7 @@
                                             <input type="hidden" name="productos[{{$index}}][producto]" value="{{$producto->producto}}">
                                             <input type="hidden" name="productos[{{$index}}][unidad]" value="{{$producto->unidad}}">
                                             <input type="hidden" name="productos[{{$index}}][maximo]" value="{{$producto->maximo}}">
+                                            <input type="hidden" name="proveedor" value="{{$proveedor->id}}">
                                                 <td class="px-6 py-4 font-medium text-gray-900">
                                                     {{ $producto->producto }}
                                                 </td>
