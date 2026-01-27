@@ -15,17 +15,34 @@ class OrdenCompraController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {   
-        if($request->proveedor){
-            $proveedor = Proveedor::find($request->proveedor);
-            $ordenes_compra = $proveedor->ordenes_compra; 
-        }else{
-            $ordenes_compra = OrdenCompra::orderBy('id')->get();
+    {
+        $query = OrdenCompra::query();
+
+        // Filtro por proveedor
+        if ($request->filled('proveedor')) {
+            $query->where('proveedor_id', $request->proveedor);
         }
 
+        // Filtro por estado
+        if ($request->filled('filtro')) {
+            if ($request->filtro === 'realizadas') {
+                $query->where('realizada', true);
+            }
+
+            if ($request->filtro === 'pendientes') {
+                $query->where('realizada', false);
+            }
+
+            if ($request->filtro === 'recibidas') {
+                $query->where('recibida', true);
+            }
+        }
+
+        $ordenes_compra = $query->orderBy('id')->get();
+
         $proveedores = Proveedor::orderBy('nombre')->get();
-       
-        return view('lista_ordenes_compra', compact('proveedores', 'ordenes_compra'));
+
+        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores'));
     }
 
     /**
@@ -62,15 +79,21 @@ class OrdenCompraController extends Controller
             ->filter(function ($producto) {
                 return $producto['pedir'] > 0;
             })
-            ->values(); 
+            ->values();
         
         if($productos->isEmpty()){
             return redirect()->back()->withInput()->with(['error' => "No hay productos suficientes para generar el reporte"]);
         }
 
-        $producto_aux = Producto::find($productos[0]['id']);
-        $proveedor = Proveedor::find($producto_aux->proveedor_id);
+        $proveedor = Proveedor::find($request->proveedor);
         $folio_orden = OrdenCompra::orderBy('id', 'desc')->first();
+        $fecha_generada = now('America/Belize');
+
+        foreach($productos as $producto){
+            $producto_update = Producto::find($producto['id']);
+            $producto_update->update(['existencia' => $producto['existencia'],
+            'pedir' => $producto['pedir'], 'ultimo_reporte' => $fecha_generada]);
+        }
 
         $nombre_archivo = 'orden_compra_'.strtolower($proveedor->nombre). now('America/Belize')->format('_d_m_Y') . '.pdf';
 
@@ -82,8 +105,8 @@ class OrdenCompraController extends Controller
         Storage::disk('public')->put($ruta, $pdf->output());
 
         $orden_compra = OrdenCompra::create([
-            'proveedor_id' => $producto_aux->proveedor_id,
-            'fecha_generada' => now('America/Belize'),
+            'proveedor_id' => $proveedor->id,
+            'fecha_generada' => $fecha_generada,
             'ruta_archivo' => $ruta,
         ]);
 
@@ -151,7 +174,9 @@ class OrdenCompraController extends Controller
     }
 
     public function index_reporte(Request $request){
-        $proveedores = Proveedor::whereHas('productos')->with('productos')->orderBy('nombre')->get();
+        $proveedores = Proveedor::whereHas('productos')->with('productos')
+        ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
+
         return view('generar_reporte_inventario', ['proveedores' => $proveedores, 
         'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()?->id,]);
     }

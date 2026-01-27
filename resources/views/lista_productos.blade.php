@@ -116,7 +116,7 @@
                         
                         <td id=fecha class="px-6 py-4">
                             @if($producto->ultimo_reporte)
-                                {{$producto->ultimo_reporte->format('d-m-Y H:i:s')}}
+                                {{$producto->ultimo_reporte->format('d/m/Y')}}
                             @else 
                                 Sin reporte
                             @endif

@@ -44,11 +44,29 @@
                     </button>
                 </form>
 
+                <a href="{{ route('lista_ordenes_compra', array_merge(request()->all(), ['filtro' => 'realizadas'])) }}"
+                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                        rounded-lg border border-transparent bg-sky-500 hover:bg-cyan-600 text-white">
+                    Realizadas
+                </a>
+
+                <a href="{{ route('lista_ordenes_compra', array_merge(request()->all(), ['filtro' => 'recibidas'])) }}"
+                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                        rounded-lg border border-transparent bg-green-400 hover:bg-green-600 text-white">
+                    Recibidas
+                </a>
+
+                <a href="{{ route('lista_ordenes_compra', array_merge(request()->all(), ['filtro' => 'pendientes'])) }}"
+                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                        rounded-lg border border-transparent bg-yellow-300 hover:bg-yellow-500 text-black">
+                    Pendientes
+                </a>
+
                 <a href="{{route('lista_ordenes_compra')}}"
-                    class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
-                        rounded-lg border border-transparent bg-teal-500 text-white 
-                        hover:bg-teal-600 focus:outline-hidden focus:bg-teal-600 cursor-pointer">
-                        Mostrar todo
+                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                    rounded-lg border border-transparent bg-neutral-600 text-white 
+                    hover:bg-neutral-800 cursor-pointer">
+                    Todas
                 </a>
 
             </div>  
