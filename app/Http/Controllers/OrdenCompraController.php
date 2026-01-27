@@ -86,7 +86,6 @@ class OrdenCompraController extends Controller
         }
 
         $proveedor = Proveedor::find($request->proveedor);
-        $folio_orden = OrdenCompra::orderBy('id', 'desc')->first();
         $fecha_generada = now('America/Belize');
 
         foreach($productos as $producto){
@@ -95,20 +94,33 @@ class OrdenCompraController extends Controller
             'pedir' => $producto['pedir'], 'ultimo_reporte' => $fecha_generada]);
         }
 
-        $nombre_archivo = 'orden_compra_'.strtolower($proveedor->nombre). now('America/Belize')->format('_d_m_Y') . '.pdf';
-
-        $pdf = Pdf::loadView('formato_orden_compra', compact('productos'))
-                ->setPaper('A4', 'portrait');
-
-        $ruta = 'ordenes_compra/' . $nombre_archivo;
-
-        Storage::disk('public')->put($ruta, $pdf->output());
-
         $orden_compra = OrdenCompra::create([
             'proveedor_id' => $proveedor->id,
             'fecha_generada' => $fecha_generada,
-            'ruta_archivo' => $ruta,
+            'ruta_archivo' => "Sin ruta de archivo",
         ]);
+
+        $nombre = config('app.facturador_nombre');
+        $correo = config('app.facturador_correo');
+        $nombre_archivo = 'orden_compra_'.str_pad($orden_compra->id, 3, "0", STR_PAD_LEFT)."_".strtolower($proveedor->nombre). $fecha_generada->format('_d_m_Y') . '.pdf';
+        $ruta = 'ordenes_compra/' . $nombre_archivo;
+        
+        $pdf = Pdf::loadView('formato_orden_compra', compact('productos','proveedor','orden_compra','nombre','correo'))
+                ->setPaper('A4', 'portrait');
+        
+        $pdf->render();
+        
+        $pdf->getDomPDF()->get_canvas()->page_text(
+            520, 820,              
+            "Página {PAGE_NUM} de {PAGE_COUNT}",
+            null,                  
+            9,                     
+            [0, 0, 0]              
+        );
+        
+        $orden_compra->update(['ruta_archivo' => $ruta]);
+        
+        Storage::disk('public')->put($ruta, $pdf->output());
 
         return redirect()->route('reporte_inventario')->with('success', 'Reporte generado con éxito');
 
@@ -130,7 +142,7 @@ class OrdenCompraController extends Controller
 
         if (Storage::disk('public')->exists($orden->ruta_archivo)) {
             return response()->download(storage_path('app/public/'.$orden->ruta_archivo), 
-            'orden_compra_'.strtolower($proveedor->nombre).$orden->fecha_generada->format('_d_m_Y') . '.pdf');
+            'orden_compra_'.str_pad($orden->id, 3, "0", STR_PAD_LEFT)."_".strtolower($proveedor->nombre). $orden->fecha_generada->format('_d_m_Y') . '.pdf');
         }else{
             return back()->withErrors(['error' => 'El archivo no existe']);
         }
@@ -143,9 +155,12 @@ class OrdenCompraController extends Controller
     {
         $productos = Producto::all();
         $productos = $productos->toArray();
+        $proveedor = Proveedor::first();
+        $orden_compra = $proveedor->ordenes_compra()->first();
+        $nombre = config('app.facturador_nombre');
+        $correo = config('app.facturador_correo');
 
-
-        return view('formato_orden_compra', compact('productos'));
+        return view('formato_orden_compra', compact('productos','proveedor','orden_compra','nombre','correo'));
     }
 
     /**
