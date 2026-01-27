@@ -185,4 +185,7 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'facturador_nombre' => env('FACTURADOR_NOMBRE'),
+    'facturador_correo' => env('FACTURADOR_CORREO'),
+
 ];
