@@ -110,6 +110,7 @@ class OrdenCompraController extends Controller
         
         $pdf->render();
         
+        /** @disregard */
         $pdf->getDomPDF()->get_canvas()->page_text(
             520, 820,              
             "Página {PAGE_NUM} de {PAGE_COUNT}",
@@ -149,6 +150,27 @@ class OrdenCompraController extends Controller
     }
 
     /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(OrdenCompra $ordenCompra)
+    {   
+        if ($ordenCompra->ruta_archivo && Storage::disk('public')->exists($ordenCompra->ruta_archivo)) {
+            Storage::disk('public')->delete($ordenCompra->ruta_archivo);
+        }
+        
+        $ordenCompra->delete();
+        return redirect()->back()->with('success', 'Orden de compra eliminada con éxito');
+    }
+
+    public function index_reporte(Request $request){
+        $proveedores = Proveedor::whereHas('productos')->with('productos')
+        ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
+
+        return view('generar_reporte_inventario', ['proveedores' => $proveedores, 
+        'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()?->id,]);
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(OrdenCompra $ordenCompra)
@@ -179,27 +201,10 @@ class OrdenCompraController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(OrdenCompra $ordenCompra)
-    {
-        $ordenCompra->delete();
-        return redirect()->back()->with('success', 'Orden de compra eliminada con éxito');
-    }
-
-    public function index_reporte(Request $request){
-        $proveedores = Proveedor::whereHas('productos')->with('productos')
-        ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
-
-        return view('generar_reporte_inventario', ['proveedores' => $proveedores, 
-        'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()?->id,]);
-    }
-
-    public function filtro_orden_proveedor(Request $request){
-        $proveedor = Proveedor::find($request->proveedor);
-        $proveedores = Proveedor::all();
-        $ordenes_compra = $proveedor->ordenes_compra;
-        return view('filtro_orden_proveedor', compact('proveedores', 'proveedor', 'ordenes_compra'));
-    }
+    // public function filtro_orden_proveedor(Request $request){
+    //     $proveedor = Proveedor::find($request->proveedor);
+    //     $proveedores = Proveedor::all();
+    //     $ordenes_compra = $proveedor->ordenes_compra;
+    //     return view('filtro_orden_proveedor', compact('proveedores', 'proveedor', 'ordenes_compra'));
+    // }
 }
