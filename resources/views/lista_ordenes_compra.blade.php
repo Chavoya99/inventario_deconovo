@@ -4,7 +4,7 @@
 <div class="bg-neutral-primary-soft shadow-xs rounded-base border border-default">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Ordenes de compra') }}
+            {{ __('Ordenes de compra')." ".strtoupper($nombre_proveedor_actual) }}
         </h2>
     </x-slot>
     

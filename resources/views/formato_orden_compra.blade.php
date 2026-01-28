@@ -62,7 +62,7 @@
     </tr>
     <tr>
         <td class="center bold">Tienda Arbolada</td>
-        <td colspan="2" class="provider center">Proveedor: {{ucfirst($proveedor->nombre)}}</td>
+        <td colspan="2" class="provider center">Proveedor: {{strtoupper($proveedor->nombre)}}</td>
     </tr>
 
     <tr class="center bold">

@@ -35,7 +35,10 @@ class OrdenCompraController extends Controller
 
         $proveedores = Proveedor::orderBy('nombre')->get();
 
-        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores'));
+        $nombre_proveedor_actual = ($request->proveedor) ? Proveedor::find($request->proveedor)->nombre : null;
+
+
+        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores', 'nombre_proveedor_actual'));
     }
 
     /**
