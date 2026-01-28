@@ -8,14 +8,14 @@
         <!-- Email Address -->
         <div>
 
-            <x-input-label for="username" :value="__('Username')" />
+            <x-input-label for="username" :value="__('Usuario')" />
             <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
 <div class="relative mt-4">
-    <x-input-label for="password" value="Password" />
+    <x-input-label for="password" value="Contraseña" />
 
     <input
         id="password"
@@ -53,19 +53,19 @@
 </x-guest-layout>
 
 <script>
-function togglePassword() {
-    const input = document.getElementById('password');
-    const eyeOpen = document.getElementById('eyeOpen');
-    const eyeClosed = document.getElementById('eyeClosed');
+    function togglePassword() {
+        const input = document.getElementById('password');
+        const eyeOpen = document.getElementById('eyeOpen');
+        const eyeClosed = document.getElementById('eyeClosed');
 
-    if (input.type === 'password') {
-        input.type = 'text';
-        eyeOpen.classList.remove('hidden');
-        eyeClosed.classList.add('hidden');
-    } else {
-        input.type = 'password';
-        eyeOpen.classList.add('hidden');
-        eyeClosed.classList.remove('hidden');
+        if (input.type === 'password') {
+            input.type = 'text';
+            eyeOpen.classList.remove('hidden');
+            eyeClosed.classList.add('hidden');
+        } else {
+            input.type = 'password';
+            eyeOpen.classList.add('hidden');
+            eyeClosed.classList.remove('hidden');
+        }
     }
-}
 </script>

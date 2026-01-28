@@ -17,7 +17,7 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {   
         $user= Auth::user();
-        if($user->tipo != 'admin'){
+        if($user == null || $user->tipo != 'admin'){
             return redirect(route('dashboard'));
         }
     
