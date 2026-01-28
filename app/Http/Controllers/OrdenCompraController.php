@@ -15,30 +15,23 @@ class OrdenCompraController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $query = OrdenCompra::query();
+    {   
 
-        // Filtro por proveedor
-        if ($request->filled('proveedor')) {
+        $ordenes_compra = OrdenCompra::orderBy('id')
+        ->when($request->proveedor, function ($query) use ($request) {
             $query->where('proveedor_id', $request->proveedor);
-        }
-
-        // Filtro por estado
-        if ($request->filled('filtro')) {
-            if ($request->filtro === 'realizadas') {
-                $query->where('realizada', true);
-            }
-
-            if ($request->filtro === 'pendientes') {
-                $query->where('realizada', false);
-            }
-
-            if ($request->filtro === 'recibidas') {
-                $query->where('recibida', true);
-            }
-        }
-
-        $ordenes_compra = $query->orderBy('id')->get();
+        })//Filtro por proveedor
+        ->when($request->filtro === 'realizadas', function ($query) {
+            $query->where('realizada', true);
+        })//Filtro realizadas
+        ->when($request->filtro === 'recibidas', function ($query) {
+            $query->where('recibida', true);
+        })//Filtro recibidas
+        ->when($request->filtro === 'pendientes', function($query){
+            $query->where('realizada', false);
+        })
+        ->paginate(7)
+        ->withQueryString();
 
         $proveedores = Proveedor::orderBy('nombre')->get();
 

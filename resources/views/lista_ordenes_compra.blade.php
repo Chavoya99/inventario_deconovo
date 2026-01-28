@@ -17,7 +17,7 @@
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                         rounded-lg border border-transparent bg-teal-500 text-white 
                         hover:bg-teal-600 focus:outline-hidden focus:bg-teal-600 cursor-pointer">
-                    Nuevo orden de compra
+                    Nueva orden de compra
                 </a>
 
                 <!-- Filtro por proveedor -->
@@ -44,29 +44,36 @@
                     </button>
                 </form>
 
-                <a href="{{ route('lista_ordenes_compra', array_merge(request()->all(), ['filtro' => 'realizadas'])) }}"
+                <a href="{{ route('lista_ordenes_compra', ['proveedor' => request()->get('proveedor'),'filtro' => 'realizadas']) }}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                         rounded-lg border border-transparent bg-sky-500 hover:bg-cyan-600 text-white">
                     Realizadas
                 </a>
 
-                <a href="{{ route('lista_ordenes_compra', array_merge(request()->all(), ['filtro' => 'recibidas'])) }}"
+                <a href="{{ route('lista_ordenes_compra', ['proveedor' => request()->get('proveedor'), 'filtro' => 'recibidas']) }}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                         rounded-lg border border-transparent bg-green-400 hover:bg-green-600 text-white">
                     Recibidas
                 </a>
 
-                <a href="{{ route('lista_ordenes_compra', array_merge(request()->all(), ['filtro' => 'pendientes'])) }}"
+                <a href="{{ route('lista_ordenes_compra', ['proveedor' => request()->get('proveedor'), 'filtro' => 'pendientes']) }}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                         rounded-lg border border-transparent bg-yellow-300 hover:bg-yellow-500 text-black">
                     Pendientes
                 </a>
 
-                <a href="{{route('lista_ordenes_compra')}}"
+                <a href="{{route('lista_ordenes_compra', ['proveedor'=> request()->get('proveedor')])}}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                     rounded-lg border border-transparent bg-neutral-600 text-white 
                     hover:bg-neutral-800 cursor-pointer">
                     Todas
+                </a>
+
+                <a href="{{route('lista_ordenes_compra')}}"
+                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                    rounded-lg border border-transparent bg-red-300 text-black 
+                    hover:bg-red-800 cursor-pointer">
+                    Limpiar filtros
                 </a>
 
             </div>  
@@ -76,14 +83,16 @@
         
 
         <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
-            <table class="w-full text-sm text-left text-gray-700">
-                @if ($ordenes_compra->isEmpty())
+            @if ($ordenes_compra->isEmpty())
+                <table class="w-full text-sm text-left text-gray-700">
                     <tr>
                         <td colspan="3" class="px-6 py-4 text-center text-gray-500">
                             No hay ordenes de compra registradas
                         </td>
                     </tr>
-                @else   
+                </table>
+            @else
+                <table class="w-full text-sm text-left text-gray-700">
                     <thead class="bg-sky-400 text-black border-b">
                         <tr>
                             <th class="px-6 py-3 font-medium">Folio</th>
@@ -102,9 +111,12 @@
                             <livewire:orden-estado-fila :orden="$orden"/>
                         @endforeach
                     </tbody>
-                @endif
+                </table>
 
-            </table>
+                
+                {{ $ordenes_compra->links('components.pagination') }}
+                
+            @endif
         </div>
     </div>
 
