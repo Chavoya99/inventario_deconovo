@@ -138,7 +138,6 @@
                             </td>
                         </tr>
 
-
                     @endforeach
                 @endif
 
@@ -146,6 +145,7 @@
                     
                 </tbody>
             </table>
+            {{$proveedores->links('components.pagination')}}
         </div>
     </div>
 </div>

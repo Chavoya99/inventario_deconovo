@@ -30,7 +30,7 @@
                         <option value="">Selecciona un proveedor</option>
                         @foreach ($proveedores as $proveedor)
                             <option value="{{ $proveedor->id }}"
-                                @if ($_GET && $_GET['proveedor'] == $proveedor->id) selected @endif>
+                                {{ request('proveedor') == $proveedor->id ? 'selected' : '' }}>
                                 {{ $proveedor->nombre }}
                             </option>
                         @endforeach
