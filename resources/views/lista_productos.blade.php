@@ -4,7 +4,7 @@
 <div class="bg-neutral-primary-soft shadow-xs rounded-base border border-default">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Lista de productos') }}
+            {{ __('Lista de productos')." ".strtoupper($nombre_proveedor_actual) }}
         </h2>
     </x-slot>
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
@@ -21,7 +21,7 @@
                 </a>
         @endif
                 <!-- Filtro por proveedor -->
-                <form action="{{ route('filtro_proveedor') }}" method="GET"
+                <form action="{{ route('lista_productos') }}" method="GET"
                     class="flex items-end gap-3">
 
                     <select name="proveedor"
@@ -30,7 +30,7 @@
                         <option value="">Selecciona un proveedor</option>
                         @foreach ($proveedores as $proveedor)
                             <option value="{{ $proveedor->id }}"
-                                {{ old('proveedor') == $proveedor->id ? 'selected' : '' }}>
+                                @if($_GET && $_GET['proveedor'] == $proveedor->id ) selected @endif>
                                 {{ $proveedor->nombre }}
                             </option>
                         @endforeach
@@ -43,6 +43,12 @@
                         Aplicar filtro
                     </button>
                 </form>
+                <a href="{{route('lista_productos')}}"
+                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                    rounded-lg border border-transparent bg-red-300 text-black 
+                    hover:bg-red-800 cursor-pointer">
+                    Limpiar filtro
+                </a>
 
             </div>  
             <br><br>

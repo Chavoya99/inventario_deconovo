@@ -11,11 +11,19 @@ class ProductoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {    
-        $productos = Producto::with('proveedor')->orderBy('producto')->get();
+        $nombre_proveedor_actual = null;
+        if($request->filled('proveedor')){
+            $proveedor = Proveedor::find($request->proveedor);
+            $nombre_proveedor_actual = $proveedor->nombre;
+            $productos = $proveedor->productos;
+        }else{
+            $productos = Producto::with('proveedor')->orderBy('producto')->get();
+        }
+        
         $proveedores = Proveedor::orderBy('nombre')->get();
-        return view('lista_productos', compact('productos','proveedores'));
+        return view('lista_productos', compact('productos','proveedores', 'nombre_proveedor_actual'));
     }
 
     /**
