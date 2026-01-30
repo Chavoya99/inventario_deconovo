@@ -30,7 +30,7 @@ class OrdenCompraController extends Controller
         ->when($request->filtro === 'pendientes', function($query){
             $query->where('realizada', false);
         })
-        ->paginate(7)
+        ->paginate(5)
         ->withQueryString();
 
         $proveedores = Proveedor::orderBy('nombre')->get();

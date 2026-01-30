@@ -30,7 +30,7 @@
                         <option value="">Selecciona un proveedor</option>
                         @foreach ($proveedores as $proveedor)
                             <option value="{{ $proveedor->id }}"
-                                {{ old('proveedor') == $proveedor->id ? 'selected' : '' }}>
+                                @if ($_GET && $_GET['proveedor'] == $proveedor->id) selected @endif>
                                 {{ $proveedor->nombre }}
                             </option>
                         @endforeach
@@ -43,7 +43,9 @@
                         Aplicar filtro
                     </button>
                 </form>
-
+            </div>
+            <br>
+            <div class="flex items-end gap-4">
                 <a href="{{ route('lista_ordenes_compra', ['proveedor' => request()->get('proveedor'),'filtro' => 'realizadas']) }}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                         rounded-lg border border-transparent bg-sky-500 hover:bg-cyan-600 text-white">
@@ -77,7 +79,7 @@
                 </a>
 
             </div>  
-            <br><br>
+            <br>
             
         @endif
         

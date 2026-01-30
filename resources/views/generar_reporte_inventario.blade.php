@@ -95,8 +95,9 @@
                                                 <td class="px-6 py-4">
                                                     <input type="number"
                                                         min="0"
-                                                        max="{{$producto->maximo}}"
+                                                        :max="maximo"
                                                         x-model.number="existencia"
+                                                        @input="existencia = Math.min(existencia, maximo)"
                                                         name="productos[{{$index}}][existencia]"
                                                         id="stock_{{$producto->id}}"
                                                         class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
