@@ -56,7 +56,6 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(OrdenCompraController::class)->group(function(){
         Route::get('lista_ordenes_compra', 'index')->name('lista_ordenes_compra')->middleware(AdminMiddleware::class);
-        Route::get('filtro_orden_proveedor', 'filtro_orden_proveedor')->name('filtro_orden_proveedor')->middleware(AdminMiddleWare::class);
         Route::get('reporte_inventario', 'index_reporte')->name('reporte_inventario');
         Route::post('generar_reporte_inventario', 'generar_reporte_inventario')->name('generar_reporte_inventario');
         Route::get('ver_orden_compra', 'ver_orden_compra')->name('ver_orden_compra')->middleware(AdminMiddleware::class);
@@ -64,11 +63,7 @@ Route::middleware('auth')->group(function () {
         Route::get('show', 'show');
         Route::delete('eliminar_orden_compra/{ordenCompra}', 'destroy')->name('eliminar_orden_compra')->middleware(AdminMiddleware::class);
     });
-    
-    //Route::middleware(EmpleadoMiddleware::class)->group(function(){});
-    
-
-    
+            
 });
 
 require __DIR__.'/auth.php';
