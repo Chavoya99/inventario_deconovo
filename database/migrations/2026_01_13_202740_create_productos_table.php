@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('producto');
             $table->string('unidad');
+            $table->decimal('contenido', 8,2)->default(0);
             $table->smallInteger('maximo')->default(1);
             $table->smallInteger('existencia')->default(0);
             $table->smallInteger('pedir')->default(0);
