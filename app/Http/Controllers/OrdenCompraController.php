@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use App\Models\OrdenCompra;
+use App\Models\ReporteFaltante;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
@@ -14,10 +15,9 @@ class OrdenCompraController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index_internas(Request $request)
+    public function index(Request $request)
     {   
 
-        $ruta_origen="lista_ordenes_compra_internas";
         $ordenes_compra = OrdenCompra::orderBy('id')
         ->when($request->proveedor, function ($query) use ($request) {
             $query->where('proveedor_id', $request->proveedor);
@@ -39,34 +39,7 @@ class OrdenCompraController extends Controller
         $nombre_proveedor_actual = ($request->proveedor) ? Proveedor::find($request->proveedor)->nombre : null;
 
 
-        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores', 'nombre_proveedor_actual', 'ruta_origen'));
-    }
-
-    public function index_proveedores(Request $request){
-
-        $ruta_origen="lista_ordenes_compra_proveedores";
-        $ordenes_compra = OrdenCompra::orderBy('id')
-        ->when($request->proveedor, function ($query) use ($request) {
-            $query->where('proveedor_id', $request->proveedor);
-        })//Filtro por proveedor
-        ->when($request->filtro === 'realizadas', function ($query) {
-            $query->where('realizada', true);
-        })//Filtro realizadas
-        ->when($request->filtro === 'recibidas', function ($query) {
-            $query->where('recibida', true);
-        })//Filtro recibidas
-        ->when($request->filtro === 'pendientes', function($query){
-            $query->where('realizada', false);
-        })
-        ->paginate(5)
-        ->withQueryString();
-
-        $proveedores = Proveedor::orderBy('nombre')->get();
-
-        $nombre_proveedor_actual = ($request->proveedor) ? Proveedor::find($request->proveedor)->nombre : null;
-
-
-        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores', 'nombre_proveedor_actual', 'ruta_origen'));
+        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores', 'nombre_proveedor_actual'));
     }
 
     /**
@@ -75,6 +48,17 @@ class OrdenCompraController extends Controller
     public function create()
     {
         //
+    }
+
+    public function index_faltantes(){
+        $reportes = ReporteFaltante::orderBy('id')->paginate(6);
+        $proveedores = Proveedor::orderBy('nombre')->get();
+        return view('reportes_faltantes', compact('reportes', 'proveedores'));
+    }
+
+    public function eliminar_reporte(ReporteFaltante $reporte){
+        $reporte->delete();
+        return redirect()->back()->with('success', 'Reporte eliminado con éxito');
     }
 
     /**
@@ -118,34 +102,33 @@ class OrdenCompraController extends Controller
             'pedir' => $producto['pedir'], 'ultimo_reporte' => $fecha_generada]);
         }
 
-        $orden_compra = OrdenCompra::create([
+        $reporte_faltante = ReporteFaltante::create([
             'proveedor_id' => $proveedor->id,
             'fecha_generada' => $fecha_generada,
-            'ruta_archivo' => "Sin ruta de archivo",
         ]);
 
-        $nombre = config('app.facturador_nombre');
-        $correo = config('app.facturador_correo');
-        $nombre_archivo = 'orden_compra_'.str_pad($orden_compra->id, 3, "0", STR_PAD_LEFT)."_".strtolower($proveedor->nombre). $fecha_generada->format('_d_m_Y') . '.pdf';
-        $ruta = 'ordenes_compra/' . $nombre_archivo;
+        // $nombre = config('app.facturador_nombre');
+        // $correo = config('app.facturador_correo');
+        // $nombre_archivo = 'orden_compra_'.str_pad($orden_compra->id, 3, "0", STR_PAD_LEFT)."_".strtolower($proveedor->nombre). $fecha_generada->format('_d_m_Y') . '.pdf';
+        // $ruta = 'ordenes_compra/' . $nombre_archivo;
         
-        $pdf = Pdf::loadView('formato_orden_compra', compact('productos','proveedor','orden_compra','nombre','correo'))
-                ->setPaper('A4', 'portrait');
+        // $pdf = Pdf::loadView('formato_orden_compra', compact('productos','proveedor','orden_compra','nombre','correo'))
+        //         ->setPaper('A4', 'portrait');
         
-        $pdf->render();
+        // $pdf->render();
         
-        /** @disregard */
-        $pdf->getDomPDF()->get_canvas()->page_text(
-            520, 820,              
-            "Página {PAGE_NUM} de {PAGE_COUNT}",
-            null,                  
-            9,                     
-            [0, 0, 0]              
-        );
+        // /** @disregard */
+        // $pdf->getDomPDF()->get_canvas()->page_text(
+        //     520, 820,              
+        //     "Página {PAGE_NUM} de {PAGE_COUNT}",
+        //     null,                  
+        //     9,                     
+        //     [0, 0, 0]              
+        // );
         
-        $orden_compra->update(['ruta_archivo' => $ruta]);
+        // $orden_compra->update(['ruta_archivo' => $ruta]);
         
-        Storage::disk('public')->put($ruta, $pdf->output());
+        // Storage::disk('public')->put($ruta, $pdf->output());
 
         return redirect()->route('reporte_inventario')->with('success', 'Reporte generado con éxito');
 

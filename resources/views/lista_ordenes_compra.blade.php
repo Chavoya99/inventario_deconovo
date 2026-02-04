@@ -4,12 +4,7 @@
 <div class="bg-neutral-primary-soft shadow-xs rounded-base border border-default">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            @if(Route::is('lista_ordenes_compra_internas'))
-                {{ __('Ordenes de compra de internas')." ".strtoupper($nombre_proveedor_actual) }}
-            @elseif(Route::is('lista_ordenes_compra_proveedores')) 
-                {{ __('Ordenes de compra de proveedor')." ".strtoupper($nombre_proveedor_actual) }}
-            @endif
-            
+            {{ __('Ordenes de compra')." ".strtoupper($nombre_proveedor_actual) }}
         </h2>
     </x-slot>
     
@@ -26,7 +21,7 @@
                 </a>
 
                 <!-- Filtro por proveedor -->
-                <form action="{{ route($ruta_origen) }}" method="GET"
+                <form action="{{ route('lista_ordenes_compra') }}" method="GET"
                     class="flex items-end gap-3">
 
                     <select name="proveedor"

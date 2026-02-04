@@ -55,8 +55,10 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(OrdenCompraController::class)->group(function(){
-        Route::get('lista_ordenes_compra_internas', 'index_internas')->name('lista_ordenes_compra_internas');
-        Route::get('lista_ordenes_compra_proveedores', 'index_proveedores')->name('lista_ordenes_compra_proveedores')->middleware(AdminMiddleware::class);
+        Route::get('lista_ordenes_compra', 'index')->name('lista_ordenes_compra');
+        Route::get('reportes_faltantes', 'index_faltantes')->name('reportes_faltantes');
+        Route::delete('eliminar_reporte_faltante/{reporte}', 'eliminar_reporte')->name('eliminar_reporte_faltante')->middleware(AdminMiddleware::class);
+        //Route::get('lista_ordenes_compra_proveedores', 'index_proveedores')->name('lista_ordenes_compra_proveedores')->middleware(AdminMiddleware::class);
         Route::get('reporte_inventario', 'index_reporte')->name('reporte_inventario');
         Route::post('generar_reporte_inventario', 'generar_reporte_inventario')->name('generar_reporte_inventario');
         Route::get('ver_orden_compra', 'ver_orden_compra')->name('ver_orden_compra')->middleware(AdminMiddleware::class);

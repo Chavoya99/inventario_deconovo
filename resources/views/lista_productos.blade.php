@@ -10,8 +10,6 @@
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
         <div class="flex items-end gap-4">
         @if (auth()->user()->isAdmin())
-            
-
                 <!-- Botón nuevo producto -->
                 <a href="{{ route('nuevo_producto') }}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
@@ -51,11 +49,8 @@
                 </a>
 
             </div>  
-            <br><br>
+            <br>
             
-        
-        
-
         <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
             <table class="w-full text-sm text-left text-gray-700">
                 @if ($productos->isEmpty())
