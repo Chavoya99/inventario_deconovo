@@ -19,7 +19,7 @@ class ProductoController extends Controller
             $nombre_proveedor_actual = $proveedor->nombre;
             $productos = $proveedor->productos()->paginate(5)->withQueryString();
         }else{
-            $productos = Producto::with('proveedor')->orderBy('producto')->paginate(5);
+            $productos = Producto::with('proveedor')->orderBy('producto')->paginate(6);
         }
         
         $proveedores = Proveedor::orderBy('nombre')->get();
