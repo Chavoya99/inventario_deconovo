@@ -145,8 +145,9 @@
                     
                 </tbody>
             </table>
-            {{$proveedores->links('components.pagination')}}
+            
         </div>
+        {{$proveedores->links('components.pagination')}}
     </div>
 </div>
 

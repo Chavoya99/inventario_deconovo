@@ -134,8 +134,9 @@
                     
                 </tbody>
             </table>
-            {{ $productos->links('components.pagination') }}
+            
         </div>
+        {{ $productos->links('components.pagination') }}
     </div>
 
 </div>

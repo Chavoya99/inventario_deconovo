@@ -114,12 +114,10 @@
                         @endforeach
                     </tbody>
                 </table>
-
-                
-                {{ $ordenes_compra->links('components.pagination') }}
                 
             @endif
         </div>
+        {{ $ordenes_compra->links('components.pagination') }}
     </div>
 
 </div>
