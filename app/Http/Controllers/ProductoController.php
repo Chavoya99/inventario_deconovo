@@ -44,7 +44,7 @@ class ProductoController extends Controller
             [
                 'nombre' => 'required',
                 'proveedor' => 'required',
-                'unidad' => 'required|in:Caja,Pza,Bulto',
+                'unidad' => 'required|in:Caja,Pza,Bulto por saco,Tarima',
                 'stock' => 'required|integer|min:0',
                 'stock_max' => 'required|integer|min:1',
                 'precio' => 'required',
@@ -91,7 +91,7 @@ class ProductoController extends Controller
             [
                 'nombre' => 'required',
                 'proveedor' => 'required',
-                'unidad' => 'required|in:Caja,Pza,Bulto',
+                'unidad' => 'required|in:Caja,Pza,Bulto por saco,Tarima',
                 'stock' => 'required|integer|min:0',
                 'stock_max' => 'required|integer|min:1',
                 'precio' => 'required',

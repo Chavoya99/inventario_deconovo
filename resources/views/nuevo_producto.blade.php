@@ -45,7 +45,8 @@
                     <option value="{{null}}">Selecciona una unidad</option>
                         <option value="Caja" @if(old('unidad') == "Caja") selected @endif>Caja</option>
                         <option value="Pza" @if(old('unidad') == "Pza") selected @endif>Pza</option>
-                        <option value="Bulto" @if(old('unidad') == "Bulto") selected @endif>Bulto</option>
+                        <option value="Bulto por saco" @if(old('unidad') == "Bulto por saco") selected @endif>Bulto por saco</option>
+                        <option value="Tarima" @if(old('unidad') == "Tarima") selected @endif>Tarima</option>
                 </select>
                 <x-input-error :messages="$errors->get('unidad')" class="mt-2" />
             </div>
