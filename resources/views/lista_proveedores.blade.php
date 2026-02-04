@@ -114,7 +114,7 @@
 
                                         <!-- Ver productos -->
                                         <a
-                                            href="{{ route('filtro_proveedor', ['proveedor' => $proveedor->id])}}"
+                                            href="{{ route('lista_productos', ['proveedor' => $proveedor->id])}}"
                                             class="text-blue-600 hover:underline"
                                         >
                                             Ver productos
