@@ -196,11 +196,4 @@ class OrdenCompraController extends Controller
     {
         //
     }
-
-    // public function filtro_orden_proveedor(Request $request){
-    //     $proveedor = Proveedor::find($request->proveedor);
-    //     $proveedores = Proveedor::all();
-    //     $ordenes_compra = $proveedor->ordenes_compra;
-    //     return view('filtro_orden_proveedor', compact('proveedores', 'proveedor', 'ordenes_compra'));
-    // }
 }
