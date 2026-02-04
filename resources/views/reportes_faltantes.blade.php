@@ -10,7 +10,7 @@
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
         <div class="flex items-end gap-4">
             <!-- Filtro por proveedor -->
-            <form action="{{ route('lista_productos') }}" method="GET"
+            <form action="{{ route('reportes_faltantes') }}" method="GET"
                 class="flex items-end gap-3">
 
                 <select name="proveedor"
@@ -32,7 +32,7 @@
                     Aplicar filtro
                 </button>
             </form>
-            <a href="{{route('lista_productos')}}"
+            <a href="{{route('reportes_faltantes')}}"
             class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                 rounded-lg border border-transparent bg-red-300 text-black 
                 hover:bg-red-800 cursor-pointer">
@@ -53,6 +53,7 @@
                         <tr>
                             <th class="px-6 py-3 font-medium">No. reporte</th>
                             <th class="px-6 py-3 font-medium">Proveedor</th>
+                            <th class="px-6 py-3 font-medium">Estatus</th>
                             <th class="px-6 py-3 font-medium">Fecha</th>
                             <th class="px-6 py-3 text-right font-medium">Acciones</th>
                         
@@ -75,9 +76,14 @@
                             </td>
 
                             <td class="px-6 py-4">
-                                {{$reporte->fecha_generada->format('d/m/y')}}
+                                @if($reporte->enRevision())
+                                    Revisión <i class="fa-solid fa-magnifying-glass"></i>
+                                @endif
                             </td>
 
+                            <td class="px-6 py-4">
+                                {{$reporte->fecha_generada->format('d/m/y')}}
+                            </td>
 
                             <!-- ACCIONES -->
                             <td class="px-6 py-4">
@@ -89,7 +95,7 @@
                                             href="{{-- --}}"
                                             class="text-blue-600 hover:underline"
                                         >
-                                            Ver productos
+                                            Revisar
                                         </a>
 
                                         <!-- Eliminar -->
@@ -106,6 +112,13 @@
                                         </form>
 
                                     </div>
+                                @elseif(auth()->user()->isEmpleado())
+                                    <a
+                                        href="{{-- --}}"
+                                        class="text-blue-600 hover:underline"
+                                    >
+                                        Detalles
+                                    </a>
                                 @endif
                             </td>
                         </tr>

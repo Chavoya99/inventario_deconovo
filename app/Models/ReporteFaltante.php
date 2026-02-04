@@ -24,4 +24,8 @@ class ReporteFaltante extends Model
         return $this->belongsToMany(Producto::class, 'reportes_productos')
             ->withPivot(['existencia']);
     }
+
+    public function enRevision(){
+        return $this->status === "revision";
+    }
 }

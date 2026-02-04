@@ -50,9 +50,19 @@ class OrdenCompraController extends Controller
         //
     }
 
-    public function index_faltantes(){
-        $reportes = ReporteFaltante::orderBy('id')->paginate(6);
-        $proveedores = Proveedor::orderBy('nombre')->get();
+    public function index_faltantes(Request $request){
+
+        $proveedores = Proveedor::orderBy('nombre')->get();    
+        if($request->filled('proveedor')){
+            $proveedor = Proveedor::find($request->proveedor);
+            $reportes = $proveedor->reportes_faltantes()
+            ->paginate(6)->withQueryString();
+        }else{
+            $reportes = ReporteFaltante::orderBy('id')->paginate(6);
+            
+        }
+
+        
         return view('reportes_faltantes', compact('reportes', 'proveedores'));
     }
 

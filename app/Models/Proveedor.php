@@ -18,4 +18,8 @@ class Proveedor extends Model
     public function ordenes_compra(){
         return $this->hasMany(OrdenCompra::class)->orderBy('id');
     }
+
+    public function reportes_faltantes(){
+        return $this->hasMany(ReporteFaltante::class)->orderBy('id');
+    }
 }
