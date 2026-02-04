@@ -19,6 +19,7 @@ return new class extends Migration
             $table->smallInteger('existencia')->default(0);
             $table->smallInteger('pedir')->default(0);
             $table->decimal('precio_venta', 8, 2)->default(0);
+            $table->decimal('precio_proveedor', 8, 2)->default(0);
             $table->foreignId('proveedor_id')->constrained()->onDelete('cascade')->default('general');
             $table->timestamp('ultimo_reporte')->nullable();
         });

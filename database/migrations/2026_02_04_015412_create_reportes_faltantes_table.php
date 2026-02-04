@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ordenes_compra', function (Blueprint $table) {
+        Schema::create('reportes_faltantes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('proveedor_id')->constrained()->restrictOnDelete();
+            $table->string('status')->default('revision');
             $table->timestamp('fecha_generada');
-            $table->string('recibida')->default('no recibida');
-            $table->timestamp('fecha_recibida')->nullable();
-            $table->string('comentario')->nullable();
-            $table->string('ruta_archivo_interna', 2048);
-            $table->string('ruta_archivo_proveedor', 2048);
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ordenes_compra');
+        Schema::dropIfExists('reportes_faltantes');
     }
 };

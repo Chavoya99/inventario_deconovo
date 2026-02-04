@@ -13,22 +13,21 @@ class OrdenCompra extends Model
     $fillable = ['proveedor_id', 'fecha_generada', 
     'realizada', 'fecha_realizada',
     'recibida', 'fecha_recibida',
-    'ruta_archivo'],
+    'ruta_archivo_interna',
+    'ruta_archivo_proveedor'],
 
-    $casts = ['fecha_generada' => 'datetime',
-    'fecha_realizada' => 'datetime',
-    'fecha_recibida' => 'datetime'];
+    $casts = ['fecha_generada' => 'datetime',];
 
 
     public function proveedor(){
         return $this->belongsTo(Proveedor::class);
     }
 
-    public function isRealizada(){
-        return $this->realizada == 1;
-    }
+    // public function isRealizada(){
+    //     return $this->realizada == 1;
+    // }
 
-    public function isRecibida(){
-        return $this->recibida == 1;
-    }
+    // public function isRecibida(){
+    //     return $this->recibida == 1;
+    // }
 }

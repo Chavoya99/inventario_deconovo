@@ -47,10 +47,10 @@
                 <select name="unidad" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 required>
                     <option value="{{null}}">Selecciona una unidad</option>
-                        <option value="Caja" @if(old('unidad') == "Caja") selected @endif>Caja</option>
-                        <option value="Pza" @if(old('unidad') == "Pza") selected @endif>Pza</option>
-                        <option value="Bulto por saco" @if(old('unidad') == "Bulto por saco") selected @endif>Bulto por saco</option>
-                        <option value="Tarima" @if(old('unidad') == "Tarima") selected @endif>Tarima</option>
+                        <option value="Caja" @if(old('unidad') == "Caja" || $producto->unidad == "Caja") selected @endif>Caja</option>
+                        <option value="Pza" @if(old('unidad') == "Pza" || $producto->unidad == "Pza") selected @endif>Pza</option>
+                        <option value="Bulto por saco" @if(old('unidad') == "Bulto por saco" ||$producto->unidad == "Bulto por saco") selected @endif>Bulto por saco</option>
+                        <option value="Tarima" @if(old('unidad') == "Tarima" || $producto->unidad == "Tarima") selected @endif>Tarima</option>
                 </select>
                 <x-input-error :messages="$errors->get('unidad')" class="mt-2" />
             </div>

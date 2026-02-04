@@ -4,7 +4,12 @@
 <div class="bg-neutral-primary-soft shadow-xs rounded-base border border-default">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Ordenes de compra')." ".strtoupper($nombre_proveedor_actual) }}
+            @if(Route::is('lista_ordenes_compra_internas'))
+                {{ __('Ordenes de compra de internas')." ".strtoupper($nombre_proveedor_actual) }}
+            @elseif(Route::is('lista_ordenes_compra_proveedores')) 
+                {{ __('Ordenes de compra de proveedor')." ".strtoupper($nombre_proveedor_actual) }}
+            @endif
+            
         </h2>
     </x-slot>
     
@@ -21,7 +26,7 @@
                 </a>
 
                 <!-- Filtro por proveedor -->
-                <form action="{{ route('lista_ordenes_compra') }}" method="GET"
+                <form action="{{ route($ruta_origen) }}" method="GET"
                     class="flex items-end gap-3">
 
                     <select name="proveedor"
@@ -45,6 +50,7 @@
                 </form>
             </div>
             <br>
+            {{--
             <div class="flex items-end gap-4">
                 <a href="{{ route('lista_ordenes_compra', ['proveedor' => request()->get('proveedor'),'filtro' => 'realizadas']) }}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
@@ -77,7 +83,7 @@
                     hover:bg-red-800 cursor-pointer">
                     Limpiar filtros
                 </a>
-
+            --}}
             </div>  
             <br>
             

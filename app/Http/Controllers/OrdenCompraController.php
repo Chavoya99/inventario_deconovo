@@ -14,9 +14,10 @@ class OrdenCompraController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index_internas(Request $request)
     {   
 
+        $ruta_origen="lista_ordenes_compra_internas";
         $ordenes_compra = OrdenCompra::orderBy('id')
         ->when($request->proveedor, function ($query) use ($request) {
             $query->where('proveedor_id', $request->proveedor);
@@ -38,7 +39,34 @@ class OrdenCompraController extends Controller
         $nombre_proveedor_actual = ($request->proveedor) ? Proveedor::find($request->proveedor)->nombre : null;
 
 
-        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores', 'nombre_proveedor_actual'));
+        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores', 'nombre_proveedor_actual', 'ruta_origen'));
+    }
+
+    public function index_proveedores(Request $request){
+
+        $ruta_origen="lista_ordenes_compra_proveedores";
+        $ordenes_compra = OrdenCompra::orderBy('id')
+        ->when($request->proveedor, function ($query) use ($request) {
+            $query->where('proveedor_id', $request->proveedor);
+        })//Filtro por proveedor
+        ->when($request->filtro === 'realizadas', function ($query) {
+            $query->where('realizada', true);
+        })//Filtro realizadas
+        ->when($request->filtro === 'recibidas', function ($query) {
+            $query->where('recibida', true);
+        })//Filtro recibidas
+        ->when($request->filtro === 'pendientes', function($query){
+            $query->where('realizada', false);
+        })
+        ->paginate(5)
+        ->withQueryString();
+
+        $proveedores = Proveedor::orderBy('nombre')->get();
+
+        $nombre_proveedor_actual = ($request->proveedor) ? Proveedor::find($request->proveedor)->nombre : null;
+
+
+        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores', 'nombre_proveedor_actual', 'ruta_origen'));
     }
 
     /**

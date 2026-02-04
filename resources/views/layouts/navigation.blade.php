@@ -15,6 +15,7 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Inicio') }}
                     </x-nav-link>
+
                     <x-nav-link :href="route('lista_productos')" :active="request()->routeIs('lista_productos')">
                         {{ __('Productos') }}
                     </x-nav-link>
@@ -24,10 +25,16 @@
                             {{ __('Proveedores') }}
                         </x-nav-link>
 
-                        <x-nav-link :href="route('lista_ordenes_compra')" :active="request()->routeIs('lista_ordenes_compra')">
-                            {{ __('Ordenes de compra') }}
+                        <x-nav-link :href="route('lista_ordenes_compra_proveedores')" :active="request()->routeIs('lista_ordenes_compra_proveedores')">
+                                {{ __('Ordenes proveedores') }}
                         </x-nav-link>
                     @endif
+
+                    <x-nav-link :href="route('lista_ordenes_compra_internas')" :active="request()->routeIs('lista_ordenes_compra_internas')">
+                        {{ __('Ordenes internas') }}
+                    </x-nav-link>
+
+                    
 
                     <x-nav-link :href="route('reporte_inventario')" :active="request()->routeIs('reporte_inventario')">
                         {{ __('Generar reporte') }}
@@ -96,11 +103,15 @@
                     {{ __('Proveedores') }}
                 </x-responsive-nav-link>
 
-                <x-responsive-nav-link :href="route('lista_ordenes_compra')" :active="request()->routeIs('lista_ordenes_compra')">
-                    {{ __('Ordenes de compra') }}
+                <x-responsive-nav-link :href="route('lista_ordenes_compra_proveedores')" :active="request()->routeIs('lista_ordenes_compra_proveedores')">
+                    {{ __('Ordenes proveedores') }}
                 </x-responsive-nav-link>
                 
             @endif
+            
+            <x-responsive-nav-link :href="route('lista_ordenes_compra_internas')" :active="request()->routeIs('lista_ordenes_compra_internas')">
+                {{ __('Ordenes internas') }}
+            </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('reporte_inventario')" :active="request()->routeIs('reporte_inventario')">
                 {{ __('Generar reporte') }}
