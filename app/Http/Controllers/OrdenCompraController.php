@@ -50,100 +50,6 @@ class OrdenCompraController extends Controller
         //
     }
 
-    public function index_faltantes(Request $request){
-
-        $proveedores = Proveedor::orderBy('nombre')->get();    
-        if($request->filled('proveedor')){
-            $proveedor = Proveedor::find($request->proveedor);
-            $reportes = $proveedor->reportes_faltantes()
-            ->paginate(6)->withQueryString();
-        }else{
-            $reportes = ReporteFaltante::orderBy('id')->paginate(6);
-            
-        }
-
-        
-        return view('reportes_faltantes', compact('reportes', 'proveedores'));
-    }
-
-    public function eliminar_reporte(ReporteFaltante $reporte){
-        $reporte->delete();
-        return redirect()->back()->with('success', 'Reporte eliminado con éxito');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function generar_reporte_inventario(Request $request)
-    {
-
-        $request->validate(
-            [
-                'productos' => 'required|array',
-                'productos.*.existencia' => 'required|integer|min:0',
-                'productos.*.maximo' => 'required|integer|min:1',
-            ],
-            [
-                'productos.*.existencia.required' => 'Debes ingresar la existencia',
-                'productos.*.existencia.integer' => 'La existencia debe ser un número',
-                'productos.*.existencia.min' => 'La existencia no puede ser negativa',
-            ]
-        );
-        $productos = collect($request->input('productos'))
-            ->map(function ($producto) {
-                $producto['pedir'] = $producto['maximo'] - $producto['existencia'];
-                return $producto;
-            })
-            ->filter(function ($producto) {
-                return $producto['pedir'] > 0;
-            })
-            ->values();
-        
-        if($productos->isEmpty()){
-            return redirect()->back()->withInput()->with(['error' => "No hay productos suficientes para generar el reporte"]);
-        }
-
-        $proveedor = Proveedor::find($request->proveedor);
-        $fecha_generada = now('America/Belize');
-
-        foreach($productos as $producto){
-            $producto_update = Producto::find($producto['id']);
-            $producto_update->update(['existencia' => $producto['existencia'],
-            'pedir' => $producto['pedir'], 'ultimo_reporte' => $fecha_generada]);
-        }
-
-        $reporte_faltante = ReporteFaltante::create([
-            'proveedor_id' => $proveedor->id,
-            'fecha_generada' => $fecha_generada,
-        ]);
-
-        // $nombre = config('app.facturador_nombre');
-        // $correo = config('app.facturador_correo');
-        // $nombre_archivo = 'orden_compra_'.str_pad($orden_compra->id, 3, "0", STR_PAD_LEFT)."_".strtolower($proveedor->nombre). $fecha_generada->format('_d_m_Y') . '.pdf';
-        // $ruta = 'ordenes_compra/' . $nombre_archivo;
-        
-        // $pdf = Pdf::loadView('formato_orden_compra', compact('productos','proveedor','orden_compra','nombre','correo'))
-        //         ->setPaper('A4', 'portrait');
-        
-        // $pdf->render();
-        
-        // /** @disregard */
-        // $pdf->getDomPDF()->get_canvas()->page_text(
-        //     520, 820,              
-        //     "Página {PAGE_NUM} de {PAGE_COUNT}",
-        //     null,                  
-        //     9,                     
-        //     [0, 0, 0]              
-        // );
-        
-        // $orden_compra->update(['ruta_archivo' => $ruta]);
-        
-        // Storage::disk('public')->put($ruta, $pdf->output());
-
-        return redirect()->route('reporte_inventario')->with('success', 'Reporte generado con éxito');
-
-    }
-
     public function ver_orden_compra(Request $request){
         $orden = OrdenCompra::find($request->orden);
         if (Storage::disk('public')->exists($orden->ruta_archivo)) {
@@ -177,14 +83,6 @@ class OrdenCompraController extends Controller
         
         $ordenCompra->delete();
         return redirect()->back()->with('success', 'Orden de compra eliminada con éxito');
-    }
-
-    public function index_reporte(Request $request){
-        $proveedores = Proveedor::whereHas('productos')->with('productos')
-        ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
-
-        return view('generar_reporte_inventario', ['proveedores' => $proveedores, 
-        'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()?->id,]);
     }
 
     /**
