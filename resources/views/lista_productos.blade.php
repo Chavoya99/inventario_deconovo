@@ -63,14 +63,15 @@
                     <thead class="bg-sky-400 text-black border-b">
                         <tr>
                             <th class="px-6 py-3 font-medium">Producto</th>
-                            <th class="px-6 py-3 font-medium">Unidad</th>
                             <th class="px-6 py-3 font-medium">Proveedor</th>
+                            <th class="px-6 py-3 font-medium">Unidad</th>
                             <th class="px-6 py-3 font-medium">Máximo</th>
                             <th class="px-6 py-3 font-medium">Existencia</th> 
                             
                             @if(auth()->user()->isAdmin())
                                 <th class="px-6 py-3 font-medium">Pedir</th>
-                                <th class="px-6 py-3 font-medium">Precio</th>
+                                <th class="px-6 py-3 font-medium">Precio venta</th>
+                                <th class="px-6 py-3 font-medium">Precio proveedor</th>
                                 
                                 <th class="px-6 py-3 text-right font-medium">Acciones</th>
                             @endif
@@ -87,14 +88,14 @@
                         <td id=nombre class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                             {{$producto->producto}}
                         </td>
+                        <td id=proveedor class="px-6 py-4">{{$producto->proveedor->nombre}}</td>
                         <td id=unidad class="px-6 py-4">{{$producto->unidad}}</td>
-                        <td id=stock class="px-6 py-4">{{$producto->proveedor->nombre}}</td>
                         <td id=stock_max class="px-6 py-4">{{$producto->maximo}}</td>
                         <td id=stock class="px-6 py-4">{{$producto->existencia}}</td>
                         @if(auth()->user()->isAdmin())
                             <td id=pedir class="px-6 py-4">{{$producto->pedir}}</td>
                             <td id=precio class="px-6 py-4">{{number_Format($producto->precio_venta, 2)}}</td>
-                            
+                            <td id=precio_proveedor class="px-6 py-4">{{number_Format($producto->precio_proveedor, 2)}}</td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end items-center gap-4">
                                     <a href="{{ route('editar_producto', $producto) }}"
