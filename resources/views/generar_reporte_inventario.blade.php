@@ -48,7 +48,7 @@
                                         <tr>
                                             <th class="px-6 py-3 font-medium">Producto</th>
                                             <th class="px-6 py-3 font-medium">Unidad</th>
-                                            <th class="px-6 py-3 font-medium">Proveedor</th>
+                                            {{--<th class="px-6 py-3 font-medium">Proveedor</th>--}}
                                             <th class="px-6 py-3 font-medium">Máximo</th>
                                             <th class="px-6 py-3 font-medium">Existencia</th>
                                             <th class="px-6 py-3 font-medium">Pedir</th>
@@ -83,9 +83,9 @@
                                                     {{ $producto->unidad }}
                                                 </td>
 
-                                                <td class="px-6 py-4">
+                                                {{--<td class="px-6 py-4">
                                                     {{ $proveedor->nombre }}
-                                                </td>
+                                                </td>--}}
 
                                                 <td class="px-6 py-4">
                                                     {{ $producto->maximo }}
