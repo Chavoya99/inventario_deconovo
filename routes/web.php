@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\OrdenCompraController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ReporteFaltanteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,15 +57,19 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(OrdenCompraController::class)->group(function(){
         Route::get('lista_ordenes_compra', 'index')->name('lista_ordenes_compra');
-        Route::get('reportes_faltantes', 'index_faltantes')->name('reportes_faltantes');
-        Route::delete('eliminar_reporte_faltante/{reporte}', 'eliminar_reporte')->name('eliminar_reporte_faltante')->middleware(AdminMiddleware::class);
         //Route::get('lista_ordenes_compra_proveedores', 'index_proveedores')->name('lista_ordenes_compra_proveedores')->middleware(AdminMiddleware::class);
-        Route::get('reporte_inventario', 'index_reporte')->name('reporte_inventario');
-        Route::post('generar_reporte_inventario', 'generar_reporte_inventario')->name('generar_reporte_inventario');
         Route::get('ver_orden_compra', 'ver_orden_compra')->name('ver_orden_compra')->middleware(AdminMiddleware::class);
         Route::get('descargar_orden_compra', 'descargar_orden_compra')->name('descargar_orden_compra')->middleware(AdminMiddleware::class);
         Route::get('show', 'show');
         Route::delete('eliminar_orden_compra/{ordenCompra}', 'destroy')->name('eliminar_orden_compra')->middleware(AdminMiddleware::class);
+    });
+
+    Route::controller(ReporteFaltanteController::class)->group(function(){
+        Route::get('reportes_faltantes', 'index_faltantes')->name('reportes_faltantes');
+        Route::get('revisar_reporte_faltante', 'revisar_reporte')->name('revisar_reporte')->middleware(AdminMiddleware::class);
+        Route::delete('eliminar_reporte_faltante/{reporte}', 'eliminar_reporte')->name('eliminar_reporte_faltante')->middleware(AdminMiddleware::class);
+        Route::get('reporte_inventario', 'index_reporte')->name('reporte_inventario');
+        Route::post('generar_reporte_inventario', 'generar_reporte_inventario')->name('generar_reporte_inventario');
     });
             
 });

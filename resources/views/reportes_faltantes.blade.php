@@ -89,7 +89,7 @@
 
                                         <!-- Ver productos -->
                                         <a
-                                            href="{{-- --}}"
+                                            href="{{route('revisar_reporte', ['reporte' => $reporte])}}"
                                             class="text-blue-600 hover:underline"
                                         >
                                             Revisar
