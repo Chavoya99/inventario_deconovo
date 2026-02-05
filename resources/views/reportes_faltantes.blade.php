@@ -51,7 +51,7 @@
                 @else
                     <thead class="bg-sky-400 text-black border-b">
                         <tr>
-                            <th class="px-6 py-3 font-medium">No. reporte</th>
+                            <th class="fixed px-6 py-3 font-medium">No. reporte</th>
                             <th class="px-6 py-3 font-medium">Proveedor</th>
                             <th class="px-6 py-3 font-medium">Estatus</th>
                             <th class="px-6 py-3 font-medium">Fecha</th>
@@ -65,7 +65,6 @@
                     @foreach ($reportes as $reporte)
                         <tr
                             class="border-b hover:bg-gray-50"
-                            x-data="{ editing: false, name: '{{ $proveedor->nombre }}' }"
                         >
                             <td class="px-6 py-4">
                                 {{$reporte->id}}
@@ -74,11 +73,9 @@
                             <td class="px-6 py-4">
                                 {{$reporte->proveedor->nombre}}
                             </td>
-
+ 
                             <td class="px-6 py-4">
-                                @if($reporte->enRevision())
-                                    Revisión <i class="fa-solid fa-magnifying-glass"></i>
-                                @endif
+                                {!! $reporte->status()!!}
                             </td>
 
                             <td class="px-6 py-4">
