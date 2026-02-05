@@ -26,9 +26,10 @@ class Producto extends Model
         return $this->belongsTo(Proveedor::class);
     }
 
-    public function productos()
+    public function reportes()
     {
-        return $this->belongsToMany(Producto::class, 'reportes_productos')
+        return $this->belongsToMany(ReporteFaltante::class, 'reportes_productos', 'producto_id', 'reporte_id')
             ->withPivot(['existencia']);
     }
+
 }

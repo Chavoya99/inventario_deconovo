@@ -21,11 +21,19 @@ class ReporteFaltante extends Model
 
     public function productos()
     {
-        return $this->belongsToMany(Producto::class, 'reportes_productos')
+        return $this->belongsToMany(Producto::class, 'reportes_productos', 'reporte_id', 'producto_id')
             ->withPivot(['existencia']);
     }
 
-    public function enRevision(){
-        return $this->status === "revision";
+    public function status(){
+
+        return match ($this->status) {
+        'revision' => 'Revisión <i class="fa-solid fa-magnifying-glass text-yellow-500"></i>',
+        'aprobado' => 'Aprobado <i class="fa-solid fa-circle-check text-green-600"></i>',
+        'rechazado' => 'Rechazado <i class="fa-solid fa-circle-xmark text-red-600"></i>',
+        default => 'Desconocido <i class="fa-solid fa-question text-gray-400"></i>',
+    };
+
+        
     }
 }
