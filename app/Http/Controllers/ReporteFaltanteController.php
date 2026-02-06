@@ -82,7 +82,8 @@ class ReporteFaltanteController extends Controller
             $producto_update = Producto::find($producto['id']);
             $producto_update->update(['existencia' => $producto['existencia'],
             'pedir' => $producto['pedir'], 'ultimo_reporte' => $fecha_generada]);
-            $reporte_faltante->productos()->attach($producto_update->id,['existencia' => $producto['existencia']]);
+            $reporte_faltante->productos()->attach($producto_update->id,['existencia' => $producto['existencia'],
+            'pedir_registrado' => $producto['pedir'], 'pedir_modificado' => $producto['pedir']]);
         }
 
 
@@ -116,12 +117,13 @@ class ReporteFaltanteController extends Controller
 
     public function revisar_reporte(Request $request){
         $reporte = ReporteFaltante::find($request->reporte);
+        $proveedor = Proveedor::find($reporte->proveedor_id);
         $productos = $reporte->productos;
         // $productos_pedir = $reporte->productos->filter(function ($producto){
         //     return $producto->maximo - $producto->pivot->existencia;
         // });
 
-        return view('revisar_reporte_faltante', compact('productos', 'reporte'));
+        return view('revisar_reporte_faltante', compact('productos', 'reporte', 'proveedor'));
     }
 
     /**
