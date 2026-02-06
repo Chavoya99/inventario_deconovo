@@ -22,4 +22,8 @@ class Proveedor extends Model
     public function reportes_faltantes(){
         return $this->hasMany(ReporteFaltante::class)->orderBy('id');
     }
+
+    public function hasReportes(){
+        return count($this->reportes_faltantes) > 0;
+    }
 }
