@@ -32,8 +32,9 @@
                     
                     <div x-show="tab === {{ $proveedor->id }}" x-transition>
                         <span>
-                            Último reporte: @if ($proveedor->ordenes_compra_max_fecha_generada)
-                                {{ \Carbon\Carbon::parse($proveedor->ordenes_compra_max_fecha_generada)->format('d/m/Y') }}
+                                
+                            Último reporte: @if ($proveedor->hasReportes())
+                                {{ \Carbon\Carbon::parse($proveedor->reportes_faltantes_max_fecha_generada)->format('d/m/Y') }}
                             @else
                                 Sin reportes
                             @endif
