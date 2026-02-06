@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(ReporteFaltanteController::class)->group(function(){
         Route::get('reportes_faltantes', 'index_faltantes')->name('reportes_faltantes');
         Route::get('revisar_reporte_faltante', 'revisar_reporte')->name('revisar_reporte')->middleware(AdminMiddleware::class);
+        Route::get('detalles_reporte_faltante', 'detalles_reporte')->name('detalles_reporte')->middleware(EmpleadoMiddleware::class);
         Route::delete('eliminar_reporte_faltante/{reporte}', 'eliminar_reporte')->name('eliminar_reporte_faltante')->middleware(AdminMiddleware::class);
         Route::get('reporte_inventario', 'index_reporte')->name('reporte_inventario');
         Route::post('generar_reporte_inventario', 'generar_reporte_inventario')->name('generar_reporte_inventario');

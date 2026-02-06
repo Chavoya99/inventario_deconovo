@@ -6,6 +6,7 @@ use App\Models\Producto;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use App\Models\ReporteFaltante;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class ReporteFaltanteController extends Controller
 {
@@ -124,6 +125,14 @@ class ReporteFaltanteController extends Controller
         // });
 
         return view('revisar_reporte_faltante', compact('productos', 'reporte', 'proveedor'));
+    }
+
+    public function detalles_reporte(Request $request){
+        $reporte = ReporteFaltante::find($request->reporte);
+        $proveedor = Proveedor::find($reporte->proveedor_id);
+        $productos = $reporte->productos;
+
+        return view('detalles_reporte_faltante', compact('productos', 'reporte', 'proveedor'));
     }
 
     /**

@@ -84,8 +84,9 @@
 
                             <!-- ACCIONES -->
                             <td class="px-6 py-4">
+                                <div class="flex justify-end items-center gap-4 text-sm">
                                 @if(auth()->user()->isAdmin())
-                                    <div class="flex justify-end items-center gap-4 text-sm">
+                                    
 
                                         <!-- Ver productos -->
                                         <a
@@ -108,15 +109,16 @@
                                             </button>
                                         </form>
 
-                                    </div>
+                                    
                                 @elseif(auth()->user()->isEmpleado())
                                     <a
-                                        href="{{-- --}}"
+                                        href="{{route('detalles_reporte', ['reporte'=>$reporte])}}"
                                         class="text-blue-600 hover:underline"
                                     >
                                         Detalles
                                     </a>
                                 @endif
+                                </div>
                             </td>
                         </tr>
 
