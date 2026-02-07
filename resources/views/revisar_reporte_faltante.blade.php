@@ -8,7 +8,9 @@
         </h2>
     </x-slot>
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
-       <span>Fecha: {{$reporte->fecha_generada->format('d/m/Y')}}</span>
+       
+        <livewire-reporte-estatus :reporte="$reporte"/> 
+
         <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
             <table class="w-full text-sm text-left text-gray-700">
                     <thead class="bg-sky-400 text-black border-b">
