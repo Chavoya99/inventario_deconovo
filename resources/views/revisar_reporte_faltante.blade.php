@@ -8,7 +8,7 @@
         </h2>
     </x-slot>
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
-       
+        <x-back-button/>
         <livewire-reporte-estatus :reporte="$reporte"/> 
 
         <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
