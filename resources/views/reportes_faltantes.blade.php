@@ -9,6 +9,7 @@
     </x-slot>
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
         <div class="flex items-end gap-4">
+            
             <!-- Filtro por proveedor -->
             <form action="{{ route('reportes_faltantes') }}" method="GET"
                 class="flex items-end gap-3">
@@ -32,6 +33,34 @@
                     Aplicar filtro
                 </button>
             </form>
+        </div>
+        <br>
+        <div class="flex items-end gap-4">
+            <a href="{{ route('reportes_faltantes', ['proveedor' => request()->get('proveedor'), 'filtro' => 'aprobados']) }}"
+            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                    rounded-lg border border-transparent bg-green-400 hover:bg-green-600 text-white">
+                Aprobados
+            </a>
+
+            <a href="{{ route('reportes_faltantes', ['proveedor' => request()->get('proveedor'),'filtro' => 'rechazados']) }}"
+            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                    rounded-lg border border-transparent bg-red-500 hover:bg-cyan-600 text-white">
+                Rechazados
+            </a>
+
+            <a href="{{ route('reportes_faltantes', ['proveedor' => request()->get('proveedor'),'filtro' => 'revision']) }}"
+            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                    rounded-lg border border-transparent bg-sky-500 hover:bg-cyan-600 text-white">
+                En revisión
+            </a>
+
+            <a href="{{route('reportes_faltantes', ['proveedor'=> request()->get('proveedor')])}}"
+            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                rounded-lg border border-transparent bg-neutral-600 text-white 
+                hover:bg-neutral-800 cursor-pointer">
+                Todos
+            </a>
+
             <a href="{{route('reportes_faltantes')}}"
             class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                 rounded-lg border border-transparent bg-red-300 text-black 

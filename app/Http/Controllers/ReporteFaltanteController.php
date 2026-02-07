@@ -22,6 +22,22 @@ class ReporteFaltanteController extends Controller
             
         }
 
+        $reportes = ReporteFaltante::orderBy('id')
+        ->when($request->proveedor, function ($query) use ($request) {
+            $query->where('proveedor_id', $request->proveedor);
+        })//Filtro por proveedor
+        ->when($request->filtro === 'aprobados', function ($query) {
+            $query->where('status', 'aprobado');
+        })//Filtro aprobados
+        ->when($request->filtro === 'rechazados', function ($query) {
+            $query->where('status', 'rechazado');
+        })//filtro rechazados
+        ->when($request->filtro === 'revision', function ($query) {
+            $query->where('status', 'revision');
+        })//filtro en revision
+        ->paginate(5)
+        ->withQueryString();
+
         
         return view('reportes_faltantes', compact('reportes', 'proveedores'));
     }
