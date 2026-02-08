@@ -1,43 +1,66 @@
 <?php
 
-use App\Models\Producto;
 use Livewire\Component;
+use App\Models\Producto;
+use App\Models\ReporteFaltante;
+use Livewire\Attributes\Computed;
 
 new class extends Component
 {
-    public Producto $producto;
+    
+    public $producto_id, $reporte_id, $producto;
+
+    public function eliminar_producto_reporte(){
+        
+        $reporte = ReporteFaltante::find($this->reporte_id);
+        
+        $reporte->productos()->detach($this->producto_id);
+        
+        $this->dispatch('productoEliminado');
+
+        $this->redirect(route('revisar_reporte', ['reporte' => $this->reporte_id]));
+
+    }
+
+    public function mount(){
+        $this->producto = ReporteFaltante::find($this->reporte_id)
+        ->productos()
+        ->where('productos.id', $this->producto_id)
+        ->first();
+    }
+
+    
+
 };
 ?>
 
-<tr
+<tr wire:key="$producto->id"
     class="border-b hover:bg-gray-50"
->
+>   
     <td id=nombre class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-        {{$producto->producto}}
+        {{$this->producto->producto}}
     </td>
     <td class="px-6 py-4">
-        {{$producto->unidad}}
+        {{$this->producto->unidad}}
     </td>
     <td class="px-6 py-4">
-        {{$producto->maximo}}
+        {{$this->producto->maximo}}
     </td>
     <td class="px-6 py-4">
-        {{$producto->pivot->existencia}}
+        {{$this->producto->pivot->existencia}}
     </td>
     <td class="px-6 py-4">
-        {{$producto->pivot->pedir_modificado}}
-    </td>
-
-    <td class="px-6 py-4">
-        {{$producto->precio_venta}}
+        {{$this->producto->pivot->pedir_modificado}}
     </td>
 
     <td class="px-6 py-4">
-        {{$producto->precio_proveedor}}
+        {{$this->producto->precio_venta}}
+    </td>
+
+    <td class="px-6 py-4">
+        <input type="number" step="0.01" value="{{$this->producto->precio_proveedor}}">
     </td>
     
-
-
     <!-- ACCIONES -->
     <td class="px-6 py-4">
         @if(auth()->user()->isAdmin())
@@ -52,18 +75,13 @@ new class extends Component
                 </a>
 
                 <!-- Eliminar -->
-                <form
-                    action="{{----}}"
-                    method="POST"
-                    onsubmit="return confirm('Se eliminará el reporte ¿Continuar?')"
-                >
-                    @csrf
-                    @method('DELETE')
-                    <button class="text-red-600 hover:underline">
-                        Eliminar
-                    </button>
-                </form>
-
+                <button 
+                    onclick="confirm('Se eliminará el producto del reporte. Esta acción no se puede deshacer ¿Continuar?')
+                    || event.stopImmediatePropagation()"
+                    wire:click="eliminar_producto_reporte"
+                    class="text-red-600 hover:underline">
+                    Eliminar
+                </button>
             </div>
         @endif
     </td>

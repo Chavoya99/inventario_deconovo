@@ -134,7 +134,10 @@ class ReporteFaltanteController extends Controller
 
     public function revisar_reporte(Request $request){
         $reporte = ReporteFaltante::find($request->reporte);
+        
         $proveedor = Proveedor::find($reporte->proveedor_id);
+
+        
         $productos = $reporte->productos;
         // $productos_pedir = $reporte->productos->filter(function ($producto){
         //     return $producto->maximo - $producto->pivot->existencia;
@@ -146,6 +149,7 @@ class ReporteFaltanteController extends Controller
     public function detalles_reporte(Request $request){
         $reporte = ReporteFaltante::find($request->reporte);
         $proveedor = Proveedor::find($reporte->proveedor_id);
+        
         $productos = $reporte->productos;
 
         return view('detalles_reporte_faltante', compact('productos', 'reporte', 'proveedor'));
