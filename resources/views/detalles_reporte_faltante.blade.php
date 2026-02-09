@@ -8,7 +8,20 @@
         </h2>
     </x-slot>
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
-       <span>Fecha: {{$reporte->fecha_generada->format('d/m/Y')}}</span>
+        <x-back-button/>
+       <!-- INFO -->
+        <div class="text-sm text-gray-700">
+            <span class="font-medium">
+                Fecha:
+            </span>
+            {{$reporte->fecha_generada->format('d/m/Y')}}
+
+            <span class="ml-6">
+                <span class="font-medium">Estatus:</span>
+                {!! $reporte->status() !!}
+            </span>
+        </div>
+        <br>
         <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
             <table class="border-collapse w-full text-sm text-left text-gray-700">
                     <thead class="bg-sky-400 text-black border-b">
@@ -18,7 +31,6 @@
                             <th class="px-6 py-3 font-medium">Máximo</th>
                             <th class="px-6 py-3 font-medium">Existencia</th>
                             <th class="px-6 py-3 font-medium">Pedir</th>
-                            <th class="px-6 py-3 font-medium">Precio venta</th>
                             
                         
                         </tr>
@@ -46,9 +58,6 @@
                                 {{$producto->pivot->pedir_registrado}}
                             </td>
 
-                            <td class="px-6 py-4">
-                                {{$producto->precio_venta}}
-                            </td>
                         </tr>
                     @endforeach           
                     
