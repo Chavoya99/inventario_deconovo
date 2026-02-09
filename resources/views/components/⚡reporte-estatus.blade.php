@@ -8,10 +8,12 @@ new class extends Component
 
     public function aprobar(){
         $this->reporte->update(['status' => 'aprobado']);
+        $this->redirect(route('revisar_reporte',['reporte' => $this->reporte->id]));
     }
 
     public function rechazar(){
         $this->reporte->update(['status' => 'rechazado']);
+        $this->redirect(route('revisar_reporte',['reporte' => $this->reporte->id]));
     }
 };
 ?>
@@ -33,7 +35,7 @@ new class extends Component
 
     <!-- ACCIONES -->
     <div class="flex items-center gap-3">
-
+        
         <!-- APROBAR -->
         <button
             onclick="confirm('¿Aprobar reporte?') || event.stopImmediatePropagation()"
@@ -69,6 +71,7 @@ new class extends Component
         >
             Rechazar
         </button>
+        
 
     </div>
 </div>
