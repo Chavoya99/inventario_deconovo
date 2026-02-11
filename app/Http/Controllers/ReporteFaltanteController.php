@@ -42,17 +42,17 @@ class ReporteFaltanteController extends Controller
         return view('reportes_faltantes', compact('reportes', 'proveedores'));
     }
 
-    public function eliminar_reporte(ReporteFaltante $reporte){
-        $reporte->delete();
-        return redirect()->back()->with('success', 'Reporte eliminado con éxito');
-    }
-
     public function index_reporte(Request $request){
         $proveedores = Proveedor::whereHas('productos')->with('productos')
         ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
 
         return view('generar_reporte_inventario', ['proveedores' => $proveedores, 
         'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()?->id,]);
+    }
+
+    public function eliminar_reporte(ReporteFaltante $reporte){
+        $reporte->delete();
+        return redirect()->back()->with('success', 'Reporte eliminado con éxito');
     }
 
     /**
@@ -78,11 +78,8 @@ class ReporteFaltanteController extends Controller
                 $producto['pedir'] = $producto['maximo'] - $producto['existencia'];
                 return $producto;
             })
-            // ->filter(function ($producto) {
-            //     return $producto['pedir'] > 0;
-            // })
             ->values();
-        
+
         if($productos->isEmpty()){
             return redirect()->back()->withInput()->with(['error' => "No hay productos suficientes para generar el reporte"]);
         }
@@ -100,10 +97,9 @@ class ReporteFaltanteController extends Controller
             $producto_update->update(['existencia' => $producto['existencia'],
             'pedir' => $producto['pedir'], 'ultimo_reporte' => $fecha_generada]);
             $reporte_faltante->productos()->attach($producto_update->id,['existencia' => $producto['existencia'],
-            'pedir_registrado' => $producto['pedir'], 'pedir_modificado' => $producto['pedir']]);
+            'pedir_registrado' => $producto['pedir'], 'pedir_modificado' => $producto['pedir'],
+            'incluir' => ($producto['pedir'] != 0) ? 1 : 0]);
         }
-
-
 
         // $nombre = config('app.facturador_nombre');
         // $correo = config('app.facturador_correo');
@@ -136,14 +132,18 @@ class ReporteFaltanteController extends Controller
         $reporte = ReporteFaltante::find($request->reporte);
         
         $proveedor = Proveedor::find($reporte->proveedor_id);
-
         
-        $productos = $reporte->productos;
-        // $productos_pedir = $reporte->productos->filter(function ($producto){
-        //     return $producto->maximo - $producto->pivot->existencia;
-        // });
+        //Filtrar productos con columna incluir igual a 1
+        $productos = $reporte->productos->filter(function ($producto){
+            return $producto->pivot->incluir != 0;
+        });
 
-        return view('revisar_reporte_faltante', compact('productos', 'reporte', 'proveedor'));
+        //Filtrar productos con columna incluir igual a 0
+        $productos_cero = $reporte->productos->filter(function ($producto){
+            return $producto->pivot->incluir == 0;
+        });
+
+        return view('revisar_reporte_faltante', compact('productos', 'reporte', 'proveedor', 'productos_cero'));
     }
 
     public function detalles_reporte(Request $request){
