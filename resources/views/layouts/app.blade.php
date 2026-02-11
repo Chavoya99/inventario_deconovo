@@ -33,6 +33,23 @@
 
             <!-- Page Content -->
             <main>
+                <div 
+                    id="error-alert"
+                    class="fixed top-5 right-5 bg-red-300 text-red-600 border px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 z-50 hidden"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        class="text-red-600">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
+
+                    <span id="error-alert-message" class="text-sm font-medium"></span>
+                </div>
+
                 @if (session('success'))
                     <div id="success-alert" class="fixed top-5 right-5 bg-green-100 border border-green-300 text-green-800 px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 z-50">
                         <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" stroke-width="2"
@@ -67,7 +84,7 @@
 
     </body>
 
-    <script>
+<script>
     setTimeout(() => {
         const alert = document.getElementById('success-alert');
         if (alert) {
@@ -75,5 +92,27 @@
             setTimeout(() => alert.remove(), 500);
         }
     }, 3000);
-    </script>
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        window.addEventListener('error', event => {
+
+            const alertBox = document.getElementById('error-alert');
+            const message = document.getElementById('error-alert-message');
+
+            // Cambiar mensaje
+            message.textContent = event.detail.message;
+
+            // Mostrar (quitar hidden)
+            alertBox.classList.remove('hidden');
+
+            // Esperar 3 segundos y ocultar
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 3000);
+
+        });
+    });
+</script>
 </html>
