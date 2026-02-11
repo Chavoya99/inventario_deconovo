@@ -22,7 +22,7 @@ class ReporteFaltante extends Model
     public function productos()
     {
         return $this->belongsToMany(Producto::class, 'reportes_productos', 'reporte_id', 'producto_id')
-            ->withPivot(['existencia', 'pedir_registrado', 'pedir_modificado','registrado']);
+            ->withPivot(['existencia', 'pedir_registrado', 'pedir_modificado', 'registrado', 'incluir']);
     }
 
     public function status(){
