@@ -6,4 +6,3 @@
     Atrás
 </button>
 
-<br>
