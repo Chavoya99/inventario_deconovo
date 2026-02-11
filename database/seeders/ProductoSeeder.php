@@ -19,7 +19,6 @@ class ProductoSeeder extends Seeder
             ['producto' => "DURACRIL PERDURA 1 LT",'maximo' => 3],
             ['producto' => "DURACRIL PERDURA GALON",'maximo' => 3],
             ['producto' => "JUNTEADOR PLATINO PERDURA 10 KG",'maximo' => 15],
-            ['producto' => "JUNTEADOR PLATINO PERDURA 10 KG",'maximo' => 15],
             ['producto' => "JUNTEADOR SIN ARENA CAFÉ PERDURA 5 KG",'maximo' => 5],
             ['producto' => "JUNTEADOR SIN ARENA CAPUCHINO PERDURA 5 KG",'maximo' => 5],
             ['producto' => "JUNTEADOR SIN ARENA CHAMPAGNE PERDURA 5 KG",'maximo' => 10],
