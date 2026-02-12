@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
         Route::get('ver_orden_compra', 'ver_orden_compra')->name('ver_orden_compra')->middleware(AdminMiddleware::class);
         Route::get('descargar_orden_compra', 'descargar_orden_compra')->name('descargar_orden_compra')->middleware(AdminMiddleware::class);
         Route::get('show', 'show');
+        Route::post('generar_orden_compra/{reporte_id}', 'create')->name('generar_orden_compra')->middleware(AdminMiddleware::class);
         Route::delete('eliminar_orden_compra/{ordenCompra}', 'destroy')->name('eliminar_orden_compra')->middleware(AdminMiddleware::class);
     });
 

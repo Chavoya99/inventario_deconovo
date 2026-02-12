@@ -49,12 +49,12 @@
     </style>
 </head>
 <body>
-
+{{strtoupper($tipo_orden)}}
 <table>
     <thead>
         <tr>
             <td rowspan="2" class="center header">
-                Deconovo<br>Recubrimientos
+                Deconovo<br>Recubrimientos   
             </td>
             <td class="center">
                 Fecha: {{ $orden_compra->fecha_generada->format('d/m/Y') }}
@@ -82,7 +82,12 @@
             <tr class="center">
                 <td>{{$producto['pedir']}}</td>
                 <td>{{$producto['unidad']}}</td>
-                <td></td>
+                @if($tipo_orden == 'proveedor')
+                    <td>{{$producto['precio_proveedor']}}</td>
+                @elseif ($tipo_orden == 'interna')
+                    <td>{{$producto['precio_venta']}}</td>
+                @endif
+                
                 <td>{{$producto['producto']}}</td>
             </tr>
         @endforeach

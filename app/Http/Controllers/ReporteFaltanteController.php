@@ -101,29 +101,6 @@ class ReporteFaltanteController extends Controller
             'incluir' => ($producto['pedir'] != 0) ? 1 : 0]);
         }
 
-        // $nombre = config('app.facturador_nombre');
-        // $correo = config('app.facturador_correo');
-        // $nombre_archivo = 'orden_compra_'.str_pad($orden_compra->id, 3, "0", STR_PAD_LEFT)."_".strtolower($proveedor->nombre). $fecha_generada->format('_d_m_Y') . '.pdf';
-        // $ruta = 'ordenes_compra/' . $nombre_archivo;
-        
-        // $pdf = Pdf::loadView('formato_orden_compra', compact('productos','proveedor','orden_compra','nombre','correo'))
-        //         ->setPaper('A4', 'portrait');
-        
-        // $pdf->render();
-        
-        // /** @disregard */
-        // $pdf->getDomPDF()->get_canvas()->page_text(
-        //     520, 820,              
-        //     "Página {PAGE_NUM} de {PAGE_COUNT}",
-        //     null,                  
-        //     9,                     
-        //     [0, 0, 0]              
-        // );
-        
-        // $orden_compra->update(['ruta_archivo' => $ruta]);
-        
-        // Storage::disk('public')->put($ruta, $pdf->output());
-
         return redirect()->route('reporte_inventario')->with('success', 'Reporte generado con éxito');
 
     }
@@ -135,7 +112,7 @@ class ReporteFaltanteController extends Controller
         
         //Filtrar productos con columna incluir igual a 1
         $productos = $reporte->productos->filter(function ($producto){
-            return $producto->pivot->incluir != 0;
+            return $producto->pivot->incluir != 0 && $producto->pivot->registrado == 0;
         });
 
         //Filtrar productos con columna incluir igual a 0
