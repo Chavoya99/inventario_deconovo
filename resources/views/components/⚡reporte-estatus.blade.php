@@ -12,6 +12,11 @@ new class extends Component
     }
 
     public function rechazar(){
+        if($this->reporte->productos()->where('registrado',true)->get()->count() > 0){
+            return redirect()->route('revisar_reporte', [
+            'reporte' => $this->reporte->id
+            ])->with('error', 'Ya hay ordenes de compra registradas');
+        }
         $this->reporte->update(['status' => 'rechazado']);
         $this->redirect(route('revisar_reporte',['reporte' => $this->reporte->id]));
     }
