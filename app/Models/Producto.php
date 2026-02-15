@@ -17,6 +17,7 @@ class Producto extends Model
             'pedir',
             'proveedor_id',
             'precio_venta',
+            'precio_proveedor',
             'ultimo_reporte'];
 
     public $timestamps = false;
