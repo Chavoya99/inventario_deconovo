@@ -83,9 +83,9 @@
                 <td>{{$producto['pedir']}}</td>
                 <td>{{$producto['unidad']}}</td>
                 @if($tipo_orden == 'proveedor')
-                    <td>{{$producto['precio_proveedor']}}</td>
+                    <td>{{number_Format($producto['precio_proveedor'], 2)}}</td>
                 @elseif ($tipo_orden == 'interna')
-                    <td>{{$producto['precio_venta']}}</td>
+                    <td>{{number_Format($producto['precio_venta'], 2)}}</td>
                 @endif
                 
                 <td>{{$producto['producto']}}</td>
