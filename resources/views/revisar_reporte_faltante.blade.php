@@ -25,7 +25,7 @@
                     disabled:opacity-50 hover:bg-sky-600 disabled:cursor-not-allowed
                 "
                 title="Generar orden de compra"
-                @if($reporte->status != 'aprobado' || $productos->count() < 1) disabled @endif
+                @if($reporte->status != 'aprobado') disabled @endif
                 >
                 Generar orden de compra
             </button>
