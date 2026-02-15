@@ -4,24 +4,23 @@
 <div class="bg-neutral-primary-soft shadow-xs rounded-base border border-default">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Ordenes de compra')." ".strtoupper($nombre_proveedor_actual) }}
+            @if (request()->routeIs('lista_ordenes_compra_internas'))
+                {{ __('Ordenes de compra internas')." ".strtoupper($nombre_proveedor_actual) }}
+            @endif
+            
+            @if (request()->routeIs('lista_ordenes_compra_proveedor'))
+                {{ __('Ordenes de compra proveedor')." ".strtoupper($nombre_proveedor_actual) }}
+            @endif
+            
+            
         </h2>
     </x-slot>
-    
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
         @if (auth()->user()->isAdmin())
             <div class="flex items-end gap-4">
 
-                <!-- Botón nuevo producto -->
-                <a href=""
-                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
-                        rounded-lg border border-transparent bg-teal-500 text-white 
-                        hover:bg-teal-600 focus:outline-hidden focus:bg-teal-600 cursor-pointer">
-                    Nueva orden de compra
-                </a>
-
                 <!-- Filtro por proveedor -->
-                <form action="{{ route('lista_ordenes_compra') }}" method="GET"
+                <form action="{{ route($ruta_origen) }}" method="GET"
                     class="flex items-end gap-3">
 
                     <select name="proveedor"
@@ -45,40 +44,40 @@
                 </form>
             </div>
             <br>
-            {{--
+            
             <div class="flex items-end gap-4">
-                <a href="{{ route('lista_ordenes_compra', ['proveedor' => request()->get('proveedor'),'filtro' => 'realizadas']) }}"
+                <a href="{{ route($ruta_origen, ['proveedor' => request()->get('proveedor'),'filtro' => 'realizadas']) }}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                         rounded-lg border border-transparent bg-sky-500 hover:bg-cyan-600 text-white">
-                    Realizadas
+                    Parciales
                 </a>
 
-                <a href="{{ route('lista_ordenes_compra', ['proveedor' => request()->get('proveedor'), 'filtro' => 'recibidas']) }}"
+                <a href="{{ route($ruta_origen, ['proveedor' => request()->get('proveedor'), 'filtro' => 'recibidas']) }}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                         rounded-lg border border-transparent bg-green-400 hover:bg-green-600 text-white">
                     Recibidas
                 </a>
 
-                <a href="{{ route('lista_ordenes_compra', ['proveedor' => request()->get('proveedor'), 'filtro' => 'pendientes']) }}"
+                <a href="{{ route($ruta_origen, ['proveedor' => request()->get('proveedor'), 'filtro' => 'pendientes']) }}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                         rounded-lg border border-transparent bg-yellow-300 hover:bg-yellow-500 text-black">
                     Pendientes
                 </a>
 
-                <a href="{{route('lista_ordenes_compra', ['proveedor'=> request()->get('proveedor')])}}"
+                <a href="{{route($ruta_origen, ['proveedor'=> request()->get('proveedor')])}}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                     rounded-lg border border-transparent bg-neutral-600 text-white 
                     hover:bg-neutral-800 cursor-pointer">
                     Todas
                 </a>
 
-                <a href="{{route('lista_ordenes_compra')}}"
+                <a href="{{route($ruta_origen)}}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                     rounded-lg border border-transparent bg-red-300 text-black 
                     hover:bg-red-800 cursor-pointer">
                     Limpiar filtros
                 </a>
-            --}}
+            
             </div>  
             <br>
             
@@ -101,8 +100,6 @@
                             <th class="px-6 py-3 font-medium">Folio</th>
                             <th class="px-6 py-3 font-medium">Proveedor</th>
                             <th class="px-6 py-3 font-medium">Fecha generada</th>
-                            <th class="px-6 py-3 font-medium">Realizada</th>
-                            <th class="px-6 py-3 font-medium">Fecha realizada</th>
                             <th class="px-6 py-3 font-medium">Recibida</th>
                             <th class="px-6 py-3 font-medium">Fecha recibida</th> 
                             <th class="px-6 py-3 text-right font-medium">Acciones</th>
