@@ -10,8 +10,7 @@ class OrdenCompra extends Model
     use HasFactory;
     protected $table = 'ordenes_compra', 
 
-    $fillable = ['proveedor_id', 'fecha_generada', 
-    'realizada', 'fecha_realizada',
+    $fillable = ['proveedor_id', 'fecha_generada', 'comentario',
     'recibida', 'fecha_recibida',
     'ruta_archivo_interna',
     'ruta_archivo_proveedor'],
