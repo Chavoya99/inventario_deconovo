@@ -15,7 +15,7 @@ class OrdenCompraController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index_internas(Request $request)
     {   
 
         $ordenes_compra = OrdenCompra::orderBy('id')
@@ -34,11 +34,41 @@ class OrdenCompraController extends Controller
         ->paginate(5)
         ->withQueryString();
 
+        $ruta_origen = 'lista_ordenes_compra_internas';
+
         $proveedores = Proveedor::orderBy('nombre')->get();
 
         $nombre_proveedor_actual = ($request->proveedor) ? Proveedor::find($request->proveedor)->nombre : null;
 
-        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores', 'nombre_proveedor_actual'));
+        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores', 'nombre_proveedor_actual', 'ruta_origen'));
+    }
+
+    public function index_proveedor(Request $request)
+    {   
+
+        $ordenes_compra = OrdenCompra::orderBy('id')
+        ->when($request->proveedor, function ($query) use ($request) {
+            $query->where('proveedor_id', $request->proveedor);
+        })//Filtro por proveedor
+        ->when($request->filtro === 'realizadas', function ($query) {
+            $query->where('realizada', true);
+        })//Filtro realizadas
+        ->when($request->filtro === 'recibidas', function ($query) {
+            $query->where('recibida', true);
+        })//Filtro recibidas
+        ->when($request->filtro === 'pendientes', function($query){
+            $query->where('realizada', false);
+        })
+        ->paginate(5)
+        ->withQueryString();
+
+        $ruta_origen = 'lista_ordenes_compra_proveedor';
+
+        $proveedores = Proveedor::orderBy('nombre')->get();
+
+        $nombre_proveedor_actual = ($request->proveedor) ? Proveedor::find($request->proveedor)->nombre : null;
+
+        return view('lista_ordenes_compra', compact('ordenes_compra', 'proveedores', 'nombre_proveedor_actual', 'ruta_origen'));
     }
 
     /**
@@ -55,6 +85,8 @@ class OrdenCompraController extends Controller
             ->map(function ($producto) use ($reporte) {
                     
                 $reporte->productos()->where('producto_id', $producto['id'])->update(['registrado' => true]);
+                Producto::find($producto['id'])->update(['precio_venta' => $producto['precio_venta'], 
+                'precio_proveedor' => $producto['precio_proveedor']]);      
                 return [
                     'id' => $producto['id'],
                     'producto' => $producto['producto'],
@@ -66,6 +98,7 @@ class OrdenCompraController extends Controller
             } )
             ->values()
             ->toArray();
+        
         if(count($productos) == 0){
             return redirect()->back()->with('error', 'No se puede generar una orden de compra vacía');
         }
@@ -114,22 +147,40 @@ class OrdenCompraController extends Controller
     }
 
     public function ver_orden_compra(Request $request){
+        
         $orden = OrdenCompra::find($request->orden);
-        if (Storage::disk('public')->exists($orden->ruta_archivo)) {
-            return response()->file(storage_path('app/public/'.$orden->ruta_archivo));
+
+        if($request->tipo == 'interna'){
+            $ruta = $orden->ruta_archivo_interna;
+        }else if($request->tipo == 'proveedor'){
+            $ruta = $orden->ruta_archivo_proveedor;
+        }else{
+            $ruta = null;
+        }
+        
+        if (Storage::disk('public')->exists($ruta)) {
+            return response()->file(storage_path('app/public/'.$ruta));
         }else{
             return back()->with(['error' => 'El archivo no existe']);
         }
     }
 
     public function descargar_orden_compra(Request $request){
+
+        
         $orden = OrdenCompra::find($request->orden);
         $proveedor = Proveedor::find($orden->proveedor_id);
+        if($request->tipo == 'interna'){
+            $ruta = $orden->ruta_archivo_interna;
+        }else if($request->tipo == 'proveedor'){
+            $ruta = $orden->ruta_archivo_proveedor;
+        }else{
+            $ruta = null;
+        }
         
-
-        if (Storage::disk('public')->exists($orden->ruta_archivo)) {
-            return response()->download(storage_path('app/public/'.$orden->ruta_archivo), 
-            'orden_compra_'.str_pad($orden->id, 3, "0", STR_PAD_LEFT)."_".strtolower($proveedor->nombre). $orden->fecha_generada->format('_d_m_Y') . '.pdf');
+        if (Storage::disk('public')->exists($ruta)) {
+            return response()->download(storage_path('app/public/'.$ruta), 
+            'orden_compra_'.str_pad($orden->id, 3, "0", STR_PAD_LEFT)."_".strtolower($proveedor->nombre). $orden->fecha_generada->format('_d_m_Y_') .$request->tipo .'.pdf');
         }else{
             return back()->withErrors(['error' => 'El archivo no existe']);
         }

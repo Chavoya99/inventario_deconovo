@@ -16,7 +16,8 @@ class OrdenCompra extends Model
     'ruta_archivo_interna',
     'ruta_archivo_proveedor'],
 
-    $casts = ['fecha_generada' => 'datetime',];
+    $casts = ['fecha_generada' => 'datetime',
+            'fecha_recibida' => 'datetime'];
 
 
     public function proveedor(){
