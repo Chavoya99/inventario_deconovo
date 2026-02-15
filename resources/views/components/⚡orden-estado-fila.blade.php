@@ -7,31 +7,23 @@ new class extends Component
 {
     public OrdenCompra $orden;
 
-    public function toggleRealizada()
-    {
-        if($this->orden->realizada == true){
-           $this->reiniciar_recibida();
-        }
-
-        $fecha = (!$this->orden->realizada) ? now('America/Belize') : null;
-
-        $this->orden->update([
-            'realizada' => ! $this->orden->realizada,
-            'fecha_realizada' => $fecha,
-        ]);
-
-        $this->orden->refresh();
-    }
-
     public function toggleRecibida()
     {   
-        if (! $this->orden->realizada) {
+        $transiciones = [
+            'n' => 'p',
+            'p' => 'r',
+            'r' => 'n',
+        ];
+        
+        /** @disregard */
+        if($this->orden->recibida == 'r' && auth()->user()->isEmpleado()){
             return;
         }
-        $fecha = (!$this->orden->recibida) ? now('America/Belize') : null;
+
+        $fecha = now('America/Belize');
 
         $this->orden->update([
-            'recibida' => ! $this->orden->recibida,
+            'recibida' => $transiciones[$this->orden->recibida],
             'fecha_recibida' => $fecha,
         ]);
 
@@ -42,7 +34,7 @@ new class extends Component
     public function reiniciar_recibida(){
 
         $this->orden->update([
-            'recibida' => 0,
+            'recibida' => 'n',
             'fecha_recibida' => null,
         ]);
     }
@@ -55,60 +47,15 @@ new class extends Component
         {{$orden->proveedor->nombre}}
     </td>
     <td id=fecha_generada class="px-6 py-4">{{$orden->fecha_generada->format('d/m/Y') }}</td>
-    <td id=realizada class="px-6 py-4">
-        <button
-        onclick="confirm('¿Confirmar cambio?') || event.stopImmediatePropagation()"
-        wire:click="toggleRealizada"
-        class="cursor-pointer"
-        title="Cambiar estado"
-        >   
-        
-            @if ($orden->realizada)
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    width="18" height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#00ff00"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="transition hover:scale-110">
-                    <path d="M20 6 9 17l-5-5"/>
-                </svg>
-            @else
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    width="18" height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#ff0000"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="transition hover:scale-110">
-                    <path d="M18 6 6 18"/>
-                    <path d="m6 6 12 12"/>
-                </svg>
-            @endif
-        </button>
-    </td>
-
-    <td id=realizada class="px-6 py-4">
-        @if ($orden->fecha_realizada)
-            {{$orden->fecha_realizada->format('d/m/Y')}}
-        @else
-            Sin fecha registrada
-        @endif
-    </td>
 
     <td class="px-6 py-4">
         <button 
         onclick="confirm('¿Confirmar cambio?') || event.stopImmediatePropagation()"
-        wire:click="toggleRecibida"
-        @disabled(! $orden->realizada)
+        wire:click="toggleRecibida()"
         class="cursor-pointer"
         title="Cambiar estado"
         >
-            @if ($orden->recibida)
+            @if ($orden->recibida == 'r')
                 <!-- CHECK -->
                 <svg xmlns="http://www.w3.org/2000/svg"
                     width="18" height="18"
@@ -120,6 +67,20 @@ new class extends Component
                     stroke-linejoin="round"
                     class="transition hover:scale-110">
                     <path d="M20 6 9 17l-5-5"/>
+                </svg>
+            @elseif($orden->recibida == 'p')
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    width="18" height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FF8000"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="transition hover:scale-110">
+
+                    <path d="M5 12h14"/>
+
                 </svg>
             @else
                 <!-- X -->
@@ -140,8 +101,10 @@ new class extends Component
     </td>
 
     <td id=fecha_recibida class="px-6 py-4">
-        @if ($orden->fecha_recibida)
-            {{$orden->fecha_recibida->format('d/m/Y')}}
+        @if ($orden->fecha_recibida && $orden->recibida == 'p')
+            {{$orden->fecha_recibida->format('d/m/Y ')}}(Parcial)
+        @elseif ($orden->fecha_recibida && $orden->recibida == 'r')
+            {{$orden->fecha_recibida->format('d/m/Y ')}}(Completa)
         @else
             Sin fecha registrada
         @endif
@@ -152,15 +115,30 @@ new class extends Component
         
         <td class="px-6 py-4 text-right">
             <div class="flex justify-end items-center gap-4">
-                <a href="{{ route('ver_orden_compra', ['orden'=> $orden]) }}"
-                class="text-blue-600 hover:underline cursor-pointer" target="_blank">
-                    Ver orden
-                </a>
+                @if (request()->routeIs('lista_ordenes_compra_internas'))
+                    <a href="{{ route('ver_orden_compra', ['orden'=> $orden, 'tipo' => 'interna']) }}"
+                    class="text-blue-600 hover:underline cursor-pointer" target="_blank">
+                        Ver orden
+                    </a>
 
-                <a href="{{ route('descargar_orden_compra', ['orden'=> $orden]) }}"
-                class="text-blue-600 hover:underline cursor-pointer">
-                    Descargar
-                </a>
+                    <a href="{{ route('descargar_orden_compra', ['orden'=> $orden, 'tipo' => 'interna']) }}"
+                    class="text-blue-600 hover:underline cursor-pointer">
+                        Descargar
+                    </a>
+                @endif
+                
+                @if (request()->routeIs('lista_ordenes_compra_proveedor'))
+                    <a href="{{ route('ver_orden_compra', ['orden'=> $orden, 'tipo' => 'proveedor']) }}"
+                    class="text-blue-600 hover:underline cursor-pointer" target="_blank">
+                        Ver orden
+                    </a>
+
+                    <a href="{{ route('descargar_orden_compra', ['orden'=> $orden, 'tipo' => 'proveedor']) }}"
+                    class="text-blue-600 hover:underline cursor-pointer">
+                        Descargar
+                    </a>
+                @endif
+
 
                 <form action="{{ route('eliminar_orden_compra', ['ordenCompra' => $orden]) }}" 
                 onsubmit="return confirm('Se eliminará la orden de compra de forma permanente, ¿continuar?')" method="POST">
