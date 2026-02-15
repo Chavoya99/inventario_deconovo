@@ -108,7 +108,7 @@
                     
                     <tbody>
                         @foreach ($ordenes_compra as $orden)
-                            <livewire:orden-estado-fila :orden="$orden"/>
+                            <livewire:orden-estado-fila :orden="$orden" :ruta_origen="$ruta_origen"/>
                         @endforeach
                     </tbody>
                 </table>

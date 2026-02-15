@@ -29,9 +29,14 @@
                             {{ __('Reportes faltantes') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('lista_ordenes_compra')" :active="request()->routeIs('lista_ordenes_compra')">
-                            {{ __('Ordenes de compra') }}
+                    <x-nav-link :href="route('lista_ordenes_compra_internas')" :active="request()->routeIs('lista_ordenes_compra_internas')">
+                            {{ __('Ordenes internas') }}
                     </x-nav-link>
+                    @if (auth()->user()->isAdmin())
+                        <x-nav-link :href="route('lista_ordenes_compra_proveedor')" :active="request()->routeIs('lista_ordenes_compra_proveedor')">
+                            {{ __('Ordenes proveedor') }}
+                        </x-nav-link>
+                    @endif
                     
                     <x-nav-link :href="route('reporte_inventario')" :active="request()->routeIs('reporte_inventario')">
                         {{ __('Generar reporte') }}
@@ -108,10 +113,15 @@
                 {{ __('Reportes faltantes') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('lista_ordenes_compra')" :active="request()->routeIs('lista_ordenes_compra')">
-                {{ __('Ordenes de compra') }}
+            <x-responsive-nav-link :href="route('lista_ordenes_compra_internas')" :active="request()->routeIs('lista_ordenes_compra_internas')">
+                {{ __('Ordenes internas') }}
             </x-responsive-nav-link>
-
+            @if (auth()->user()->isAdmin())
+                <x-responsive-nav-link :href="route('lista_ordenes_compra_proveedor')" :active="request()->routeIs('lista_ordenes_compra_proveedor')">
+                    {{ __('Ordenes proveedor') }}
+                </x-responsive-nav-link>
+            @endif
+            
             <x-responsive-nav-link :href="route('reporte_inventario')" :active="request()->routeIs('reporte_inventario')">
                 {{ __('Generar reporte') }}
             </x-responsive-nav-link>
