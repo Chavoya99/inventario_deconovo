@@ -66,7 +66,7 @@ class ProductoSeeder extends Seeder
             ['producto' => "PEGAPISO GRIS ZAZ PEGADURO 20 KG", 'maximo' => 150],
         ];
 
-        foreach($productosPerdura as $producto){
+        foreach($productosPegaduro as $producto){
             Producto::create([
                 'producto' => $producto['producto'],
                 'proveedor_id' => 2,
