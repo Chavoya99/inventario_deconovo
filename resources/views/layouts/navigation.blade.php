@@ -63,9 +63,12 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Perfil') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('register')">
-                            {{ __('Nuevo usuario') }}
-                        </x-dropdown-link>
+                        @if (auth()->user()->isAdmin())
+                            <x-dropdown-link :href="route('register')">
+                                {{ __('Nuevo usuario') }}
+                            </x-dropdown-link>
+                        @endif
+                        
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -135,9 +138,12 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Perfil') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('register')">
-                    {{ __('Nuevo usuario') }}
-                </x-responsive-nav-link>
+                @if (auth()->user()->isAdmin())
+                    <x-responsive-nav-link :href="route('register')">
+                        {{ __('Nuevo usuario') }}
+                    </x-responsive-nav-link>
+                @endif
+                
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
