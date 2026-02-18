@@ -80,7 +80,7 @@
                 @else
                     <thead class="bg-sky-400 text-black border-b">
                         <tr>
-                            <th class="fixed px-6 py-3 font-medium">No. reporte</th>
+                            <th class="max-w-10 px-6 py-3 font-medium">No. reporte</th>
                             <th class="px-6 py-3 font-medium">Proveedor</th>
                             <th class="px-6 py-3 font-medium">Estatus</th>
                             <th class="px-6 py-3 font-medium">Fecha</th>

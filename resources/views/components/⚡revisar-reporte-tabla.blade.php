@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Producto;
 use Livewire\Component;
 use App\Models\ReporteFaltante;
 
@@ -16,11 +15,26 @@ new class extends Component
     {
         $this->cargarProductos();
 
-        foreach ($this->productos as $producto) {
-            $this->precios[$producto->id] = $producto->precio_proveedor;
-            $this->precios_venta[$producto->id] = $producto->precio_venta;
-            $this->pedir_modificado[$producto->id] = $producto->pivot->pedir_modificado;
-            $this->nombres_productos[$producto->id] = $producto->producto;
+        foreach ($this->productos as $index => $producto) {
+
+            $this->precios[$producto->id] =
+            old("productos.$index.precio_proveedor", $producto->precio_proveedor);
+
+            $this->precios_venta[$producto->id] =
+                old("productos.$index.precio_venta", $producto->precio_venta);
+
+            $this->pedir_modificado[$producto->id] =
+                old("productos.$index.pedir", $producto->pivot->pedir_modificado);
+
+            $this->nombres_productos[$producto->id] =
+                old("productos.$index.producto", $producto->producto);
+
+            $this->seleccionados[$producto->id] =
+            old("productos.$index.seleccionado",
+                isset($this->seleccionados[$producto->id])
+                    ? $this->seleccionados[$producto->id]
+                    : false
+            );
         }
 
         foreach ($this->productos_cero as $producto) {
@@ -128,10 +142,12 @@ new class extends Component
                                     wire:model.defer="nombres_productos.{{ $producto->id }}" 
                                     wire:key="producto-{{ $producto->id }}" 
                                     type="text" 
-                                    value="{{ $producto->producto }}"
                                     class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
                                     id="nombre_producto_{{$index}}"
-                                    name="productos[{{$index}}][producto]">
+                                    name="productos[{{$index}}][producto]" @required(isset($seleccionados[$producto->id]) && $seleccionados[$producto->id])>
+                                    <x-input-error 
+                                    :messages="$errors->get('productos.' . $index . '.producto')" 
+                                    class="mt-1" />
                                 
                             </td>
                         @else
@@ -143,6 +159,7 @@ new class extends Component
                         <td class="px-6 py-4">
                             @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
                                 <input type="hidden" name="productos[{{$index}}][unidad]" value="{{$producto->unidad}}">
+                                
                             @endif
                             {{$producto->unidad}}
                         </td>
@@ -163,7 +180,10 @@ new class extends Component
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                 max="{{$producto->maximo - $producto->pivot->existencia}}"
                                 id="pedir_producto_{{$index}}"
-                                name="productos[{{$index}}][pedir]">
+                                name="productos[{{$index}}][pedir]" @required(isset($seleccionados[$producto->id]) && $seleccionados[$producto->id])>
+                                <x-input-error 
+                                :messages="$errors->get('productos.' . $index . '.pedir')" 
+                                class="mt-1" />
                                 
                             </td>
 
@@ -175,7 +195,10 @@ new class extends Component
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                 max="999999"
                                 id="precio_proveedor_{{$index}}"
-                                name="productos[{{$index}}][precio_proveedor]">
+                                name="productos[{{$index}}][precio_proveedor]" @required(isset($seleccionados[$producto->id]) && $seleccionados[$producto->id]) >
+                                <x-input-error 
+                                :messages="$errors->get('productos.' . $index . '.precio_proveedor')" 
+                                class="mt-1" />
                             </td>
 
                         <!--Precio venta-->
@@ -185,7 +208,10 @@ new class extends Component
                                 type="number" step="0.01" min="0" value="{{$producto->precio_venta}}"
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                                 max="999999"
-                                id="precio_venta_{{$index}}">
+                                id="precio_venta_{{$index}}" @required(isset($seleccionados[$producto->id]) && $seleccionados[$producto->id])>
+                                <x-input-error 
+                                :messages="$errors->get('productos.' . $index . '.precio_venta')" 
+                                class="mt-1" />
                             </td>
                         @else
                             <td class="px-6 py-4">
@@ -212,7 +238,8 @@ new class extends Component
                                             shadow-2xs text-primary focus:ring-0 focus:ring-offset-0 
                                             checked:bg-primary-checked checked:bg-green-500 disabled:opacity-50 
                                             disabled:pointer-events-none" id="hs-default-checkbox"
-                                            title="Registrado">
+                                            title="Registrado"
+                                            >
                                         </div>
                                     @else
                                         <div class="max-w-sm w-full space-y-3">
@@ -222,7 +249,7 @@ new class extends Component
                                             checked:bg-primary-checked checked:border-primary-checked 
                                             disabled:opacity-50 disabled:pointer-events-none" id="hs-default-checkboxs"
                                             onchange="campos_requeridos('{{$index}}')"
-                                            title="Incluir">
+                                            title="Incluir" @if(old("productos.$index.seleccionado")) checked @endif>
                                         </div>
                                     @endif
                                     
