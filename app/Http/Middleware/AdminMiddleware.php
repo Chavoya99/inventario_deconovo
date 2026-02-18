@@ -18,6 +18,7 @@ class AdminMiddleware
     {   
         $user= Auth::user();
         if($user == null || $user->tipo != 'admin'){
+            abort(404);
             return redirect(route('dashboard'));
         }
     

@@ -18,6 +18,7 @@ class EmpleadoMiddleware
     {
         $user = Auth::user();
         if($user->tipo != 'empleado'){
+            abort(404);
             return redirect(route('dashboard'));
         }
         return $next($request);
