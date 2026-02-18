@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\AdminMiddleware;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use App\Models\OrdenCompra;
@@ -127,7 +128,8 @@ class OrdenCompraController extends Controller
             ->filter(fn($producto) => isset($producto['seleccionado']))
             ->map(function ($producto) use ($reporte) {
                     
-                $reporte->productos()->where('producto_id', $producto['id'])->update(['registrado' => true]);
+                $reporte->productos()->where('producto_id', $producto['id'])->update(['registrado' => true, 
+                'pedir_modificado' => $producto['pedir']]);
                 Producto::find($producto['id'])->update(['precio_venta' => $producto['precio_venta'], 
                 'precio_proveedor' => $producto['precio_proveedor'], 'ultima_orden' => now('America/Belize')]);      
                 return [
@@ -141,7 +143,6 @@ class OrdenCompraController extends Controller
             } )
             ->values()
             ->toArray();
-        
         if(count($productos) == 0){
             return redirect()->back()->with('error', 'No se puede generar una orden de compra vacía')->withInput();
         }
@@ -196,6 +197,9 @@ class OrdenCompraController extends Controller
         if($request->tipo == 'interna'){
             $ruta = $orden->ruta_archivo_interna;
         }else if($request->tipo == 'proveedor'){
+            if(!auth()->user()->isAdmin()){
+                abort(404);
+            }
             $ruta = $orden->ruta_archivo_proveedor;
         }else{
             $ruta = null;
