@@ -22,14 +22,14 @@ class OrdenCompraController extends Controller
         ->when($request->proveedor, function ($query) use ($request) {
             $query->where('proveedor_id', $request->proveedor);
         })//Filtro por proveedor
-        ->when($request->filtro === 'realizadas', function ($query) {
-            $query->where('realizada', true);
+        ->when($request->filtro === 'parciales', function ($query) {
+            $query->where('recibida', 'p');
         })//Filtro realizadas
         ->when($request->filtro === 'recibidas', function ($query) {
-            $query->where('recibida', true);
+            $query->where('recibida', 'r');
         })//Filtro recibidas
         ->when($request->filtro === 'pendientes', function($query){
-            $query->where('realizada', false);
+            $query->where('recibida', 'n');
         })
         ->paginate(5)
         ->withQueryString();
@@ -79,14 +79,13 @@ class OrdenCompraController extends Controller
         $reporte = ReporteFaltante::find($request->reporte_id);
         $proveedor = Proveedor::find($reporte->proveedor_id);
         $fecha_generada = now('America/Belize');
-
         $productos = collect($request->productos)
             ->filter(fn($producto) => isset($producto['seleccionado']))
             ->map(function ($producto) use ($reporte) {
                     
                 $reporte->productos()->where('producto_id', $producto['id'])->update(['registrado' => true]);
                 Producto::find($producto['id'])->update(['precio_venta' => $producto['precio_venta'], 
-                'precio_proveedor' => $producto['precio_proveedor']]);      
+                'precio_proveedor' => $producto['precio_proveedor'], 'ultima_orden' => now('America/Belize')]);      
                 return [
                     'id' => $producto['id'],
                     'producto' => $producto['producto'],
@@ -100,7 +99,7 @@ class OrdenCompraController extends Controller
             ->toArray();
         
         if(count($productos) == 0){
-            return redirect()->back()->with('error', 'No se puede generar una orden de compra vacía');
+            return redirect()->back()->with('error', 'No se puede generar una orden de compra vacía')->withInput();
         }
 
         $orden_compra = OrdenCompra::create([

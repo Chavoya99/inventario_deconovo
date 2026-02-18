@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('proveedor_id')->constrained()->restrictOnDelete();
             $table->timestamp('fecha_generada');
-            $table->string('recibida')->default('no recibida');
+            $table->char('recibida')->default('n');
             $table->timestamp('fecha_recibida')->nullable();
             $table->string('comentario')->nullable();
             $table->string('ruta_archivo_interna', 2048);

@@ -16,7 +16,7 @@
         </h2>
     </x-slot>
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
-        @if (auth()->user()->isAdmin())
+        
             <div class="flex items-end gap-4">
 
                 <!-- Filtro por proveedor -->
@@ -46,7 +46,7 @@
             <br>
             
             <div class="flex items-end gap-4">
-                <a href="{{ route($ruta_origen, ['proveedor' => request()->get('proveedor'),'filtro' => 'realizadas']) }}"
+                <a href="{{ route($ruta_origen, ['proveedor' => request()->get('proveedor'),'filtro' => 'parciales']) }}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                         rounded-lg border border-transparent bg-sky-500 hover:bg-cyan-600 text-white">
                     Parciales
@@ -81,7 +81,6 @@
             </div>  
             <br>
             
-        @endif
         
 
         <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
