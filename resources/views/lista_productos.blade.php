@@ -86,11 +86,15 @@
                                 <th class="px-6 py-3 font-medium">Pedir</th>
                                 <th class="px-6 py-3 font-medium">Precio venta</th>
                                 <th class="px-6 py-3 font-medium">Precio proveedor</th>
-                                
-                                <th class="px-6 py-3 text-right font-medium">Acciones</th>
                             @endif
+
                             <th class="px-6 py-3 font-medium">Último reporte</th>
                             <th class="px-6 py-3 font-medium">Última orden</th>
+                            @if (auth()->user()->isAdmin())
+                                <th class="px-6 py-3 text-right font-medium">Acciones</th>
+                            @endif 
+                                
+                            
                             
 
                         </tr>
@@ -105,6 +109,7 @@
                         </td>
                         <td id=proveedor class="px-6 py-4">{{$producto->proveedor->nombre}}</td>
                         <td id=unidad class="px-6 py-4">{{$producto->unidad}}</td>
+
                         @if(auth()->user()->isAdmin())<td id=contenido class="px-6 py-4">{{$producto->contenido}}</td>@endif
                         <td id=stock_max class="px-6 py-4">{{$producto->maximo}}</td>
                         <td id=stock class="px-6 py-4">{{$producto->existencia}}</td>
@@ -113,6 +118,25 @@
                             <td id=pedir class="px-6 py-4">{{$producto->pedir}}</td>
                             <td id=precio class="px-6 py-4">{{number_Format($producto->precio_venta, 2)}}</td>
                             <td id=precio_proveedor class="px-6 py-4">{{number_Format($producto->precio_proveedor, 2)}}</td>
+                        @endif
+
+                        <td id=fecha class="px-6 py-4">
+                            @if($producto->ultimo_reporte)
+                                {{$producto->ultimo_reporte->format('d/m/Y')}}
+                            @else 
+                                Sin reporte
+                            @endif
+                        </td>
+                        <td id=fecha_orden class="px-6 py-4">
+                            @if($producto->ultima_orden)
+                                {{$producto->ultima_orden->format('d/m/Y')}}
+                            @else 
+                                Sin orden
+                            @endif
+                        </td>
+                        
+
+                        @if (auth()->user()->isAdmin())
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end items-center gap-4">
                                     <a href="{{ route('editar_producto', $producto) }}"
@@ -132,22 +156,8 @@
                                 </div>
                             </td>
                         @endif
-                        
-                        <td id=fecha class="px-6 py-4">
-                            @if($producto->ultimo_reporte)
-                                {{$producto->ultimo_reporte->format('d/m/Y')}}
-                            @else 
-                                Sin reporte
-                            @endif
-                        </td>
-                        <td id=fecha_orden class="px-6 py-4">
-                            @if($producto->ultima_orden)
-                                {{$producto->ultima_orden->format('d/m/Y')}}
-                            @else 
-                                Sin orden
-                            @endif
-                        </td>
                         </tr>
+                        
                     @endforeach
                 @endif
                     
