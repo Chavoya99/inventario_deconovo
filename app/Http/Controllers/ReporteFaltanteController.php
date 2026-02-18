@@ -6,23 +6,14 @@ use App\Models\Producto;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use App\Models\ReporteFaltante;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class ReporteFaltanteController extends Controller
 {
     public function index_faltantes(Request $request){
 
         $proveedores = Proveedor::orderBy('nombre')->get();    
-        if($request->filled('proveedor')){
-            $proveedor = Proveedor::find($request->proveedor);
-            $reportes = $proveedor->reportes_faltantes()
-            ->paginate(6)->withQueryString();
-        }else{
-            $reportes = ReporteFaltante::orderBy('id')->paginate(6);
-            
-        }
 
-        $reportes = ReporteFaltante::orderBy('id')
+        $reportes = ReporteFaltante::with('proveedor')->orderBy('id')
         ->when($request->proveedor, function ($query) use ($request) {
             $query->where('proveedor_id', $request->proveedor);
         })//Filtro por proveedor
@@ -43,11 +34,11 @@ class ReporteFaltanteController extends Controller
     }
 
     public function index_reporte(Request $request){
-        $proveedores = Proveedor::whereHas('productos')->with('productos')
+        $proveedores = Proveedor::whereHas('productos')->with('productos', 'reportes_faltantes')
         ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
 
         return view('generar_reporte_inventario', ['proveedores' => $proveedores, 
-        'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()?->id,]);
+        'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()->id,]);
     }
 
     public function eliminar_reporte(ReporteFaltante $reporte){
