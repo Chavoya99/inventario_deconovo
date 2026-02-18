@@ -41,7 +41,7 @@
 
     function campos_requeridos($index){
         let input_nombre = document.getElementById("nombre_producto_" + $index);
-        let input_pedir = document.getElementById("predir_producto_" + $index);
+        let input_pedir = document.getElementById("pedir_producto_" + $index);
         let input_precio_proveedor = document.getElementById("precio_proveedor_" + $index);
         let input_precio_venta = document.getElementById("precio_venta_" + $index);
         
