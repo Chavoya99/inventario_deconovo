@@ -44,7 +44,7 @@
 
             <a href="{{ route('reportes_faltantes', ['proveedor' => request()->get('proveedor'),'filtro' => 'rechazados']) }}"
             class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
-                    rounded-lg border border-transparent bg-red-500 hover:bg-cyan-600 text-white">
+                    rounded-lg border border-transparent bg-red-500 hover:bg-red-600 text-white">
                 Rechazados
             </a>
 
