@@ -47,7 +47,20 @@
                     hover:bg-red-800 cursor-pointer">
                     Limpiar filtro
                 </a>
-
+            </div>
+            <br>
+            <div class="flex items-end gap-4">
+                <form action="{{ route('lista_productos') }}" method="GET"
+                class="flex items-end gap-3">
+                    <input class="rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500" 
+                    type="text" placeholder="Busqueda por nombre" name="busqueda" required>
+                    <button type="submit"
+                            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                                rounded-lg border border-transparent bg-teal-500 text-white 
+                                hover:bg-teal-600 focus:outline-hidden focus:bg-teal-600 cursor-pointer">
+                        Buscar
+                    </button>
+                </form>
             </div>  
             <br>
             
@@ -65,6 +78,7 @@
                             <th class="px-6 py-3 font-medium">Producto</th>
                             <th class="px-6 py-3 font-medium">Proveedor</th>
                             <th class="px-6 py-3 font-medium">Unidad</th>
+                            @if(auth()->user()->isAdmin())<th class="px-6 py-3 font-medium">Contenido</th>@endif
                             <th class="px-6 py-3 font-medium">Máximo</th>
                             <th class="px-6 py-3 font-medium">Existencia</th> 
                             
@@ -76,6 +90,7 @@
                                 <th class="px-6 py-3 text-right font-medium">Acciones</th>
                             @endif
                             <th class="px-6 py-3 font-medium">Último reporte</th>
+                            <th class="px-6 py-3 font-medium">Última orden</th>
                             
 
                         </tr>
@@ -85,13 +100,15 @@
                     
                     @foreach ($productos as $producto)
                         <tr class="border-b hover:bg-gray-50">
-                        <td id=nombre class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        <td id=nombre class="px-6 py-4 font-medium text-gray-900">
                             {{$producto->producto}}
                         </td>
                         <td id=proveedor class="px-6 py-4">{{$producto->proveedor->nombre}}</td>
                         <td id=unidad class="px-6 py-4">{{$producto->unidad}}</td>
+                        @if(auth()->user()->isAdmin())<td id=contenido class="px-6 py-4">{{$producto->contenido}}</td>@endif
                         <td id=stock_max class="px-6 py-4">{{$producto->maximo}}</td>
                         <td id=stock class="px-6 py-4">{{$producto->existencia}}</td>
+                        
                         @if(auth()->user()->isAdmin())
                             <td id=pedir class="px-6 py-4">{{$producto->pedir}}</td>
                             <td id=precio class="px-6 py-4">{{number_Format($producto->precio_venta, 2)}}</td>
@@ -121,6 +138,13 @@
                                 {{$producto->ultimo_reporte->format('d/m/Y')}}
                             @else 
                                 Sin reporte
+                            @endif
+                        </td>
+                        <td id=fecha_orden class="px-6 py-4">
+                            @if($producto->ultima_orden)
+                                {{$producto->ultima_orden->format('d/m/Y')}}
+                            @else 
+                                Sin orden
                             @endif
                         </td>
                         </tr>
