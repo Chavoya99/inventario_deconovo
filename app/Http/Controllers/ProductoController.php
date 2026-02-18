@@ -17,7 +17,7 @@ class ProductoController extends Controller
         if($request->filled('proveedor')){
             $proveedor = Proveedor::find($request->proveedor);
             $nombre_proveedor_actual = $proveedor->nombre;
-            $productos = $proveedor->productos()->paginate(6)->withQueryString();
+            $productos = $proveedor->productos()->with('proveedor')->paginate(6)->withQueryString();
         }else if($request->filled('busqueda')){
             $productos = Producto::with('proveedor')->orderBy('producto')
             ->where('producto', 'LIKE', '%'.$request->busqueda.'%')->paginate(6)->withQueryString();
