@@ -18,7 +18,7 @@ class OrdenCompraController extends Controller
     public function index_internas(Request $request)
     {   
 
-        $ordenes_compra = OrdenCompra::orderBy('id')
+        $ordenes_compra = OrdenCompra::with('proveedor')->orderBy('id')
         ->when($request->proveedor, function ($query) use ($request) {
             $query->where('proveedor_id', $request->proveedor);
         })//Filtro por proveedor
@@ -46,7 +46,7 @@ class OrdenCompraController extends Controller
     public function index_proveedor(Request $request)
     {   
 
-        $ordenes_compra = OrdenCompra::orderBy('id')
+        $ordenes_compra = OrdenCompra::with('proveedor')->orderBy('id')
         ->when($request->proveedor, function ($query) use ($request) {
             $query->where('proveedor_id', $request->proveedor);
         })//Filtro por proveedor
@@ -76,6 +76,50 @@ class OrdenCompraController extends Controller
      */
     public function create(Request $request)
     {   
+        $request->validate([
+
+            'productos' => ['required','array'],
+
+            'productos.*.id' => [
+                'required',
+                'exists:productos,id'
+            ],
+
+            'productos.*.producto' => [
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1',
+                'string',
+                'max:255'
+            ],
+
+            'productos.*.pedir' => [
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1',
+                'required',
+                'integer',
+                'min:1'
+            ],
+
+            'productos.*.precio_proveedor' => [
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1',
+                'filled',
+                'numeric',
+                'min:0',
+                'max:999999'
+            ],
+
+            'productos.*.precio_venta' => [
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1',
+                'filled',
+                'numeric',
+                'min:0',
+                'max:999999'
+            ],
+
+        ]);
+
         $reporte = ReporteFaltante::find($request->reporte_id);
         $proveedor = Proveedor::find($reporte->proveedor_id);
         $fecha_generada = now('America/Belize');
