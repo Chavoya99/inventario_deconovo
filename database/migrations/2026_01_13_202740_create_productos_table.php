@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('precio_proveedor', 8, 2)->default(0);
             $table->foreignId('proveedor_id')->constrained()->onDelete('cascade')->default('general');
             $table->timestamp('ultimo_reporte')->nullable();
+            $table->timestamp('ultima_orden')->nullable();
         });
     }
 

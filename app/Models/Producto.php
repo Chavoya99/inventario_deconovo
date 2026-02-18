@@ -18,10 +18,12 @@ class Producto extends Model
             'proveedor_id',
             'precio_venta',
             'precio_proveedor',
-            'ultimo_reporte'];
+            'ultimo_reporte',
+            'ultima_orden'];
 
     public $timestamps = false;
-    protected $casts = ['ultimo_reporte' => 'datetime:d-m-Y H:i:s'];
+    protected $casts = ['ultimo_reporte' => 'datetime:d-m-Y H:i:s',
+    'ultima_orden' => 'datetime:d-m-Y H:i:s'];
 
     public function proveedor(){
         return $this->belongsTo(Proveedor::class);
