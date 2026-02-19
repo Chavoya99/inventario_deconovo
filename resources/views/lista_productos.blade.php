@@ -63,7 +63,7 @@
                         Aplicar filtro
                     </button>
                 </form>
-                <a href="{{route('lista_productos')}}"
+                <a href="{{route(request()->route()->uri)}}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
                     rounded-lg border border-transparent bg-red-300 text-black 
                     hover:bg-red-800 cursor-pointer">
