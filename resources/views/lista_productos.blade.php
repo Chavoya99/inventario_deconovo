@@ -6,20 +6,42 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Lista de productos')." ".strtoupper($nombre_proveedor_actual) }}
         </h2>
+        <a href="{{route('lista_productos')}}"
+        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+            rounded-lg border border-transparent bg-sky-300 text-black 
+            hover:bg-sky-600 cursor-pointer">
+            Ver productos
+        </a>
+        <a href="{{route('lista_recubrimientos')}}"
+        class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+            rounded-lg border border-transparent bg-green-300 text-black 
+            hover:bg-green-600 cursor-pointer">
+            Ver recubrimientos
+        </a>
     </x-slot>
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
         <div class="flex items-end gap-4">
         @if (auth()->user()->isAdmin())
                 <!-- Botón nuevo producto -->
-                <a href="{{ route('nuevo_producto') }}"
-                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
-                        rounded-lg border border-transparent bg-teal-500 text-white 
-                        hover:bg-teal-600 focus:outline-hidden focus:bg-teal-600 cursor-pointer">
-                    Nuevo producto
-                </a>
+                @if (request()->routeIs('lista_productos'))
+                    <a href="{{ route('nuevo_producto') }}"
+                    class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                            rounded-lg border border-transparent bg-teal-500 text-white 
+                            hover:bg-teal-600 focus:outline-hidden focus:bg-teal-600 cursor-pointer">
+                        Nuevo producto
+                    </a>
+                @elseif( request()->routeIs('lista_recubrimientos'))
+                    <a href="{{ route('nuevo_recubrimiento') }}"
+                    class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                            rounded-lg border border-transparent bg-teal-500 text-white 
+                            hover:bg-teal-600 focus:outline-hidden focus:bg-teal-600 cursor-pointer">
+                        Nuevo recubrimiento
+                    </a>
+                @endif
+                
         @endif
                 <!-- Filtro por proveedor -->
-                <form action="{{ route('lista_productos') }}" method="GET"
+                <form action="{{ route(request()->route()->uri) }}" method="GET"
                     class="flex items-end gap-3">
 
                     <select name="proveedor"
@@ -50,7 +72,7 @@
             </div>
             <br>
             <div class="flex items-end gap-4">
-                <form action="{{ route('lista_productos') }}" method="GET"
+                <form action="{{ route(request()->route()->uri) }}" method="GET"
                 class="flex items-end gap-3">
                     <input class="rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500" 
                     type="text" placeholder="Busqueda por nombre" name="busqueda" required>
@@ -61,7 +83,8 @@
                         Buscar
                     </button>
                 </form>
-            </div>  
+            </div> 
+            
             <br>
             
         <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
@@ -78,15 +101,20 @@
                             <th class="px-6 py-3 font-medium">Producto</th>
                             <th class="px-6 py-3 font-medium">Proveedor</th>
                             <th class="px-6 py-3 font-medium">Unidad</th>
-                            @if(auth()->user()->isAdmin())<th class="px-6 py-3 font-medium">Contenido</th>@endif
+
+                            @if(request()->routeIs('lista_recubrimientos'))
+                                <th class="px-6 py-3 font-medium">Contenido</th>
+                            @endif
+
                             <th class="px-6 py-3 font-medium">Máximo</th>
                             <th class="px-6 py-3 font-medium">Existencia</th> 
                             
                             @if(auth()->user()->isAdmin())
-                                <th class="px-6 py-3 font-medium">Pedir</th>
-                                <th class="px-6 py-3 font-medium">Precio venta</th>
+                                <th class="px-6 py-3 font-medium">Utilidad</th>
+                                {{--<th class="px-6 py-3 font-medium">Pedir</th>--}}
                                 <th class="px-6 py-3 font-medium">Precio proveedor</th>
                             @endif
+                            <th class="px-6 py-3 font-medium">Precio venta</th>
 
                             <th class="px-6 py-3 font-medium">Último reporte</th>
                             <th class="px-6 py-3 font-medium">Última orden</th>
@@ -110,15 +138,20 @@
                         <td id=proveedor class="px-6 py-4">{{$producto->proveedor->nombre}}</td>
                         <td id=unidad class="px-6 py-4">{{$producto->unidad}}</td>
 
-                        @if(auth()->user()->isAdmin())<td id=contenido class="px-6 py-4">{{$producto->contenido}}</td>@endif
+                        @if(request()->routeIs('lista_recubrimientos'))
+                            <td id=contenido class="px-6 py-4">{{$producto->contenido}}</td>
+                        @endif
+                        
                         <td id=stock_max class="px-6 py-4">{{$producto->maximo}}</td>
                         <td id=stock class="px-6 py-4">{{$producto->existencia}}</td>
                         
                         @if(auth()->user()->isAdmin())
-                            <td id=pedir class="px-6 py-4">{{$producto->pedir}}</td>
-                            <td id=precio class="px-6 py-4">{{number_Format($producto->precio_venta, 2)}}</td>
+                            <td id=utilidad class="px-6 py-4">{{$producto->utilidad}}%</td>
+                            {{--<td id=pedir class="px-6 py-4">{{$producto->pedir}}</td>--}}
                             <td id=precio_proveedor class="px-6 py-4">{{number_Format($producto->precio_proveedor, 2)}}</td>
                         @endif
+
+                        <td id=precio class="px-6 py-4">{{number_Format($producto->precio_venta, 2)}}</td>
 
                         <td id=fecha class="px-6 py-4">
                             @if($producto->ultimo_reporte)
@@ -139,11 +172,17 @@
                         @if (auth()->user()->isAdmin())
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end items-center gap-4">
-                                    <a href="{{ route('editar_producto', $producto) }}"
-                                    class="text-blue-600 hover:underline cursor-pointer">
-                                        Editar
-                                    </a>
-
+                                    @if(request()->routeIs('lista_recubrimientos'))
+                                        <a href="{{ route('editar_recubrimiento', $producto) }}"
+                                        class="text-blue-600 hover:underline cursor-pointer">
+                                            Editar
+                                        </a>
+                                    @elseif(request()->routeIs('lista_productos'))
+                                        <a href="{{ route('editar_producto', $producto) }}"
+                                        class="text-blue-600 hover:underline cursor-pointer">
+                                            Editar
+                                        </a>
+                                    @endif
                                     <form action="{{ route('eliminar_producto', $producto) }}" 
                                     onsubmit="return confirm('Se eliminará el producto, ¿continuar?')" method="POST">
                                         @csrf

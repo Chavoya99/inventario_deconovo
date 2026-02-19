@@ -6,46 +6,39 @@ use App\Models\Producto;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
 
-class ProductoController extends Controller
+class RecubrimientoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    public function index_recubrimientos(Request $request)
     {    
         $nombre_proveedor_actual = null;
         if($request->filled('proveedor')){
             $proveedor = Proveedor::find($request->proveedor);
             $nombre_proveedor_actual = $proveedor->nombre;
-            $productos = $proveedor->productos()->where('recubrimiento', 0)->with('proveedor')->paginate(10)->withQueryString();
+            $productos = $proveedor->productos()->where('recubrimiento', 1)->with('proveedor')->paginate(10)->withQueryString();
         }else if($request->filled('busqueda')){
             $productos = Producto::with('proveedor')->orderBy('producto')
-            ->where('producto', 'LIKE', '%'.$request->busqueda.'%')->where('recubrimiento', 0)->paginate(10)->withQueryString();
+            ->where('producto', 'LIKE', '%'.$request->busqueda.'%')->where('recubrimiento', 1)->paginate(10)->withQueryString();
         }
         else{
-            $productos = Producto::with('proveedor')->where('recubrimiento', 0)->orderBy('producto')->paginate(10);
+            $productos = Producto::with('proveedor')->where('recubrimiento', 1)->orderBy('producto')->paginate(10);
         }
         
         $proveedores = Proveedor::orderBy('nombre')->get();
-
         return view('lista_productos', compact('productos','proveedores', 'nombre_proveedor_actual'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create_recubrimiento()
     {
         $proveedores = Proveedor::orderBy('nombre')->get();
-        $ruta_guardar = 'guardar_producto';
-        $ruta_anterior = 'lista_productos';
-        return view('nuevo_producto', compact('proveedores', 'ruta_anterior', 'ruta_guardar'));
+        $ruta_guardar = 'guardar_recubrimiento';
+        $ruta_anterior = 'lista_recubrimientos';
+        return view('nuevo_producto', compact('proveedores','ruta_guardar','ruta_anterior'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store_recubrimiento(Request $request)
     {
         $request->validate(
             [
@@ -56,6 +49,7 @@ class ProductoController extends Controller
                 'stock_max' => 'required|integer|min:1',
                 'precio_proveedor' => 'required|',
                 'utilidad' => 'required|max:100|integer',
+                'contenido' => 'required|min:1|numeric',
             ]
         );
 
@@ -67,37 +61,25 @@ class ProductoController extends Controller
             'existencia' => $request->stock,
             'maximo' => $request->stock_max,
             'utilidad' => $request->utilidad,
+            'contenido' => $request->contenido,
             'pedir' => $pedir,
+            'recubrimiento' => true,
             'precio_proveedor' => $request->precio_proveedor,
             'precio_venta' => 100,
         ]);
 
-        return redirect()->route('lista_productos')->with('success', 'Producto agregado con éxito');
+        return redirect()->route('lista_recubrimientos')->with('success', 'Producto agregado con éxito');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Producto $producto)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Producto $producto)
+    public function edit_recubrimiento(Producto $producto)
     {       
         $proveedores = Proveedor::orderBy('nombre')->get();
-        $ruta_guardar = 'editar_producto';
-        $ruta_anterior = 'lista_productos';
-        return view('editar_producto', compact('producto', 'proveedores','ruta_guardar','ruta_anterior'));
+        $ruta_guardar = 'editar_recubrimiento';
+        $ruta_anterior = 'lista_recubrimientos';
+        return view('editar_producto', compact('producto', 'proveedores', 'ruta_anterior', 'ruta_guardar'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Producto $producto)
+    public function update_recubrimiento(Request $request, Producto $producto)
     {
         $request->validate(
             [
@@ -106,8 +88,9 @@ class ProductoController extends Controller
                 'unidad' => 'required|in:Caja,Pza,Bulto por saco,Tarima',
                 'stock' => 'required|integer|min:0',
                 'stock_max' => 'required|integer|min:1',
-                'utilidad' => 'required|max:100|integer|min:1',
                 'precio_proveedor' => 'required|numeric|min:0.01',
+                'utilidad' => 'required|max:100|integer|min:1',
+                'contenido' => 'required|min:0.01|numeric',
             ]
         );
 
@@ -117,29 +100,17 @@ class ProductoController extends Controller
             'proveedor_id' => $request->proveedor,
             'unidad' => $request->unidad,
             'existencia' => $request->stock,
-            'utilidad' => $request->utilidad,
             'maximo' => $request->stock_max,
+            'utilidad' => $request->utilidad,
+            'contenido' => $request->contenido,
             'pedir' => $pedir,
+            'recubrimiento' => true,
             'precio_proveedor' => $request->precio_proveedor,
+            'precio_venta' => 100,
         ]);
 
-        return redirect()->back()->with('success', 'Producto actualizado correctamente');
+        return redirect()->back()->with('success', 'Producto actualizado con éxito');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Producto $producto)
-    {
-        $producto->delete();
-        return redirect()->back()->with('success', 'Producto eliminado con éxito');
-    }
 
-    public function filtro_proveedor(Request $request){
-        $proveedor = Proveedor::find($request->proveedor);
-        $proveedores = Proveedor::orderBy('nombre')->get();
-        $productos = $proveedor->productos;
-
-        return view('filtro_proveedor', compact('productos', 'proveedor', 'proveedores'));
-    }
 }

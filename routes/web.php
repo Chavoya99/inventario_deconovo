@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\OrdenCompraController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\RecubrimientoController;
 use App\Http\Controllers\ReporteFaltanteController;
 
 /*
@@ -37,7 +38,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     //Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::middleware(AdminMiddleware::class)->group(function(){});
     Route::controller(ProductoController::class)->group(function(){
         Route::get('lista_productos', 'index')->name('lista_productos');
         Route::get('nuevo_producto', 'create')->name('nuevo_producto')->middleware(AdminMiddleware::class);
@@ -74,7 +74,16 @@ Route::middleware('auth')->group(function () {
         Route::get('reporte_inventario', 'index_reporte')->name('reporte_inventario');
         Route::post('generar_reporte_inventario', 'generar_reporte_inventario')->name('generar_reporte_inventario');
     });
-            
+
+    Route::controller(RecubrimientoController::class)->group(function(){
+        Route::get('lista_recubrimientos' , 'index_recubrimientos')->name('lista_recubrimientos');
+        Route::get('nuevo_recubrimiento', 'create_recubrimiento')->name('nuevo_recubrimiento')->middleware(AdminMiddleware::class);
+        Route::post('guardar_recubrimiento', 'store_recubrimiento')->name('guardar_recubrimiento')->middleware(AdminMiddleware::class);
+        Route::get('editar_recubrimiento/{producto}', 'edit_recubrimiento')->name('editar_recubrimiento')->middleware(AdminMiddleware::class);
+        Route::post('editar_recubrimiento/{producto}', 'update_recubrimiento')->name('editar_recubrimiento')->middleware(AdminMiddleware::class);
+        
+    });
+ 
 });
 
 require __DIR__.'/auth.php';

@@ -31,12 +31,41 @@ class ProductoSeeder extends Seeder
 
         ];
 
+        $recubrimientoPrueba = [
+            ['producto' => "RECUBRIMIENTO PERDURA 1", 'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 2",'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 3",'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 4", 'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 5",'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 6",'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 7", 'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 8",'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 9",'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 10", 'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 11",'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO PERDURA 12",'maximo' => 3],
+        ];
+
         foreach($productosPerdura as $producto){
             Producto::create([
                 'producto' => $producto['producto'],
                 'proveedor_id' => 1,
                 'unidad' => 'Pza',
                 'existencia' => 0,
+                'maximo' => $producto['maximo'],
+                'pedir' => $producto['maximo'],
+                'precio_venta' => 100
+            ]);
+        }
+
+        foreach($recubrimientoPrueba as $producto){
+            Producto::create([
+                'producto' => $producto['producto'],
+                'proveedor_id' => 1,
+                'unidad' => 'Pza',
+                'existencia' => 0,
+                'contenido' => 2.11,
+                'recubrimiento' => true,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_venta' => 100
