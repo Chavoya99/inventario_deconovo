@@ -34,10 +34,52 @@ class ReporteFaltanteController extends Controller
     }
 
     public function index_reporte(Request $request){
-        $proveedores = Proveedor::whereHas('productos')->with('productos', 'reportes_faltantes')
-        ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
+        // $proveedores = Proveedor::whereHas('productos')->with('productos', 'reportes_faltantes')
+        // ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
+
+        $proveedores = Proveedor::whereHas('productos', function ($query) {
+        $query->where('recubrimiento', false);
+        })
+        ->with([
+            'productos' => function ($query) {
+                $query->where('recubrimiento', false);
+            },
+            'reportes_faltantes'
+        ])
+        ->withMax([
+        'reportes_faltantes' => function ($query) {
+            $query->where('de_recubrimiento', 0);
+        }
+        ], 'fecha_generada')
+        ->orderBy('nombre')
+        ->get();
 
         return view('generar_reporte_inventario', ['proveedores' => $proveedores, 
+        'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()->id,]);
+    }
+
+    public function index_reporte_recubrimientos(Request $request){
+        // $proveedores = Proveedor::whereHas('productos')->with('productos', 'reportes_faltantes')
+        // ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
+
+        $proveedores = Proveedor::whereHas('productos', function ($query) {
+        $query->where('recubrimiento', true);
+        })
+        ->with([
+            'productos' => function ($query) {
+                $query->where('recubrimiento', true);
+            },
+            'reportes_faltantes'
+        ])
+        ->withMax([
+        'reportes_faltantes' => function ($query) {
+            $query->where('de_recubrimiento', 1);
+        }
+        ], 'fecha_generada')
+        ->orderBy('nombre')
+        ->get();
+
+        return view('generar_reporte_recubrimientos', ['proveedores' => $proveedores, 
         'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()->id,]);
     }
 
@@ -51,7 +93,6 @@ class ReporteFaltanteController extends Controller
      */
     public function generar_reporte_inventario(Request $request)
     {
-
         $request->validate(
             [
                 'productos' => 'required|array',
@@ -81,6 +122,7 @@ class ReporteFaltanteController extends Controller
         $reporte_faltante = ReporteFaltante::create([
             'proveedor_id' => $proveedor->id,
             'fecha_generada' => $fecha_generada,
+            'de_recubrimiento' => $request->recubrimiento,
         ]);
  
         foreach($productos as $producto){
@@ -92,7 +134,7 @@ class ReporteFaltanteController extends Controller
             'incluir' => ($producto['pedir'] != 0) ? 1 : 0]);
         }
 
-        return redirect()->route('reporte_inventario')->with('success', 'Reporte generado con éxito');
+        return redirect(url()->previous())->with('success', 'Reporte generado con éxito');
 
     }
 

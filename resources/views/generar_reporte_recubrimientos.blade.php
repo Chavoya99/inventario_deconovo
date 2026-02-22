@@ -4,7 +4,7 @@
 <div class="bg-neutral-primary-soft shadow-xs rounded-base border border-default">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Generar reporte de productos') }}
+            {{ __('Generar reporte de recubrimientos') }}
         </h2>
         <a href="{{route('reporte_inventario')}}"
         class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
@@ -45,13 +45,13 @@
                     <div x-show="tab === {{ $proveedor->id }}" x-transition>
                         <span>
                                 
-                            Último reporte: @if ($proveedor->hasReportes())
+                            Último reporte: @if ($proveedor->hasReportesRecubrimientos())
                                 {{ \Carbon\Carbon::parse($proveedor->reportes_faltantes_max_fecha_generada)->format('d/m/Y') }}
                             @else
                                 Sin reportes
                             @endif
                         </span>
-                        <form action="{{route('generar_reporte_inventario', ['recubrimiento' => false])}}" method="POST"
+                        <form action="{{route('generar_reporte_inventario', ['recubrimiento' => true])}}" method="POST"
                         onsubmit="return confirm('Se generará el reporte, ¿continuar?')">
                         @csrf
                             <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
@@ -151,10 +151,7 @@
                     </div>
                 @endforeach
             
-                
-            
-        
-            
+                  
 
         </div>
     </div>
