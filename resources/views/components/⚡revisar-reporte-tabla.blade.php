@@ -127,8 +127,8 @@ new class extends Component
                         @endif
                         <th class="px-6 py-3 font-medium">Máximo</th>
                         <th class="px-6 py-3 font-medium">Existencia</th>
-                        <th class="px-6 py-3 font-medium">Utilidad</th>
                         <th class="px-6 py-3 font-medium">Pedir</th>
+                        <th class="px-6 py-3 font-medium">Utilidad</th>
                         <th class="px-6 py-3 font-medium">Precio proveedor</th>
                         <th class="px-6 py-3 font-medium">Precio venta</th>
                         @if (auth()->user()->isAdmin())
@@ -189,6 +189,24 @@ new class extends Component
                         <td class="px-6 py-4">
                             {{$producto->pivot->existencia}}
                         </td>
+                        
+                        @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
+                        <!--Pedir-->
+                            <td class="px-6 py-4 min-w-[120px]">
+                                <input  wire:model.defer="pedir_modificado.{{ $producto->id }}" 
+                                wire:key="producto-{{ $producto->id }}" 
+                                type="number" step="1" min="1" value="{{$producto->pivot->pedir_modificado}}"
+                                class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                max="{{$producto->maximo - $producto->pivot->existencia}}"
+                                id="pedir_producto_{{$index}}"
+                                name="productos[{{$index}}][pedir]" @required(isset($seleccionados[$producto->id]) && $seleccionados[$producto->id])>
+                                <x-input-error 
+                                :messages="$errors->get('productos.' . $index . '.pedir')" 
+                                class="mt-1" />
+                                
+                            </td>
+                        @endif
+
                         @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
                             <!--Utilidad-->
                             <td class="px-6 py-4 min-w-[110px]">
@@ -209,23 +227,8 @@ new class extends Component
                                 {{$producto->utilidad}}
                             </td>
                         @endif
-                        
-                        @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
-                        <!--Pedir-->
-                            <td class="px-6 py-4 min-w-[125px]">
-                                <input  wire:model.defer="pedir_modificado.{{ $producto->id }}" 
-                                wire:key="producto-{{ $producto->id }}" 
-                                type="number" step="1" min="1" value="{{$producto->pivot->pedir_modificado}}"
-                                class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                max="{{$producto->maximo - $producto->pivot->existencia}}"
-                                id="pedir_producto_{{$index}}"
-                                name="productos[{{$index}}][pedir]" @required(isset($seleccionados[$producto->id]) && $seleccionados[$producto->id])>
-                                <x-input-error 
-                                :messages="$errors->get('productos.' . $index . '.pedir')" 
-                                class="mt-1" />
-                                
-                            </td>
 
+                        @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
                         <!--Precio proveedor-->
                             <td class="px-6 py-4 min-w-[125px]">
                                 <input  wire:model.defer="precios.{{ $producto->id }}" 

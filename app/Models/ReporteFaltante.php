@@ -10,7 +10,7 @@ class ReporteFaltante extends Model
     use HasFactory;
     protected $table="reportes_faltantes",
 
-    $fillable = ['proveedor_id', 'fecha_generada', 'status'],
+    $fillable = ['proveedor_id', 'fecha_generada', 'status', 'de_recubrimiento'],
 
     $casts = ['fecha_generada'=> 'datetime'];
 
