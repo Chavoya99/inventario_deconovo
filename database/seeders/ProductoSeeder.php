@@ -13,7 +13,7 @@ class ProductoSeeder extends Seeder
      */
     public function run(): void
     {   
-
+        $utilidad = 30;
         //Productos Perdura
         $productosPerdura = [
             ['producto' => "DURACRIL PERDURA 1 LT",'maximo' => 3],
@@ -52,9 +52,11 @@ class ProductoSeeder extends Seeder
                 'proveedor_id' => 1,
                 'unidad' => 'Pza',
                 'existencia' => 0,
+                'utilidad' => $utilidad,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
-                'precio_venta' => 100
+                'precio_proveedor' => 100,
+                'precio_venta' => $this->obtenerPrecioVenta(false),
             ]);
         }
 
@@ -64,11 +66,13 @@ class ProductoSeeder extends Seeder
                 'proveedor_id' => 1,
                 'unidad' => 'Pza',
                 'existencia' => 0,
-                'contenido' => 2.11,
+                'contenido' => 2.00,
                 'recubrimiento' => true,
+                'utilidad' => $utilidad,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
-                'precio_venta' => 100
+                'precio_proveedor' => 100,
+                'precio_venta' => $this->obtenerPrecioVenta(true),
             ]);
         }
 
@@ -103,7 +107,8 @@ class ProductoSeeder extends Seeder
                 'existencia' => 0,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
-                'precio_venta' => 100
+                'precio_proveedor' => 100,
+                'precio_venta' => $this->obtenerPrecioVenta(false),
             ]);
         }
 
@@ -195,11 +200,19 @@ class ProductoSeeder extends Seeder
                 'existencia' => 0,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
-                'precio_venta' => 100
+                'precio_proveedor' => 100,
+                'precio_venta' => $this->obtenerPrecioVenta(false),
             ]);
         }
 
-        
 
     }
+
+    public function obtenerPrecioVenta($contenido){
+            $contenido = ($contenido) ? 2 : 1;
+            $aux1 = 100 * $contenido;
+            $aux2 = 1-(30/100);
+            $resultado = $aux1 / $aux2;
+            return $resultado;
+        }
 }
