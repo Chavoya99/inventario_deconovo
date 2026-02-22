@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('proveedor_id')->constrained()->restrictOnDelete();
             $table->string('status')->default('revision');
+            $table->boolean('de_recubrimiento')->default(false);
             $table->timestamp('fecha_generada');
             $table->timestamps();
         });
