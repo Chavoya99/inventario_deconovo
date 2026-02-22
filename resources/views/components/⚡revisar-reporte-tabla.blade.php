@@ -10,6 +10,7 @@ new class extends Component
     public $pedir_modificado = [];
     public $seleccionados = [];
     public $precios_venta = [];
+    public $producto_utilidad = [];
 
     public function mount()
     {
@@ -29,6 +30,9 @@ new class extends Component
             $this->nombres_productos[$producto->id] =
                 old("productos.$index.producto", $producto->producto);
 
+            $this->producto_utilidad[$producto->id] =
+                old("productos.$index.utilidad", $producto->utilidad);
+
             $this->seleccionados[$producto->id] =
             old("productos.$index.seleccionado",
                 isset($this->seleccionados[$producto->id])
@@ -42,6 +46,7 @@ new class extends Component
             $this->precios_venta[$producto->id] = $producto->precio_venta;
             $this->pedir_modificado[$producto->id] = $producto->pivot->pedir_modificado;
             $this->nombres_productos[$producto->id] = $producto->producto;
+            $this->producto_utilidad[$producto->id] = $producto->utilidad;
         }
     }
 
@@ -74,6 +79,7 @@ new class extends Component
         $this->precios_venta[$producto_id] = $producto->precio_venta;
         $this->pedir_modificado[$producto_id] = $producto->pivot->pedir_modificado;
         $this->nombres_productos[$producto->id] = $producto->producto;
+        $this->producto_utilidad[$producto->id] = $producto->utilidad;
 
         $this->cargarProductos();
     }
@@ -96,6 +102,7 @@ new class extends Component
             unset($this->pedir_modificado[$producto_id]);
             unset($this->seleccionados[$producto_id]);
             unset($this->nombres_productos[$producto->id]);
+            unset($this->producto_utilidad[$producto->id]);
 
             $this->cargarProductos();
         }
@@ -114,9 +121,13 @@ new class extends Component
                 <thead class="bg-sky-400 text-black border-b">
                     <tr>
                         <th class="px-6 py-3 font-medium">Producto</th>
-                        <th class="px-6 py-3 font-medium">Unidad</th>
+                        {{--<th class="px-6 py-3 font-medium">Unidad</th>--}}
+                        @if($reporte->de_recubrimiento == 1 ) 
+                            <th class="px-6 py-3 font-medium">Contenido</th>
+                        @endif
                         <th class="px-6 py-3 font-medium">Máximo</th>
                         <th class="px-6 py-3 font-medium">Existencia</th>
+                        <th class="px-6 py-3 font-medium">Utilidad</th>
                         <th class="px-6 py-3 font-medium">Pedir</th>
                         <th class="px-6 py-3 font-medium">Precio proveedor</th>
                         <th class="px-6 py-3 font-medium">Precio venta</th>
@@ -135,9 +146,9 @@ new class extends Component
                         class="border-b hover:bg-gray-50"
                     >
                         @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
-                            <td class="px-6 py-4 font-medium text-gray-900 min-w-[450px]">
+                            <td class="px-6 py-4 font-medium text-gray-900 min-w-[400px]">
                         <!--Nombre producto-->
-                                <input type="hidden" name="productos[{{$index}}][id]" value="{{$producto->id}}">
+                                <input type="hidden" name="productos[{{$index}}][id]" value="{{$producto->id}}" required>
                                 <input  
                                     wire:model.defer="nombres_productos.{{ $producto->id }}" 
                                     wire:key="producto-{{ $producto->id }}" 
@@ -156,20 +167,48 @@ new class extends Component
                             </td>
                         @endif
                         
-                        <td class="px-6 py-4">
+                        {{--<td class="px-6 py-4">--}}
                             @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
                                 <input type="hidden" name="productos[{{$index}}][unidad]" value="{{$producto->unidad}}">
                                 
                             @endif
-                            {{$producto->unidad}}
-                        </td>
+                            {{--$producto->unidad--}}
+                        {{--</td>--}}
+
+                        <!--Contenido-->
+                        <input type="hidden" value="{{$producto->contenido}}" class="contenido-input">
+                        @if($reporte->de_recubrimiento == 1 )
+                            <td class="px-6 py-4">
+                                
+                                {{$producto->contenido}}
+                            </td>
+                         @endif
                         <td class="px-6 py-4">
                             {{$producto->maximo}}
                         </td>
                         <td class="px-6 py-4">
                             {{$producto->pivot->existencia}}
                         </td>
-
+                        @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
+                            <!--Utilidad-->
+                            <td class="px-6 py-4 min-w-[110px]">
+                                <input  wire:model.defer="producto_utilidad.{{ $producto->id }}" 
+                                wire:key="producto-{{ $producto->id }}" 
+                                type="number" step="1" min="1" value="{{$producto->utilidad}}"
+                                class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 utilidad-input"
+                                max="99"
+                                id="producto_utilidad_{{$index}}"
+                                name="productos[{{$index}}][utilidad]" @required(isset($seleccionados[$producto->id]) && $seleccionados[$producto->id])>
+                                <x-input-error 
+                                :messages="$errors->get('productos.' . $index . '.utilidad')" 
+                                class="mt-1" />
+                                
+                            </td>
+                        @else
+                            <td class="px-6 py-4">
+                                {{$producto->utilidad}}
+                            </td>
+                        @endif
                         
                         @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
                         <!--Pedir-->
@@ -192,7 +231,7 @@ new class extends Component
                                 <input  wire:model.defer="precios.{{ $producto->id }}" 
                                 wire:key="producto-{{ $producto->id }}" 
                                 type="number" step="0.01" min="0" value="{{$producto->precio_proveedor}}"
-                                class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 precio-proveedor-input"
                                 max="999999"
                                 id="precio_proveedor_{{$index}}"
                                 name="productos[{{$index}}][precio_proveedor]" @required(isset($seleccionados[$producto->id]) && $seleccionados[$producto->id]) >
@@ -205,10 +244,11 @@ new class extends Component
                             <td class="px-6 py-4 min-w-[150px]">
                                 <input name="productos[{{$index}}][precio_venta]" wire:model.defer="precios_venta.{{ $producto->id }}" 
                                 wire:key="producto-{{ $producto->id }}" 
-                                type="number" step="0.01" min="0" value="{{$producto->precio_venta}}"
-                                class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                type="number" step="0.01" min="0" value=""
+                                class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 precio-venta-input"
                                 max="999999"
-                                id="precio_venta_{{$index}}" @required(isset($seleccionados[$producto->id]) && $seleccionados[$producto->id])>
+                                disabled
+                                id="precio_venta_{{$index}}">
                                 <x-input-error 
                                 :messages="$errors->get('productos.' . $index . '.precio_venta')" 
                                 class="mt-1" />

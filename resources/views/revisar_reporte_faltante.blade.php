@@ -44,8 +44,49 @@
         let input_pedir = document.getElementById("pedir_producto_" + $index);
         let input_precio_proveedor = document.getElementById("precio_proveedor_" + $index);
         let input_precio_venta = document.getElementById("precio_venta_" + $index);
+        let input_utilidad = document.getElementById("producto_utilidad_" + $index);
         
-        [input_nombre, input_pedir, input_precio_proveedor, input_precio_venta]
+        [input_nombre, input_pedir, input_precio_proveedor, input_precio_venta, input_utilidad]
         .forEach(input => input.toggleAttribute('required'));    
     }
+
+
+    document.addEventListener('input', function(e)
+    {
+        if (
+            e.target.classList.contains('precio-proveedor-input') ||
+            e.target.classList.contains('utilidad-input')
+        ) {
+            calcularFila(e.target);
+        }
+    });
+    
+
+    function calcularFila(elemento)
+    {
+        let fila = elemento.closest('tr');
+
+        let precioProveedor = fila.querySelector('.precio-proveedor-input');
+        let utilidad = fila.querySelector('.utilidad-input');
+        let precioVenta = fila.querySelector('.precio-venta-input');
+        let contenido = fila.querySelector('.contenido-input');
+
+        let costo = parseFloat(precioProveedor.value);
+        let porcentaje = parseFloat(utilidad.value);
+        let contenido_valor = parseFloat(contenido.value);
+
+        if (!isNaN(costo) && !isNaN(porcentaje) && porcentaje < 100)
+        {
+            let resultado = (costo  * contenido_valor)/ (1 - (porcentaje / 100));
+            precioVenta.value = resultado.toFixed(2);
+
+            // actualizar Livewire
+            precioVenta.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        else
+        {
+            precioVenta.value = '';
+        }
+    }
+
 </script>
