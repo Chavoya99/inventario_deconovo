@@ -24,6 +24,10 @@ class Proveedor extends Model
     }
 
     public function hasReportes(){
-        return count($this->reportes_faltantes) > 0;
+        return count($this->reportes_faltantes()->where('de_recubrimiento', 0)->get()) > 0;
+    }
+
+    public function hasReportesRecubrimientos(){
+        return count($this->reportes_faltantes()->where('de_recubrimiento', 1)->get()) > 0;
     }
 }
