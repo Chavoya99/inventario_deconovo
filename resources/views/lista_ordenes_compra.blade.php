@@ -100,7 +100,10 @@
                             <th class="px-6 py-3 font-medium">Proveedor</th>
                             <th class="px-6 py-3 font-medium">Fecha generada</th>
                             <th class="px-6 py-3 font-medium">Recibida</th>
-                            <th class="px-6 py-3 font-medium">Fecha recibida</th> 
+                            <th class="px-6 py-3 font-medium">Fecha recibida</th>
+                            @if($ruta_origen == 'lista_ordenes_compra_proveedor')
+                                <th class="px-6 py-3 font-medium">Revisada</th>
+                            @endif
                             <th class="px-6 py-3 text-right font-medium">Acciones</th>
                         </tr>
                     </thead>
@@ -120,4 +123,18 @@
 </div>
 
 </x-app-layout>
+<script>
+    function realizarAccionCritica() {
+        if (confirm("¿Cambiar estado?")) {
+            
+            if (confirm("Esta orden ya tiene status recibido completo, ¿Continuar?")) {
+                return true;
+            } else {
+                return false;
+            }
+              
+        } 
+    }
+</script>
+
 
