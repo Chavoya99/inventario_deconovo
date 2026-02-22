@@ -46,19 +46,18 @@ class OrdenCompraController extends Controller
 
     public function index_proveedor(Request $request)
     {   
-
         $ordenes_compra = OrdenCompra::with('proveedor')->orderBy('id')
         ->when($request->proveedor, function ($query) use ($request) {
             $query->where('proveedor_id', $request->proveedor);
         })//Filtro por proveedor
-        ->when($request->filtro === 'realizadas', function ($query) {
-            $query->where('realizada', true);
+        ->when($request->filtro === 'parciales', function ($query) {
+            $query->where('recibida', 'p');
         })//Filtro realizadas
         ->when($request->filtro === 'recibidas', function ($query) {
-            $query->where('recibida', true);
+            $query->where('recibida', 'r');
         })//Filtro recibidas
         ->when($request->filtro === 'pendientes', function($query){
-            $query->where('realizada', false);
+            $query->where('recibida', 'n');
         })
         ->paginate(5)
         ->withQueryString();
