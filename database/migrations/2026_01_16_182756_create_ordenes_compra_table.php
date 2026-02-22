@@ -17,6 +17,7 @@ return new class extends Migration
             $table->timestamp('fecha_generada');
             $table->char('recibida')->default('n');
             $table->timestamp('fecha_recibida')->nullable();
+            $table->boolean('revisada')->default(false);
             $table->string('comentario')->nullable();
             $table->string('ruta_archivo_interna', 2048);
             $table->string('ruta_archivo_proveedor', 2048);
