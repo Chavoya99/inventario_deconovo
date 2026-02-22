@@ -63,6 +63,14 @@
                         rounded-lg border border-transparent bg-yellow-300 hover:bg-yellow-500 text-black">
                     Pendientes
                 </a>
+                @if (request()->routeIs('lista_ordenes_compra_proveedor'))
+                    <a href="{{ route($ruta_origen, ['proveedor' => request()->get('proveedor'), 'filtro' => 'revisadas']) }}"
+                    class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                            rounded-lg border border-transparent bg-green-300 hover:bg-green-500 text-black">
+                        Revisadas
+                    </a>
+                @endif
+                
 
                 <a href="{{route($ruta_origen, ['proveedor'=> request()->get('proveedor')])}}"
                 class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 

@@ -22,16 +22,17 @@ class OrdenCompraController extends Controller
         $ordenes_compra = OrdenCompra::with('proveedor')->orderBy('id')
         ->when($request->proveedor, function ($query) use ($request) {
             $query->where('proveedor_id', $request->proveedor);
-        })//Filtro por proveedor
+        })
         ->when($request->filtro === 'parciales', function ($query) {
             $query->where('recibida', 'p');
-        })//Filtro realizadas
+        })
         ->when($request->filtro === 'recibidas', function ($query) {
             $query->where('recibida', 'r');
-        })//Filtro recibidas
+        })
         ->when($request->filtro === 'pendientes', function($query){
             $query->where('recibida', 'n');
         })
+        
         ->paginate(5)
         ->withQueryString();
 
@@ -49,15 +50,18 @@ class OrdenCompraController extends Controller
         $ordenes_compra = OrdenCompra::with('proveedor')->orderBy('id')
         ->when($request->proveedor, function ($query) use ($request) {
             $query->where('proveedor_id', $request->proveedor);
-        })//Filtro por proveedor
+        })
         ->when($request->filtro === 'parciales', function ($query) {
             $query->where('recibida', 'p');
-        })//Filtro realizadas
+        })
         ->when($request->filtro === 'recibidas', function ($query) {
             $query->where('recibida', 'r');
-        })//Filtro recibidas
+        })
         ->when($request->filtro === 'pendientes', function($query){
             $query->where('recibida', 'n');
+        })
+        ->when($request->filtro === 'revisadas', function($query){
+            $query->where('revisada', true);
         })
         ->paginate(5)
         ->withQueryString();
@@ -76,12 +80,14 @@ class OrdenCompraController extends Controller
      */
     public function create(Request $request)
     {   
+        
         $request->validate([
 
             'productos' => ['required','array'],
 
             'productos.*.id' => [
-                'required',
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1',
                 'exists:productos,id'
             ],
 
@@ -92,10 +98,15 @@ class OrdenCompraController extends Controller
                 'max:255'
             ],
 
+            'productos.*.utilidad' => [
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1', 
+                'integer', 'min:1', 'max:99'
+            ],
+
             'productos.*.pedir' => [
                 'required_if:productos.*.seleccionado,on',
                 'exclude_unless:productos.*.seleccionado,1',
-                'required',
                 'integer',
                 'min:1'
             ],
@@ -109,14 +120,14 @@ class OrdenCompraController extends Controller
                 'max:999999'
             ],
 
-            'productos.*.precio_venta' => [
-                'required_if:productos.*.seleccionado,on',
-                'exclude_unless:productos.*.seleccionado,1',
-                'filled',
-                'numeric',
-                'min:0',
-                'max:999999'
-            ],
+            // 'productos.*.precio_venta' => [
+            //     'required_if:productos.*.seleccionado,on',
+            //     'exclude_unless:productos.*.seleccionado,1',
+            //     'filled',
+            //     'numeric',
+            //     'min:0',
+            //     'max:999999'
+            // ],
 
         ]);
 
@@ -126,17 +137,25 @@ class OrdenCompraController extends Controller
         $productos = collect($request->productos)
             ->filter(fn($producto) => isset($producto['seleccionado']))
             ->map(function ($producto) use ($reporte) {
+
                     
                 $reporte->productos()->where('producto_id', $producto['id'])->update(['registrado' => true, 
                 'pedir_modificado' => $producto['pedir']]);
-                Producto::find($producto['id'])->update(['precio_venta' => $producto['precio_venta'], 
-                'precio_proveedor' => $producto['precio_proveedor'], 'ultima_orden' => now('America/Belize')]);      
+
+                $aux = Producto::find($producto['id']);
+                $contenido = $aux->contenido;
+                $aux->update([
+                'precio_proveedor' => $producto['precio_proveedor'],
+                'precio_venta' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad'], $contenido),
+                'utilidad' => $producto['utilidad'], 
+                'ultima_orden' => now('America/Belize')]); 
+
                 return [
                     'id' => $producto['id'],
                     'producto' => $producto['producto'],
                     'pedir' => $producto['pedir'],
                     'unidad' => $producto['unidad'],
-                    'precio_venta' => $producto['precio_venta'],
+                    'precio_venta' => $this->obtenerPrecioVenta($producto['precio_proveedor'],$producto['utilidad'],$contenido),
                     'precio_proveedor' => $producto['precio_proveedor'],
                 ];
             } )
@@ -274,5 +293,11 @@ class OrdenCompraController extends Controller
     public function update(Request $request, OrdenCompra $ordenCompra)
     {
         //
+    }
+
+    public function obtenerPrecioVenta($precio_proveedor, $utilidad, $contenido){
+        
+        $resultado = ($precio_proveedor * $contenido) / (1-($utilidad / 100));
+        return $resultado;
     }
 }
