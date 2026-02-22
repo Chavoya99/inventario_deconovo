@@ -32,6 +32,7 @@ new class extends Component
 
     public function toggleRecibida()
     {   
+        
         $transiciones = [
             'n' => 'p',
             'p' => 'r',
@@ -42,6 +43,7 @@ new class extends Component
         if($this->orden->recibida == 'r' && auth()->user()->isEmpleado()){
             return;
         }
+
 
         $fecha = now('America/Belize');
 
@@ -61,6 +63,16 @@ new class extends Component
             'fecha_recibida' => null,
         ]);
     }
+
+    public function toggleRevisada(){
+        if($this->orden->recibida == 'r'){
+            return;
+        }
+
+        $this->orden->update([
+            'revisada' => true,
+        ]);
+    }
 };
 ?>
 
@@ -75,7 +87,12 @@ new class extends Component
 
     <td class="px-6 py-4">
         <button 
-        onclick="confirm('¿Confirmar cambio?') || event.stopImmediatePropagation()"
+        @if($orden->recibida != 'r') 
+            onclick="confirm('¿Confirmar cambio?') || event.stopImmediatePropagation()"
+        
+        @else
+            onclick="realizarAccionCritica() || event.stopImmediatePropagation()"
+        @endif
         wire:click="toggleRecibida()"
         class="cursor-pointer"
         title="Cambiar estado"
@@ -135,8 +152,46 @@ new class extends Component
         @endif
     </td>
                             
-    
-    
+    @if($ruta_origen == 'lista_ordenes_compra_proveedor')
+    <td class="px-6 py-4">
+        <button 
+        onclick="confirm('¿Confirmar cambio?') || event.stopImmediatePropagation()"
+        wire:click="toggleRevisada()"
+        class="cursor-pointer"
+        title="Cambiar estado"
+        @if($orden->revisada == 1) disabled @endif
+        >
+            @if ($orden->revisada == 1)
+                <!-- CHECK -->
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    width="18" height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#00ff00"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="transition hover:scale-110">
+                    <path d="M20 6 9 17l-5-5"/>
+                </svg>
+            @else
+                <!-- X -->
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    width="18" height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#ff0000"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="transition hover:scale-110">
+                    <path d="M18 6 6 18"/>
+                    <path d="m6 6 12 12"/>
+                </svg>
+            @endif
+        </button>
+    </td>
+    @endif
         
         <td class="px-6 py-4 text-right">
             <div class="flex justify-end items-center gap-4">
@@ -158,7 +213,7 @@ new class extends Component
                     </a>
                 @endif
                 @if(auth()->user()->isAdmin())     
-                    @if (request()->routeIs('lista_ordenes_compra_proveedor'))
+                    @if ($ruta_origen == 'lista_ordenes_compra_proveedor')
                         <a href="{{ route('ver_orden_compra', ['orden'=> $orden, 'tipo' => 'proveedor']) }}"
                         class="text-blue-600 hover:underline cursor-pointer" target="_blank">
                             Ver orden
