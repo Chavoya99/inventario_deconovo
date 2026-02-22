@@ -54,8 +54,8 @@ class ProductoController extends Controller
                 'unidad' => 'required|in:Caja,Pza,Bulto por saco,Tarima',
                 'stock' => 'required|integer|min:0',
                 'stock_max' => 'required|integer|min:1',
-                'precio_proveedor' => 'required|',
-                'utilidad' => 'required|max:100|integer',
+                'precio_proveedor' => 'required|min:0.01|numeric',
+                'utilidad' => 'required|integer|min:1|max:99',
             ]
         );
 
@@ -69,7 +69,7 @@ class ProductoController extends Controller
             'utilidad' => $request->utilidad,
             'pedir' => $pedir,
             'precio_proveedor' => $request->precio_proveedor,
-            'precio_venta' => 100,
+            'precio_venta' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad),
         ]);
 
         return redirect()->route('lista_productos')->with('success', 'Producto agregado con éxito');
@@ -87,7 +87,7 @@ class ProductoController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Producto $producto)
-    {       
+    {     
         $proveedores = Proveedor::orderBy('nombre')->get();
         $ruta_guardar = 'editar_producto';
         $ruta_anterior = 'lista_productos';
@@ -106,7 +106,7 @@ class ProductoController extends Controller
                 'unidad' => 'required|in:Caja,Pza,Bulto por saco,Tarima',
                 'stock' => 'required|integer|min:0',
                 'stock_max' => 'required|integer|min:1',
-                'utilidad' => 'required|max:100|integer|min:1',
+                'utilidad' => 'required|integer|min:1|max:99',
                 'precio_proveedor' => 'required|numeric|min:0.01',
             ]
         );
@@ -121,6 +121,7 @@ class ProductoController extends Controller
             'maximo' => $request->stock_max,
             'pedir' => $pedir,
             'precio_proveedor' => $request->precio_proveedor,
+            'precio_venta' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad),
         ]);
 
         return redirect()->back()->with('success', 'Producto actualizado correctamente');
@@ -141,5 +142,9 @@ class ProductoController extends Controller
         $productos = $proveedor->productos;
 
         return view('filtro_proveedor', compact('productos', 'proveedor', 'proveedores'));
+    }
+
+    public function obtenerPrecioVenta($precio_proveedor, $utilidad){
+        return ($precio_proveedor) / (1-($utilidad / 100));
     }
 }

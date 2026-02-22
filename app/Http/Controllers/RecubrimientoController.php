@@ -48,8 +48,8 @@ class RecubrimientoController extends Controller
                 'stock' => 'required|integer|min:0',
                 'stock_max' => 'required|integer|min:1',
                 'precio_proveedor' => 'required|',
-                'utilidad' => 'required|max:100|integer',
-                'contenido' => 'required|min:1|numeric',
+                'utilidad' => 'required|max:99|integer|min:1',
+                'contenido' => 'required|min:0.01|numeric',
             ]
         );
 
@@ -65,7 +65,7 @@ class RecubrimientoController extends Controller
             'pedir' => $pedir,
             'recubrimiento' => true,
             'precio_proveedor' => $request->precio_proveedor,
-            'precio_venta' => 100,
+            'precio_venta' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad, $request->contenido),
         ]);
 
         return redirect()->route('lista_recubrimientos')->with('success', 'Producto agregado con éxito');
@@ -89,7 +89,7 @@ class RecubrimientoController extends Controller
                 'stock' => 'required|integer|min:0',
                 'stock_max' => 'required|integer|min:1',
                 'precio_proveedor' => 'required|numeric|min:0.01',
-                'utilidad' => 'required|max:100|integer|min:1',
+                'utilidad' => 'required|integer|min:1|max:99',
                 'contenido' => 'required|min:0.01|numeric',
             ]
         );
@@ -106,10 +106,14 @@ class RecubrimientoController extends Controller
             'pedir' => $pedir,
             'recubrimiento' => true,
             'precio_proveedor' => $request->precio_proveedor,
-            'precio_venta' => 100,
+            'precio_venta' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad, $request->contenido),
         ]);
 
         return redirect()->back()->with('success', 'Producto actualizado con éxito');
+    }
+
+    public function obtenerPrecioVenta($precio_proveedor, $utilidad, $contenido){
+        return ($precio_proveedor * $contenido) / (1-($utilidad / 100));
     }
 
 

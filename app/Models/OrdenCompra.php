@@ -11,7 +11,7 @@ class OrdenCompra extends Model
     protected $table = 'ordenes_compra', 
 
     $fillable = ['proveedor_id', 'fecha_generada', 'comentario',
-    'recibida', 'fecha_recibida',
+    'recibida', 'fecha_recibida', 'revisada',
     'ruta_archivo_interna',
     'ruta_archivo_proveedor'],
 
