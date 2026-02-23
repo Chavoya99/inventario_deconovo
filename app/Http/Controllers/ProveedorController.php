@@ -69,7 +69,17 @@ class ProveedorController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Proveedor $proveedor)
-    {
+    {   
+
+        if($proveedor->ordenes_compra->count() > 0){
+
+            return redirect()->route('lista_proveedores')->with('error', 'El proveedor tiene ordenes de compra relacionadas');
+        }elseif($proveedor->reportes_faltantes->count() > 0){
+            return redirect()->route('lista_proveedores')->with('error', 'El proveedor tiene reportes relacionados');
+        }
+
+        
+        
         $proveedor->delete();
         return redirect()->route('lista_proveedores')->with('success', 'Proveedor eliminado con éxito');
 
