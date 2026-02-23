@@ -28,7 +28,6 @@ class ReporteFaltanteController extends Controller
         })//filtro en revision
         ->paginate(5)
         ->withQueryString();
-
         
         return view('reportes_faltantes', compact('reportes', 'proveedores'));
     }
@@ -54,8 +53,10 @@ class ReporteFaltanteController extends Controller
         ->orderBy('nombre')
         ->get();
 
+        $proveedor_id = ($proveedores->first()) ? $proveedores->first()->id : 0;
+
         return view('generar_reporte_inventario', ['proveedores' => $proveedores, 
-        'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()->id,]);
+        'proveedorActivo' => ($request->proveedor_id) ? $request->proveedor_id : $proveedor_id,]);
     }
 
     public function index_reporte_recubrimientos(Request $request){
@@ -79,8 +80,10 @@ class ReporteFaltanteController extends Controller
         ->orderBy('nombre')
         ->get();
 
+        $proveedor_id = ($proveedores->first()) ? $proveedores->first()->id : 0;
+
         return view('generar_reporte_recubrimientos', ['proveedores' => $proveedores, 
-        'proveedorActivo' => $request->proveedor_id ?? $proveedores->first()->id,]);
+        'proveedorActivo' => ($request->proveedor_id) ? $request->proveedor_id : $proveedor_id,]);
     }
 
     public function eliminar_reporte(ReporteFaltante $reporte){
@@ -111,7 +114,7 @@ class ReporteFaltanteController extends Controller
                 return $producto;
             })
             ->values();
-
+        dd($productos);
         if($productos->isEmpty()){
             return redirect()->back()->withInput()->with(['error' => "No hay productos suficientes para generar el reporte"]);
         }

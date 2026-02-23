@@ -21,7 +21,17 @@
     </x-slot>
     
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
-
+        @if($proveedores->isEmpty())
+        <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
+            <table class="w-full text-sm text-left text-gray-700">
+                <tr>
+                    <td colspan="3" class="px-6 py-4 text-center text-gray-500">
+                        No hay productos registrados
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @else
         <div x-data="{ tab: {{ $proveedorActivo }} }">
 
             <!-- TABS -->
@@ -154,6 +164,7 @@
                   
 
         </div>
+        @endif
     </div>
 
 </div>
