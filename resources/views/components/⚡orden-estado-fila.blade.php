@@ -65,9 +65,6 @@ new class extends Component
     }
 
     public function toggleRevisada(){
-        if($this->orden->recibida == 'r'){
-            return;
-        }
 
         $this->orden->update([
             'revisada' => true,

@@ -89,7 +89,7 @@
         const alert = document.getElementById('success-alert');
         if (alert) {
             alert.classList.add('opacity-0');
-            setTimeout(() => alert.remove(), 500);
+            setTimeout(() => alert.remove(), 3000);
         }
     }, 3000);
 </script>
@@ -110,7 +110,7 @@
             // Esperar 3 segundos y ocultar
             setTimeout(() => {
                 alertBox.classList.add('hidden');
-            }, 3000);
+            }, 4000);
 
         });
     });
