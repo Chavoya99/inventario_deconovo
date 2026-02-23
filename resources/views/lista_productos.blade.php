@@ -19,7 +19,7 @@
             Ver recubrimientos
         </a>
     </x-slot>
-    <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-20">
+    <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-10">
         <div class="flex items-end gap-4">
         @if (auth()->user()->isAdmin())
                 <!-- Botón nuevo producto -->

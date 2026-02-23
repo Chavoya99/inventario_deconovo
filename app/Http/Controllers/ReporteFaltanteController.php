@@ -114,7 +114,7 @@ class ReporteFaltanteController extends Controller
                 return $producto;
             })
             ->values();
-        dd($productos);
+        
         if($productos->isEmpty()){
             return redirect()->back()->withInput()->with(['error' => "No hay productos suficientes para generar el reporte"]);
         }
