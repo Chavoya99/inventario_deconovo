@@ -131,7 +131,10 @@ class ProductoController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Producto $producto)
-    {
+    {   
+        if($producto->reportes->count() > 0){
+            return redirect()->back()->with('error', 'El producto tiene reportes relacionados');
+        }
         $producto->delete();
         return redirect()->back()->with('success', 'Producto eliminado con éxito');
     }
