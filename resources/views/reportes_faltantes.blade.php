@@ -80,10 +80,11 @@
                 @else
                     <thead class="bg-sky-400 text-black border-b">
                         <tr>
-                            <th class="max-w-10 px-6 py-3 font-medium">No. reporte</th>
+                            <th class="px-6 py-3 font-medium">No. reporte</th>
                             <th class="px-6 py-3 font-medium">Proveedor</th>
                             <th class="px-6 py-3 font-medium">Estatus</th>
                             <th class="px-6 py-3 font-medium">Fecha</th>
+                            <th class="px-6 py-3 font-medium">De recubrimiento</th>
                             <th class="px-6 py-3 text-right font-medium">Acciones</th>
                         
                         </tr>
@@ -109,6 +110,10 @@
 
                             <td class="px-6 py-4">
                                 {{$reporte->fecha_generada->format('d/m/y')}}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                @if($reporte->de_recubrimiento) Sí @else No @endif
                             </td>
 
                             <!-- ACCIONES -->
