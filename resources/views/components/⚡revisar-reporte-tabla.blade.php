@@ -205,6 +205,10 @@ new class extends Component
                                 class="mt-1" />
                                 
                             </td>
+                        @else
+                            <td class="px-6 py-4">
+                                {{$producto->pivot->pedir_modificado}}
+                            </td>
                         @endif
 
                         @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
