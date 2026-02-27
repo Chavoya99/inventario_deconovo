@@ -262,9 +262,6 @@ new class extends Component
                             </td>
                         @else
                             <td class="px-6 py-4">
-                                {{$producto->pivot->pedir_modificado}}
-                            </td>
-                            <td class="px-6 py-4">
                                 {{$producto->precio_proveedor}}
                             </td>
                             <td class="px-6 py-4">
@@ -339,10 +336,10 @@ new class extends Component
                     <thead class="bg-sky-400 text-black border-b">
                         <tr>
                             <th class="px-6 py-3 font-medium">Producto</th>
-                            <th class="px-6 py-3 font-medium">Unidad</th>
                             <th class="px-6 py-3 font-medium">Máximo</th>
                             <th class="px-6 py-3 font-medium">Existencia</th>
                             <th class="px-6 py-3 font-medium">Pedir</th>
+                            <th class="px-6 py-3 font-medium">Utilidad</th>
                             <th class="px-6 py-3 font-medium">Precio proveedor</th>
                             <th class="px-6 py-3 font-medium">Precio venta</th>
                             @if (auth()->user()->isAdmin())
@@ -365,9 +362,6 @@ new class extends Component
                                 {{$producto->producto}}
                             </td>
                             <td class="px-6 py-4">
-                                {{$producto->unidad}}
-                            </td>
-                            <td class="px-6 py-4">
                                 {{$producto->maximo}}
                             </td>
                             <td class="px-6 py-4">
@@ -376,6 +370,9 @@ new class extends Component
                             
                             <td class="px-6 py-4">
                                 {{$producto->pivot->pedir_modificado}}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{$producto->utilidad}}
                             </td>
                             <td class="px-6 py-4">
                                 {{$producto->precio_proveedor}}
