@@ -112,13 +112,13 @@
                                             </button>
                                         </form>
 
-                                        <!-- Ver productos -->
+                                        {{--<!-- Ver productos -->
                                         <a
                                             href="{{ route('lista_productos', ['proveedor' => $proveedor->id])}}"
                                             class="text-blue-600 hover:underline"
                                         >
                                             Ver productos
-                                        </a>
+                                        </a>--}}
 
                                         <!-- Eliminar -->
                                         <form
