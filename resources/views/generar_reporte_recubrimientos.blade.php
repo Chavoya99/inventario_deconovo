@@ -70,11 +70,8 @@
                                     <thead class="bg-sky-400 text-black border-b">
                                         <tr>
                                             <th class="px-6 py-3 font-medium">Producto</th>
-                                            <th class="px-6 py-3 font-medium">Unidad</th>
                                             {{--<th class="px-6 py-3 font-medium">Proveedor</th>--}}
-                                            <th class="px-6 py-3 font-medium">Máximo</th>
                                             <th class="px-6 py-3 font-medium">Existencia</th>
-                                            <th class="px-6 py-3 font-medium">Pedir</th>
                                         </tr>
                                     </thead>
 
@@ -102,17 +99,9 @@
                                                     {{ $producto->producto }}
                                                 </td>
 
-                                                <td class="px-6 py-4 font-medium text-gray-900">
-                                                    {{ $producto->unidad }}
-                                                </td>
-
                                                 {{--<td class="px-6 py-4">
                                                     {{ $proveedor->nombre }}
                                                 </td>--}}
-
-                                                <td class="px-6 py-4">
-                                                    {{ $producto->maximo }}
-                                                </td>
 
                                                 <!-- EXISTENCIA -->
                                                 <td class="px-6 py-4">
@@ -124,16 +113,13 @@
                                                         name="productos[{{$index}}][existencia]"
                                                         id="stock_{{$producto->id}}"
                                                         class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                                        required>
+                                                        >
                                                         <x-input-error 
                                                         :messages="$errors->get('productos.' . $index . '.existencia')" 
                                                         class="mt-1" />
                                                 </td>
                                             
-                                                <!-- PEDIR -->
-                                                <td class="px-6 py-4 font-semibold text-blue-600">
-                                                    <span x-text="pedir"></span>
-                                                </td>
+                                            
                                             </tr>
                                         @empty
                                             <tr>
