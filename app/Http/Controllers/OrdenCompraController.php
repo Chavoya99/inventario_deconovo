@@ -63,6 +63,9 @@ class OrdenCompraController extends Controller
         ->when($request->filtro === 'revisadas', function($query){
             $query->where('revisada', true);
         })
+        ->when($request->filtro === 'no_revisadas', function($query){
+            $query->where('revisada', false);
+        })
         ->paginate(5)
         ->withQueryString();
 
