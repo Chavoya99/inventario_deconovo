@@ -51,11 +51,14 @@ class ProductoController extends Controller
             [
                 'nombre' => 'required',
                 'proveedor' => 'required',
-                'unidad' => 'required|in:Caja,Pza,Bulto por saco,Tarima',
+                'unidad' => 'required|in:Caja,Pza,Saco,Tarima',
                 'stock' => 'required|integer|min:0',
-                'stock_max' => 'required|integer|min:1',
+                'stock_max' => 'required|integer|min:1|max:30000',
                 'precio_proveedor' => 'required|min:0.01|numeric',
-                'utilidad' => 'required|integer|min:1|max:99',
+                'utilidad_1' => 'required|integer|min:1|max:99',
+                'utilidad_2' => 'required|integer|min:1|max:99',
+                'utilidad_3' => 'required|integer|min:1|max:99',
+                'utilidad_4' => 'required|integer|min:1|max:99',
             ]
         );
 
@@ -66,10 +69,16 @@ class ProductoController extends Controller
             'unidad' => $request->unidad,
             'existencia' => $request->stock,
             'maximo' => $request->stock_max,
-            'utilidad' => $request->utilidad,
+            'utilidad_1' => $request->utilidad_1,
+            'utilidad_2' => $request->utilidad_2,
+            'utilidad_3' => $request->utilidad_3,
+            'utilidad_4' => $request->utilidad_4,
             'pedir' => $pedir,
             'precio_proveedor' => $request->precio_proveedor,
-            'precio_venta' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad),
+            'precio_venta_1' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad_1, $request->contenido),
+            'precio_venta_2' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad_2, $request->contenido),
+            'precio_venta_3' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad_3, $request->contenido),
+            'precio_venta_4' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad_4, $request->contenido),
         ]);
 
         return redirect()->route('lista_productos')->with('success', 'Producto agregado con éxito');
@@ -98,16 +107,19 @@ class ProductoController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Producto $producto)
-    {
+    {   
         $request->validate(
             [
                 'nombre' => 'required',
                 'proveedor' => 'required',
-                'unidad' => 'required|in:Caja,Pza,Bulto por saco,Tarima',
+                'unidad' => 'required|in:Caja,Pza,Saco,Tarima',
                 'stock' => 'required|integer|min:0',
                 'stock_max' => 'required|integer|min:1',
-                'utilidad' => 'required|integer|min:1|max:99',
                 'precio_proveedor' => 'required|numeric|min:0.01',
+                'utilidad_1' => 'required|integer|min:1|max:99',
+                'utilidad_2' => 'required|integer|min:1|max:99',
+                'utilidad_3' => 'required|integer|min:1|max:99',
+                'utilidad_4' => 'required|integer|min:1|max:99',
             ]
         );
 
@@ -117,11 +129,17 @@ class ProductoController extends Controller
             'proveedor_id' => $request->proveedor,
             'unidad' => $request->unidad,
             'existencia' => $request->stock,
-            'utilidad' => $request->utilidad,
+            'utilidad_1' => $request->utilidad_1,
+            'utilidad_2' => $request->utilidad_2,
+            'utilidad_3' => $request->utilidad_3,
+            'utilidad_4' => $request->utilidad_4,
             'maximo' => $request->stock_max,
             'pedir' => $pedir,
             'precio_proveedor' => $request->precio_proveedor,
-            'precio_venta' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad),
+            'precio_venta_1' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad_1, $request->contenido),
+            'precio_venta_2' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad_2, $request->contenido),
+            'precio_venta_3' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad_3, $request->contenido),
+            'precio_venta_4' => $this->obtenerPrecioVenta($request->precio_proveedor, $request->utilidad_4, $request->contenido),
         ]);
 
         return redirect()->back()->with('success', 'Producto actualizado correctamente');

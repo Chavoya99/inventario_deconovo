@@ -52,11 +52,11 @@ class ProductoSeeder extends Seeder
                 'proveedor_id' => 1,
                 'unidad' => 'Pza',
                 'existencia' => 0,
-                'utilidad' => $utilidad,
+                'utilidad_1' => $utilidad,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
-                'precio_venta' => $this->obtenerPrecioVenta(false),
+                'precio_venta_1' => $this->obtenerPrecioVenta(false),
             ]);
         }
 
@@ -68,11 +68,11 @@ class ProductoSeeder extends Seeder
                 'existencia' => 0,
                 'contenido' => 2.00,
                 'recubrimiento' => true,
-                'utilidad' => $utilidad,
+                'utilidad_1' => $utilidad,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
-                'precio_venta' => $this->obtenerPrecioVenta(true),
+                'precio_venta_1' => $this->obtenerPrecioVenta(true),
             ]);
         }
 
@@ -105,11 +105,11 @@ class ProductoSeeder extends Seeder
                 'proveedor_id' => 2,
                 'unidad' => 'Pza',
                 'existencia' => 0,
-                'utilidad' => $utilidad,
+                'utilidad_1' => $utilidad,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
-                'precio_venta' => $this->obtenerPrecioVenta(false),
+                'precio_venta_1' => $this->obtenerPrecioVenta(false),
             ]);
         }
 
@@ -199,11 +199,11 @@ class ProductoSeeder extends Seeder
                 'proveedor_id' => 3,
                 'unidad' => 'Pza',
                 'existencia' => 0,
-                'utilidad' => $utilidad,
+                'utilidad_1' => $utilidad,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
-                'precio_venta' => $this->obtenerPrecioVenta(false),
+                'precio_venta_1' => $this->obtenerPrecioVenta(false),
             ]);
         }
 

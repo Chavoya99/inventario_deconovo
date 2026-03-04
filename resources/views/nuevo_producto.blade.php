@@ -16,7 +16,9 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">
                     Nombre del producto
                 </label>
-                <input type="text" name="nombre" class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
+                <input type="text" name="nombre" 
+                class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500" 
+                value="{{old('nombre')}}" required>
                 <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
             </div>
 
@@ -71,7 +73,7 @@
                 </div>
             @endif
             
-
+            @if(request()->routeIs('nuevo_producto'))
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6"
                 x-data="{
                     stock: 0,
@@ -113,8 +115,12 @@
                     <x-input-error :messages="$errors->get('stock_max')" class="mt-2" />
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @else
+                <input type="hidden" name="stock" min="0" value="0" required>
+                <input type="hidden" name="stock_max" min="1" value="30000" required>
+            
+            @endif
+            <div>
                 <div>
                 
                     <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -127,26 +133,110 @@
                     <x-input-error :messages="$errors->get('precio_proveedor')" class="mt-2" />
                 </div>
 
+                
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        % Utilidad
+                        % Utilidad 1
                     </label>
-                    <input type="number" step="1" name="utilidad" id="porcentaje_utilidad"
+                    <input type="number" step="1" name="utilidad_1" id="porcentaje_utilidad_1"
                     value=0 min=1 max=99 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     required>
 
-                    <x-input-error :messages="$errors->get('utilidad')" class="mt-2" />
+                    <x-input-error :messages="$errors->get('utilidad_1')" class="mt-2" />
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Precio venta
+                        Precio venta 1
                     </label>
                     <input 
                         type="number" 
                         step="0.01"
                         value=0
-                        id="precio_calculado"
+                        id="precio_calculado_1"
+                        class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        disabled
+                    >
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        % Utilidad 2
+                    </label>
+                    <input type="number" step="1" name="utilidad_2" id="porcentaje_utilidad_2"
+                    value=0 min=1 max=99 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    required>
+
+                    <x-input-error :messages="$errors->get('utilidad_2')" class="mt-2" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Precio venta 2
+                    </label>
+                    <input 
+                        type="number" 
+                        step="0.01"
+                        value=0
+                        id="precio_calculado_2"
+                        class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        disabled
+                    >
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        % Utilidad 3
+                    </label>
+                    <input type="number" step="1" name="utilidad_3" id="porcentaje_utilidad_3"
+                    value=0 min=1 max=99 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    required>
+
+                    <x-input-error :messages="$errors->get('utilidad_3')" class="mt-2" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Precio venta 3
+                    </label>
+                    <input 
+                        type="number" 
+                        step="0.01"
+                        value=0
+                        id="precio_calculado_3"
+                        class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        disabled
+                    >
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        % Utilidad 4
+                    </label>
+                    <input type="number" step="1" name="utilidad_4" id="porcentaje_utilidad_4"
+                    value=0 min=1 max=99 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    required>
+
+                    <x-input-error :messages="$errors->get('utilidad_4')" class="mt-2" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Precio venta 4
+                    </label>
+                    <input 
+                        type="number" 
+                        step="0.01"
+                        value=0
+                        id="precio_calculado_4"
                         class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                         disabled
                     >
@@ -175,30 +265,55 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     const precioProveedorInput = document.getElementById('precio_proveedor');
-    const porcentajeInput = document.getElementById('porcentaje_utilidad');
-    const precioCalculadoInput = document.getElementById('precio_calculado');
     const contenidoInput = document.getElementById('contenido');
 
+    const porcentajes = [
+        { porcentaje: 'porcentaje_utilidad_1', precio: 'precio_calculado_1' },
+        { porcentaje: 'porcentaje_utilidad_2', precio: 'precio_calculado_2' },
+        { porcentaje: 'porcentaje_utilidad_3', precio: 'precio_calculado_3' },
+        { porcentaje: 'porcentaje_utilidad_4', precio: 'precio_calculado_4' },
+    ];
+
     function calcularPrecio() {
+
         let precioProveedor = parseFloat(precioProveedorInput.value);
-        let porcentaje = parseFloat(porcentajeInput.value);
+        let contenido = contenidoInput ? parseFloat(contenidoInput.value) : 1;
 
-        let contenido = (contenidoInput) ? parseFloat(contenidoInput.value) : 1;
-        console.log(contenido);
+        porcentajes.forEach(item => {
 
-        if (!precioProveedor || !porcentaje || porcentaje >= 100 || !contenido) {
-            precioCalculadoInput.value = '';
-            return;
-        }
+            let porcentajeInput = document.getElementById(item.porcentaje);
+            let precioCalculadoInput = document.getElementById(item.precio);
 
-        let resultado = Math.ceil((precioProveedor) / (1 - (porcentaje / 100))) * contenido;
-        precioCalculadoInput.value = resultado.toFixed(2);
+            let porcentaje = parseFloat(porcentajeInput.value);
+
+            if (
+                isNaN(precioProveedor) ||
+                isNaN(porcentaje) ||
+                porcentaje >= 100 ||
+                isNaN(contenido)
+            ) {
+                precioCalculadoInput.value = '';
+            } else {
+
+                let resultado = Math.ceil(
+                    precioProveedor / (1 - (porcentaje / 100))
+                ) * contenido;
+
+                precioCalculadoInput.value = resultado.toFixed(2);
+            }
+
+        });
     }
 
-    // 👇 Se ejecuta cada vez que el usuario escribe
     precioProveedorInput.addEventListener('input', calcularPrecio);
-    porcentajeInput.addEventListener('input', calcularPrecio);
-    if(contenidoInput){
+
+    porcentajes.forEach(item => {
+        document
+            .getElementById(item.porcentaje)
+            .addEventListener('input', calcularPrecio);
+    });
+
+    if (contenidoInput) {
         contenidoInput.addEventListener('input', calcularPrecio);
     }
 });
