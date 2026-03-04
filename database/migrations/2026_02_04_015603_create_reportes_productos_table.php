@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('reportes_productos', function (Blueprint $table) {
             $table->foreignId('reporte_id')->constrained('reportes_faltantes')->cascadeOnDelete();
             $table->foreignId('producto_id')->constrained()->restrictOnDelete();
+            $table->string('producto');
+            $table->decimal('contenido', 8,2)->default(1);
             $table->smallInteger('existencia')->default(0);
             $table->smallInteger('pedir_registrado')->default(0);
             $table->smallInteger('pedir_modificado')->default(0);
