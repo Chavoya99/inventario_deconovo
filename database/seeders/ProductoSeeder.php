@@ -32,18 +32,18 @@ class ProductoSeeder extends Seeder
         ];
 
         $recubrimientoPrueba = [
-            ['producto' => "RECUBRIMIENTO 1", 'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO 2",'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO 3",'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO 4", 'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO 5",'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO 6",'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO 7", 'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO 8",'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO 9",'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO10", 'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO 11",'maximo' => 3],
-            ['producto' => "RECUBRIMIENTO 12",'maximo' => 3],
+            ['producto' => "RECUBRIMIENTO 1", 'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO 2",'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO 3",'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO 4", 'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO 5",'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO 6",'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO 7", 'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO 8",'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO 9",'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO10", 'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO 11",'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO 12",'maximo' => 30000],
         ];
 
         foreach($productosPerdura as $producto){
@@ -212,9 +212,9 @@ class ProductoSeeder extends Seeder
 
     public function obtenerPrecioVenta($contenido){
             $contenido = ($contenido) ? 2 : 1;
-            $aux1 = 100 * $contenido;
+            $aux1 = 100;
             $aux2 = 1-(30/100);
-            $resultado = $aux1 / $aux2;
+            $resultado = ceil($aux1 / $aux2) * $contenido;
             return $resultado;
         }
 }
