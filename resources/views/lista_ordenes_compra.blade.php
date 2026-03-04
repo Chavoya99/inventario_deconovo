@@ -70,6 +70,14 @@
                         Revisadas
                     </a>
                 @endif
+
+                @if (request()->routeIs('lista_ordenes_compra_proveedor'))
+                    <a href="{{ route($ruta_origen, ['proveedor' => request()->get('proveedor'), 'filtro' => 'no_revisadas']) }}"
+                    class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium 
+                            rounded-lg border border-transparent bg-gray-400 hover:bg-gray-500 text-black">
+                        No revisadas
+                    </a>
+                @endif
                 
 
                 <a href="{{route($ruta_origen, ['proveedor'=> request()->get('proveedor')])}}"
