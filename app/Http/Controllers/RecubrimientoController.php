@@ -113,7 +113,7 @@ class RecubrimientoController extends Controller
     }
 
     public function obtenerPrecioVenta($precio_proveedor, $utilidad, $contenido){
-        return ($precio_proveedor * $contenido) / (1-($utilidad / 100));
+        return ceil(($precio_proveedor) / (1-($utilidad / 100)))  * $contenido;
     }
 
 

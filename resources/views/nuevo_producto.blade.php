@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        let resultado = (precioProveedor * contenido) / (1 - (porcentaje / 100));
+        let resultado = Math.ceil((precioProveedor) / (1 - (porcentaje / 100))) * contenido;
         precioCalculadoInput.value = resultado.toFixed(2);
     }
 

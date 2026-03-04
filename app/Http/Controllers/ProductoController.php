@@ -148,6 +148,6 @@ class ProductoController extends Controller
     }
 
     public function obtenerPrecioVenta($precio_proveedor, $utilidad){
-        return ($precio_proveedor) / (1-($utilidad / 100));
+        return ceil(($precio_proveedor) / (1-($utilidad / 100)));
     }
 }
