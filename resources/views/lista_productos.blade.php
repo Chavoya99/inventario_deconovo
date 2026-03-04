@@ -105,8 +105,9 @@
                             @if(request()->routeIs('lista_recubrimientos'))
                                 <th class="px-6 py-3 font-medium">Contenido</th>
                             @endif
-
-                            <th class="px-6 py-3 font-medium">Máximo</th>
+                            @if(request()->routeIs('lista_productos'))
+                                <th class="px-6 py-3 font-medium">Máximo</th>
+                            @endif
                             <th class="px-6 py-3 font-medium">Existencia</th> 
                             
                             @if(auth()->user()->isAdmin())
@@ -141,8 +142,9 @@
                         @if(request()->routeIs('lista_recubrimientos'))
                             <td id=contenido class="px-6 py-4">{{$producto->contenido}}</td>
                         @endif
-                        
-                        <td id=stock_max class="px-6 py-4">{{$producto->maximo}}</td>
+                        @if(request()->routeIs('lista_productos'))
+                            <td id=stock_max class="px-6 py-4">{{$producto->maximo}}</td>
+                        @endif
                         <td id=stock class="px-6 py-4">{{$producto->existencia}}</td>
                         
                         @if(auth()->user()->isAdmin())
