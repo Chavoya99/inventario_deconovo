@@ -83,7 +83,7 @@ class OrdenCompraController extends Controller
      */
     public function create(Request $request)
     {   
-        
+
         $request->validate([
 
             'productos' => ['required','array'],
@@ -101,17 +101,27 @@ class OrdenCompraController extends Controller
                 'max:255'
             ],
 
-            'productos.*.utilidad' => [
+            'productos.*.unidad' => [
                 'required_if:productos.*.seleccionado,on',
-                'exclude_unless:productos.*.seleccionado,1', 
-                'integer', 'min:1', 'max:99'
+                'exclude_unless:productos.*.seleccionado,1',
+                'in:Caja,Pza,Saco,Tarima',
+            ],
+
+            'productos.*.contenido' => [
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1',
+                'filled',
+                'numeric',
+                'min:0',
+                'max:30000'
             ],
 
             'productos.*.pedir' => [
                 'required_if:productos.*.seleccionado,on',
                 'exclude_unless:productos.*.seleccionado,1',
                 'integer',
-                'min:1'
+                'min:1',
+                'max:30000'
             ],
 
             'productos.*.precio_proveedor' => [
@@ -123,14 +133,29 @@ class OrdenCompraController extends Controller
                 'max:999999'
             ],
 
-            // 'productos.*.precio_venta' => [
-            //     'required_if:productos.*.seleccionado,on',
-            //     'exclude_unless:productos.*.seleccionado,1',
-            //     'filled',
-            //     'numeric',
-            //     'min:0',
-            //     'max:999999'
-            // ],
+            'productos.*.utilidad_1' => [
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1', 
+                'integer', 'min:0', 'max:99'
+            ],
+
+            'productos.*.utilidad_2' => [
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1', 
+                'integer', 'min:0', 'max:99'
+            ],
+
+            'productos.*.utilidad_3' => [
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1', 
+                'integer', 'min:0', 'max:99'
+            ],
+
+            'productos.*.utilidad_4' => [
+                'required_if:productos.*.seleccionado,on',
+                'exclude_unless:productos.*.seleccionado,1', 
+                'integer', 'min:0', 'max:99'
+            ],
 
         ]);
 
@@ -141,29 +166,60 @@ class OrdenCompraController extends Controller
             ->filter(fn($producto) => isset($producto['seleccionado']))
             ->map(function ($producto) use ($reporte) {
 
-                    
-                $reporte->productos()->where('producto_id', $producto['id'])->update(['registrado' => true, 
-                'pedir_modificado' => $producto['pedir']]);
+                //Actualizar los datos en la tabla de reportes_productos   
+                $reporte->productos()->where('producto_id', $producto['id'])
+                ->update(['registrado' => true, 
+                'pedir_modificado' => $producto['pedir'], 
+                'reportes_productos.producto' => $producto['producto'],
+                'reportes_productos.unidad' => $producto['unidad'],
+                'reportes_productos.contenido' => $producto['contenido'],
+                'reportes_productos.utilidad_1' => $producto['utilidad_1'],
+                'reportes_productos.utilidad_2' => $producto['utilidad_2'],
+                'reportes_productos.utilidad_3' => $producto['utilidad_3'],
+                'reportes_productos.utilidad_4' => $producto['utilidad_4'],
+                'reportes_productos.precio_venta_1' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_1'], $producto['contenido']),
+                'reportes_productos.precio_venta_2' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_2'], $producto['contenido']),
+                'reportes_productos.precio_venta_3' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_3'], $producto['contenido']),
+                'reportes_productos.precio_venta_4' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_4'], $producto['contenido']),
+                'reportes_productos.precio_proveedor' => $producto['precio_proveedor'],
 
-                $aux = Producto::find($producto['id']);
-                $contenido = $aux->contenido;
-                $aux->update([
-                'precio_proveedor' => $producto['precio_proveedor'],
-                'precio_venta' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad'], $contenido),
-                'utilidad' => $producto['utilidad'], 
-                'ultima_orden' => now('America/Belize')]); 
-
-                return [
-                    'id' => $producto['id'],
+                ]);
+                if($producto['id'] != 0){
+                    //Actualizar el registro de la base de datos del producto
+                    $aux = Producto::find($producto['id']);
+                    $contenido = $aux->contenido;
+                    $aux->update([
                     'producto' => $producto['producto'],
-                    'pedir' => $producto['pedir'],
                     'unidad' => $producto['unidad'],
-                    'precio_venta' => $this->obtenerPrecioVenta($producto['precio_proveedor'],$producto['utilidad'],$contenido),
+                    'contenido' => $producto['contenido'],
+                    'utilidad_1' => $producto['utilidad_1'], 
+                    'utilidad_2' => $producto['utilidad_2'], 
+                    'utilidad_3' => $producto['utilidad_3'], 
+                    'utilidad_4' => $producto['utilidad_4'],
+                    'precio_venta_1' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_1'], $producto['contenido']),
+                    'precio_venta_2' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_2'], $producto['contenido']),
+                    'precio_venta_3' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_3'], $producto['contenido']),
+                    'precio_venta_4' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_4'], $producto['contenido']),
                     'precio_proveedor' => $producto['precio_proveedor'],
-                ];
+                    'ultima_orden' => now('America/Belize')]); 
+
+                    return [
+                        'id' => $producto['id'],
+                        'producto' => $producto['producto'],
+                        'pedir' => $producto['pedir'],
+                        'unidad' => $producto['unidad'],
+                        'precio_venta_1' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_1'], $producto['contenido']),
+                        'precio_venta_2' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_2'], $producto['contenido']),
+                        'precio_venta_3' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_3'], $producto['contenido']),
+                        'precio_venta_4' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_4'], $producto['contenido']),
+                        'precio_proveedor' => $producto['precio_proveedor'],
+                    ];
+                }
+                
             } )
             ->values()
             ->toArray();
+
         if(count($productos) == 0){
             return redirect()->back()->with('error', 'No se puede generar una orden de compra vacía')->withInput();
         }
@@ -184,7 +240,6 @@ class OrdenCompraController extends Controller
     }
 
     public function generar_pdf($orden_compra, $productos, $tipo_orden){
-
         $proveedor = $orden_compra->proveedor;
         $nombre = config('app.facturador_nombre');
         $correo = config('app.facturador_correo');
@@ -300,7 +355,7 @@ class OrdenCompraController extends Controller
 
     public function obtenerPrecioVenta($precio_proveedor, $utilidad, $contenido){
         
-        $resultado = ($precio_proveedor * $contenido) / (1-($utilidad / 100));
+        $resultado = ceil(($precio_proveedor) / (1-($utilidad / 100))) * $contenido;
         return $resultado;
     }
 }

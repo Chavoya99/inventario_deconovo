@@ -56,7 +56,7 @@ class ProductoSeeder extends Seeder
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
-                'precio_venta_1' => $this->obtenerPrecioVenta(false),
+                'precio_venta_1' => $this->obtenerPrecioVenta(false, $utilidad),
             ]);
         }
 
@@ -69,10 +69,16 @@ class ProductoSeeder extends Seeder
                 'contenido' => 2.00,
                 'recubrimiento' => true,
                 'utilidad_1' => $utilidad,
+                'utilidad_2' => $utilidad+1,
+                'utilidad_3' => $utilidad+2,
+                'utilidad_4' => $utilidad+3,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
-                'precio_venta_1' => $this->obtenerPrecioVenta(true),
+                'precio_venta_1' => $this->obtenerPrecioVenta(true, $utilidad),
+                'precio_venta_2' => $this->obtenerPrecioVenta(true, $utilidad+1),
+                'precio_venta_3' => $this->obtenerPrecioVenta(true,$utilidad+2),
+                'precio_venta_4' => $this->obtenerPrecioVenta(true,$utilidad+3),
             ]);
         }
 
@@ -109,7 +115,7 @@ class ProductoSeeder extends Seeder
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
-                'precio_venta_1' => $this->obtenerPrecioVenta(false),
+                'precio_venta_1' => $this->obtenerPrecioVenta(false,$utilidad),
             ]);
         }
 
@@ -203,17 +209,17 @@ class ProductoSeeder extends Seeder
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
-                'precio_venta_1' => $this->obtenerPrecioVenta(false),
+                'precio_venta_1' => $this->obtenerPrecioVenta(false, $utilidad),
             ]);
         }
 
 
     }
 
-    public function obtenerPrecioVenta($contenido){
+    public function obtenerPrecioVenta($contenido, $utilidad){
             $contenido = ($contenido) ? 2 : 1;
             $aux1 = 100;
-            $aux2 = 1-(30/100);
+            $aux2 = 1-($utilidad/100);
             $resultado = ceil($aux1 / $aux2) * $contenido;
             return $resultado;
         }

@@ -15,8 +15,18 @@ return new class extends Migration
             $table->foreignId('reporte_id')->constrained('reportes_faltantes')->cascadeOnDelete();
             $table->foreignId('producto_id')->constrained()->restrictOnDelete();
             $table->string('producto');
+            $table->string('unidad');
             $table->decimal('contenido', 8,2)->default(1);
             $table->smallInteger('existencia')->default(0);
+            $table->tinyInteger('utilidad_1')->default(0)->max(99);
+            $table->tinyInteger('utilidad_2')->default(0)->max(99);
+            $table->tinyInteger('utilidad_3')->default(0)->max(99);
+            $table->tinyInteger('utilidad_4')->default(0)->max(99);
+            $table->decimal('precio_venta_1', 8, 2)->default(0);
+            $table->decimal('precio_venta_2', 8, 2)->default(0);
+            $table->decimal('precio_venta_3', 8, 2)->default(0);
+            $table->decimal('precio_venta_4', 8, 2)->default(0);
+            $table->decimal('precio_proveedor', 8, 2)->default(0);
             $table->smallInteger('pedir_registrado')->default(0);
             $table->smallInteger('pedir_modificado')->default(0);
             $table->boolean('registrado')->default(false);

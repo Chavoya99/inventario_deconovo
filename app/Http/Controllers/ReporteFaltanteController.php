@@ -95,11 +95,12 @@ class ReporteFaltanteController extends Controller
      * Store a newly created resource in storage.
      */
     public function generar_reporte_inventario(Request $request)
-    {
+    {   
+
         $request->validate(
             [
                 'productos' => 'required|array',
-                'productos.*.existencia' => 'required|integer|min:0',
+                'productos.*.existencia' => 'min:0',
                 'productos.*.maximo' => 'required|integer|min:1',
             ],
             [
@@ -112,9 +113,11 @@ class ReporteFaltanteController extends Controller
             ->map(function ($producto) {
                 $producto['pedir'] = $producto['maximo'] - $producto['existencia'];
                 return $producto;
+            })->filter(function ($producto) {
+                return isset($producto['existencia']);
             })
             ->values();
-        
+
         if($productos->isEmpty()){
             return redirect()->back()->withInput()->with(['error' => "No hay productos suficientes para generar el reporte"]);
         }
@@ -127,15 +130,57 @@ class ReporteFaltanteController extends Controller
             'fecha_generada' => $fecha_generada,
             'de_recubrimiento' => $request->recubrimiento,
         ]);
- 
-        foreach($productos as $producto){
-            $producto_update = Producto::find($producto['id']);
-            $producto_update->update(['existencia' => $producto['existencia'],
-            'pedir' => $producto['pedir'], 'ultimo_reporte' => $fecha_generada]);
-            $reporte_faltante->productos()->attach($producto_update->id,['existencia' => $producto['existencia'],
-            'pedir_registrado' => $producto['pedir'], 'pedir_modificado' => $producto['pedir'],
-            'incluir' => ($producto['pedir'] != 0) ? 1 : 0]);
+        if($reporte_faltante->de_recubrimiento == 1 ){
+            foreach($productos as $producto){
+                $producto_update = Producto::find($producto['id']);
+                $producto_update->update(['existencia' => isset($producto['existencia']) ? $producto['existencia'] : $producto_update->existencia ,
+                'pedir' => $producto['pedir'], 'ultimo_reporte' => $fecha_generada]);
+                if(isset($producto['existencia'])){
+                    $reporte_faltante->productos()->attach($producto_update->id,[
+                    'existencia' => $producto['existencia'],
+                    'pedir_registrado' => 1, 
+                    'pedir_modificado' => 1, 
+                    'producto' => $producto['producto'],
+                    'contenido' => $producto_update['contenido'], 
+                    'incluir' => ($producto['pedir'] != 0) ? 1 : 0,
+                    'unidad' => $producto_update['unidad'],
+                    'utilidad_1' => $producto_update['utilidad_1'],
+                    'utilidad_2' => $producto_update['utilidad_2'],
+                    'utilidad_3' => $producto_update['utilidad_3'],
+                    'utilidad_4' => $producto_update['utilidad_4'],
+                    'precio_venta_1' => $producto_update['precio_venta_1'],
+                    'precio_venta_2' => $producto_update['precio_venta_2'],
+                    'precio_venta_3' => $producto_update['precio_venta_3'],
+                    'precio_venta_4' => $producto_update['precio_venta_4']]);
+                }  
+            }
+        }else{
+            foreach($productos as $producto){
+                $producto_update = Producto::find($producto['id']);
+                $producto_update->update(['existencia' => isset($producto['existencia']) ? $producto['existencia'] : $producto_update->existencia ,
+                'pedir' => $producto['pedir'], 'ultimo_reporte' => $fecha_generada]);
+                if(isset($producto['existencia'])){
+                    $reporte_faltante->productos()->attach($producto_update->id,[
+                    'existencia' => $producto['existencia'],
+                    'pedir_registrado' => $producto['pedir'], 
+                    'pedir_modificado' => $producto['pedir'], 
+                    'producto' => $producto['producto'],
+                    'contenido' => $producto_update['contenido'], 
+                    'incluir' => ($producto['pedir'] != 0) ? 1 : 0,
+                    'unidad' => $producto_update['unidad'],
+                    'utilidad_1' => $producto_update['utilidad_1'],
+                    'utilidad_2' => $producto_update['utilidad_2'],
+                    'utilidad_3' => $producto_update['utilidad_3'],
+                    'utilidad_4' => $producto_update['utilidad_4'],
+                    'precio_venta_1' => $producto_update['precio_venta_1'],
+                    'precio_venta_2' => $producto_update['precio_venta_2'],
+                    'precio_venta_3' => $producto_update['precio_venta_3'],
+                    'precio_venta_4' => $producto_update['precio_venta_4']]);
+                }
+                
+            }
         }
+        
 
         return redirect(url()->previous())->with('success', 'Reporte generado con éxito');
 
