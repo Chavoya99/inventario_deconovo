@@ -28,9 +28,13 @@
                         <tr>
                             <th class="px-6 py-3 font-medium w-1/3">Producto</th>
                             <th class="px-6 py-3 font-medium">Unidad</th>
-                            <th class="px-6 py-3 font-medium">Máximo</th>
+                            @if($reporte->de_recubrimiento == 0)
+                                <th class="px-6 py-3 font-medium">Máximo</th>
+                            @endif
                             <th class="px-6 py-3 font-medium">Existencia</th>
-                            <th class="px-6 py-3 font-medium">Pedir</th>
+                            @if($reporte->de_recubrimiento == 0 )
+                                <th class="px-6 py-3 font-medium">Pedir</th>
+                            @endif
                             
                         
                         </tr>
@@ -43,20 +47,24 @@
                             class="border-b hover:bg-gray-50"
                         >
                             <td id=nombre class="px-6 py-4 font-medium text-gray-900">
-                                {{$producto->producto}}
+                                {{$producto->pivot->producto}}
                             </td>
                             <td class="px-6 py-4">
-                                {{$producto->unidad}}
+                                {{$producto->pivot->unidad}}
                             </td>
+                            @if($reporte->de_recubrimiento == 0)
                             <td class="px-6 py-4">
                                 {{$producto->maximo}}
                             </td>
+                            @endif
                             <td class="px-6 py-4">
                                 {{$producto->pivot->existencia}}
                             </td>
+                            @if($reporte->de_recubrimiento == 0 )
                             <td class="px-6 py-4">
                                 {{$producto->pivot->pedir_registrado}}
                             </td>
+                            @endif
 
                         </tr>
                     @endforeach           
