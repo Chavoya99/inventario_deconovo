@@ -67,7 +67,7 @@ new class extends Component
     public function toggleRevisada(){
 
         $this->orden->update([
-            'revisada' => true,
+            'revisada' => !$this->orden->revisada,
         ]);
     }
 };
@@ -156,7 +156,7 @@ new class extends Component
         wire:click="toggleRevisada()"
         class="cursor-pointer"
         title="Cambiar estado"
-        @if($orden->revisada == 1) disabled @endif
+        {{--@if($orden->revisada == 1) disabled @endif--}}
         >
             @if ($orden->revisada == 1)
                 <!-- CHECK -->
