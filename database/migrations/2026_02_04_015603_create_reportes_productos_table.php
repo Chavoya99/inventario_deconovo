@@ -15,6 +15,7 @@ return new class extends Migration
             $table->foreignId('reporte_id')->constrained('reportes_faltantes')->cascadeOnDelete();
             $table->foreignId('producto_id')->constrained()->restrictOnDelete();
             $table->string('producto');
+            $table->unsignedInteger('generico_id')->default(0);
             $table->string('unidad');
             $table->decimal('contenido', 8,2)->default(1);
             $table->smallInteger('existencia')->default(0);
