@@ -260,7 +260,7 @@ new class extends Component
                                 
                             </td>
                         @else
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 sticky left-0 bg-white z-10">
                                 {{$producto->pivot->producto}}   
                             </td>
                         @endif
@@ -353,7 +353,7 @@ new class extends Component
                             <td class="px-6 py-4 min-w-[150px]">
                                 <input  wire:model.defer="precios.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                 
-                                type="number" step="0.01" min="0" value="{{$producto->precio_proveedor}}"
+                                type="number" step="0.01" min="0.01" value="{{$producto->precio_proveedor}}"
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 precio-proveedor-input"
                                 max="999999"
                                 id="precio_proveedor_{{$index}}"
