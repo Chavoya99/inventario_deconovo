@@ -33,7 +33,7 @@ class OrdenCompraController extends Controller
             $query->where('recibida', 'n');
         })
         
-        ->paginate(5)
+        ->paginate(10)
         ->withQueryString();
 
         $ruta_origen = 'lista_ordenes_compra_internas';
@@ -66,7 +66,7 @@ class OrdenCompraController extends Controller
         ->when($request->filtro === 'no_revisadas', function($query){
             $query->where('revisada', false);
         })
-        ->paginate(5)
+        ->paginate(10)
         ->withQueryString();
 
         $ruta_origen = 'lista_ordenes_compra_proveedor';
