@@ -167,7 +167,7 @@ class OrdenCompraController extends Controller
             ->map(function ($producto) use ($reporte) {
 
                 //Actualizar los datos en la tabla de reportes_productos   
-                $reporte->productos()->where('producto_id', $producto['id'])
+                $reporte->productos()->where('producto_id', $producto['id'])->where('generico_id', $producto['generico_id'])
                 ->update(['registrado' => true, 
                 'pedir_modificado' => $producto['pedir'], 
                 'reportes_productos.producto' => $producto['producto'],
@@ -184,7 +184,9 @@ class OrdenCompraController extends Controller
                 'reportes_productos.precio_proveedor' => $producto['precio_proveedor'],
 
                 ]);
-                if($producto['id'] != 0){
+
+                $generico = Producto::where('producto','RECUBRIMIENTO GENERICO')->first()->id;
+                if($producto['id'] != $generico){
                     //Actualizar el registro de la base de datos del producto
                     $aux = Producto::find($producto['id']);
                     $contenido = $aux->contenido;
@@ -202,7 +204,7 @@ class OrdenCompraController extends Controller
                     'precio_venta_4' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_4'], $producto['contenido']),
                     'precio_proveedor' => $producto['precio_proveedor'],
                     'ultima_orden' => now('America/Belize')]); 
-
+                }
                     return [
                         'id' => $producto['id'],
                         'producto' => $producto['producto'],
@@ -214,7 +216,7 @@ class OrdenCompraController extends Controller
                         'precio_venta_4' => $this->obtenerPrecioVenta($producto['precio_proveedor'], $producto['utilidad_4'], $producto['contenido']),
                         'precio_proveedor' => $producto['precio_proveedor'],
                     ];
-                }
+                
                 
             } )
             ->values()

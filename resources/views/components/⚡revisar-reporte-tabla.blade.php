@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Producto;
+use App\Models\Proveedor;
 use Livewire\Component;
 use App\Models\ReporteFaltante;
 
@@ -19,62 +21,63 @@ new class extends Component
 
         foreach ($this->productos as $index => $producto) {
 
-            $this->precios[$producto->id] =
+            $this->precios[$producto->id."_".$producto->pivot->generico_id] =
             old("productos.$index.precio_proveedor", $producto->precio_proveedor);
 
-            $this->precios_venta_1[$producto->id] =
+            $this->precios_venta_1[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.precio_venta_1", $producto->precio_venta_1);
 
-            $this->precios_venta_2[$producto->id] =
+            $this->precios_venta_2[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.precio_venta_2", $producto->precio_venta_2);
 
-            $this->precios_venta_3[$producto->id] =
+            $this->precios_venta_3[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.precio_venta_3", $producto->precio_venta_3);
 
-            $this->precios_venta_4[$producto->id] =
+            $this->precios_venta_4[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.precio_venta_4", $producto->precio_venta_4);
 
-            $this->pedir_modificado[$producto->id] =
+            $this->pedir_modificado[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.pedir", $producto->pivot->pedir_modificado);
 
-            $this->nombres_productos[$producto->id] =
+            $this->nombres_productos[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.producto", $producto->producto);
 
-            $this->producto_utilidad_1[$producto->id] =
+            $this->producto_utilidad_1[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.utilidad_1", $producto->utilidad_1);
 
-            $this->producto_utilidad_2[$producto->id] =
+            $this->producto_utilidad_2[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.utilidad_2", $producto->utilidad_2);
 
-            $this->producto_utilidad_3[$producto->id] =
+            $this->producto_utilidad_3[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.utilidad_3", $producto->utilidad_3);
 
-            $this->producto_utilidad_4[$producto->id] =
+            $this->producto_utilidad_4[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.utilidad_4", $producto->utilidad_4);
 
-            $this->contenido[$producto->id] =
+            $this->contenido[$producto->id."_".$producto->pivot->generico_id] =
                 old("productos.$index.contenido", $producto->contenido);
 
-            $this->seleccionados[$producto->id] =
+            $this->seleccionados[$producto->id."_".$producto->pivot->generico_id] =
             old("productos.$index.seleccionado",
-                isset($this->seleccionados[$producto->id])
-                    ? $this->seleccionados[$producto->id]
+                isset($this->seleccionados[$producto->id."_".$producto->pivot->generico_id])
+                    ? $this->seleccionados[$producto->id."_".$producto->pivot->generico_id]
                     : false
             );
-        }
 
+            
+        }
         foreach ($this->productos_cero as $producto) {
-            $this->precios[$producto->id] = $producto->precio_proveedor;
-            $this->precios_venta_1[$producto->id] = $producto->precio_venta_1;
-            $this->precios_venta_2[$producto->id] = $producto->precio_venta_2;
-            $this->precios_venta_3[$producto->id] = $producto->precio_venta_3;
-            $this->precios_venta_4[$producto->id] = $producto->precio_venta_4;
-            $this->pedir_modificado[$producto->id] = $producto->pivot->pedir_modificado;
-            $this->nombres_productos[$producto->id] = $producto->producto;
-            $this->producto_utilidad_1[$producto->id] = $producto->utilidad_1;
-            $this->producto_utilidad_2[$producto->id] = $producto->utilidad_2;
-            $this->producto_utilidad_3[$producto->id] = $producto->utilidad_3;
-            $this->producto_utilidad_4[$producto->id] = $producto->utilidad_4;
+            $this->precios[$producto->id."_".$producto->pivot->generico_id] = $producto->precio_proveedor;
+            $this->precios_venta_1[$producto->id."_".$producto->pivot->generico_id] = $producto->precio_venta_1;
+            $this->precios_venta_2[$producto->id."_".$producto->pivot->generico_id] = $producto->precio_venta_2;
+            $this->precios_venta_3[$producto->id."_".$producto->pivot->generico_id] = $producto->precio_venta_3;
+            $this->precios_venta_4[$producto->id."_".$producto->pivot->generico_id] = $producto->precio_venta_4;
+            $this->pedir_modificado[$producto->id."_".$producto->pivot->generico_id] = $producto->pivot->pedir_modificado;
+            $this->nombres_productos[$producto->id."_".$producto->pivot->generico_id] = $producto->producto;
+            $this->producto_utilidad_1[$producto->id."_".$producto->pivot->generico_id] = $producto->utilidad_1;
+            $this->producto_utilidad_2[$producto->id."_".$producto->pivot->generico_id] = $producto->utilidad_2;
+            $this->producto_utilidad_3[$producto->id."_".$producto->pivot->generico_id] = $producto->utilidad_3;
+            $this->producto_utilidad_4[$producto->id."_".$producto->pivot->generico_id] = $producto->utilidad_4;
             $this->contenido[$producto->id] = $producto->contenido;
         }
     }
@@ -99,28 +102,28 @@ new class extends Component
 
     }
 
-    public function incluir_producto_reporte($producto_id)
+    public function incluir_producto_reporte($producto_id, $generico_id)
     {   
-        $producto = $this->reporte->productos()->where('producto_id', $producto_id)->first();
-        $producto->reportes()->where('reporte_id', $this->reporte_id)->update(['pedir_modificado' => $producto->pivot->pedir_registrado,'incluir' => 1]);
+        $producto = $this->reporte->productos()->where('producto_id', $producto_id)->where('generico_id',$generico_id)->first();
+        $producto->reportes()->where('reporte_id', $this->reporte_id)->where('generico_id',$generico_id)->update(['pedir_modificado' => $producto->pivot->pedir_registrado,'incluir' => 1]);
 
-        $this->precios[$producto_id] = $producto->precio_proveedor;
-        $this->precios_venta_1[$producto_id] = $producto->precio_venta_1;
-        $this->precios_venta_2[$producto_id] = $producto->precio_venta_2;
-        $this->precios_venta_3[$producto_id] = $producto->precio_venta_3;
-        $this->precios_venta_4[$producto_id] = $producto->precio_venta_4;
-        $this->pedir_modificado[$producto_id] = $producto->pivot->pedir_modificado;
-        $this->nombres_productos[$producto->id] = $producto->producto;
-        $this->producto_utilidad_1[$producto->id] = $producto->utilidad_1;
-        $this->producto_utilidad_2[$producto->id] = $producto->utilidad_2;
-        $this->producto_utilidad_3[$producto->id] = $producto->utilidad_3;
-        $this->producto_utilidad_4[$producto->id] = $producto->utilidad_4;
-        $this->contenido[$producto->id] = $producto->contenido;
+        $this->precios[$producto_id."_".$generico_id] = $producto->precio_proveedor;
+        $this->precios_venta_1[$producto_id."_".$generico_id] = $producto->precio_venta_1;
+        $this->precios_venta_2[$producto_id."_".$generico_id] = $producto->precio_venta_2;
+        $this->precios_venta_3[$producto_id."_".$generico_id] = $producto->precio_venta_3;
+        $this->precios_venta_4[$producto_id."_".$generico_id] = $producto->precio_venta_4;
+        $this->pedir_modificado[$producto_id."_".$generico_id] = $producto->pivot->pedir_modificado;
+        $this->nombres_productos[$producto->id."_".$generico_id] = $producto->producto;
+        $this->producto_utilidad_1[$producto->id."_".$generico_id] = $producto->utilidad_1;
+        $this->producto_utilidad_2[$producto->id."_".$generico_id] = $producto->utilidad_2;
+        $this->producto_utilidad_3[$producto->id."_".$generico_id] = $producto->utilidad_3;
+        $this->producto_utilidad_4[$producto->id."_".$generico_id] = $producto->utilidad_4;
+        $this->contenido[$producto->id."_".$generico_id] = $producto->contenido;
 
         $this->cargarProductos();
     }
 
-    public function eliminar_producto_reporte($producto_id)
+    public function eliminar_producto_reporte($producto_id, $generico_id)
     {   
         if (count($this->productos) <= 1) {
 
@@ -130,26 +133,67 @@ new class extends Component
             $this->cargarProductos();
             return;
         }else{
-            $producto = $this->reporte->productos()->where('producto_id', $producto_id)->first();
-            $producto->reportes()->where('reporte_id', $this->reporte_id)->update(['incluir' => 0]);
             
-            unset($this->precios[$producto_id]);
-            unset($this->precios_venta_1[$producto_id]);
-            unset($this->precios_venta_2[$producto_id]);
-            unset($this->precios_venta_3[$producto_id]);
-            unset($this->precios_venta_4[$producto_id]);
-            unset($this->pedir_modificado[$producto_id]);
-            unset($this->seleccionados[$producto_id]);
-            unset($this->nombres_productos[$producto->id]);
-            unset($this->producto_utilidad_1[$producto->id]);
-            unset($this->producto_utilidad_2[$producto->id]);
-            unset($this->producto_utilidad_3[$producto->id]);
-            unset($this->producto_utilidad_4[$producto->id]);
-            unset($this->contenido[$producto->id]);
+            $producto = $this->reporte->productos()->where('producto_id', $producto_id)->where('generico_id',$generico_id)->first();
+            $producto->reportes()->where('reporte_id', $this->reporte_id)->where('generico_id',$generico_id)->update(['incluir' => 0]);
+            
+            unset($this->precios[$producto_id."_".$generico_id]);
+            unset($this->precios_venta_1[$producto_id."_".$generico_id]);
+            unset($this->precios_venta_2[$producto_id."_".$generico_id]);
+            unset($this->precios_venta_3[$producto_id."_".$generico_id]);
+            unset($this->precios_venta_4[$producto_id."_".$generico_id]);
+            unset($this->pedir_modificado[$producto_id."_".$generico_id]);
+            unset($this->seleccionados[$producto_id."_".$generico_id]);
+            unset($this->nombres_productos[$producto->id."_".$generico_id]);
+            unset($this->producto_utilidad_1[$producto->id."_".$generico_id]);
+            unset($this->producto_utilidad_2[$producto->id."_".$generico_id]);
+            unset($this->producto_utilidad_3[$producto->id."_".$generico_id]);
+            unset($this->producto_utilidad_4[$producto->id."_".$generico_id]);
+            unset($this->contenido[$producto->id."_".$generico_id]);
 
             $this->cargarProductos();
         }
         
+    }
+
+    public function agregar_recubrimiento_generico(){
+        $producto = Producto::where('producto','RECUBRIMIENTO GENERICO')->first();
+        
+        if(!$producto){
+            $producto = Producto::create([
+                'id' => 0,
+                'producto' => 'RECUBRIMIENTO GENERICO',
+                'unidad' => 'Saco',
+                'contenido' => 0,
+                'existencia' => 0,
+                'recubrimiento' => true,
+                'maximo' => 30000,
+                'proveedor_id' => Proveedor::first()->id,
+            ]);
+
+            $producto = Producto::find($producto->id);
+        }
+        
+        
+        $this->reporte->productos()->attach($producto->id,[
+        'existencia' => $producto->existencia,
+        'pedir_registrado' => 1, 
+        'pedir_modificado' => 1,
+        'producto' => $producto->producto,
+        'contenido' => $producto->contenido, 
+        'incluir' => false,
+        'unidad' => $producto->unidad,
+        'utilidad_1' => $producto->utilidad_1,
+        'utilidad_2' => $producto->utilidad_2,
+        'utilidad_3' => $producto->utilidad_3,
+        'utilidad_4' => $producto->utilidad_4,
+        'precio_venta_1' => $producto->precio_venta_1,
+        'precio_venta_2' => $producto->precio_venta_2,
+        'precio_venta_3' => $producto->precio_venta_3,
+        'precio_venta_4' => $producto->precio_venta_4,
+        'generico_id' => $this->reporte->productos()->max('generico_id') + 1]);
+
+        $this->cargarProductos();       
     }
 
 };
@@ -163,7 +207,7 @@ new class extends Component
         <table class="w-full text-sm text-left text-gray-700">
                 <thead class="bg-sky-400 text-black border-b">
                     <tr>
-                        <th class="px-6 py-3 font-medium">Producto</th>
+                        <th class="px-6 py-3 font-medium sticky left-0 bg-sky-400 z-10">Producto</th>
                         <th class="px-6 py-3 font-medium">Unidad</th>
                         @if($reporte->de_recubrimiento == 1 ) 
                             
@@ -194,17 +238,17 @@ new class extends Component
                 <tbody>
                 
                 @foreach ($productos as $index => $producto)
-                
                     <tr 
-                        wire:key="producto-{{ $producto->id }}" 
+                        wire:key="producto-{{ $producto->id }}-{{$index}}" 
                         class="border-b hover:bg-gray-50"
                     >
                         @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
-                            <td class="px-6 py-4 font-medium text-gray-900 min-w-[400px]">
+                            <td class="px-6 py-4 font-medium text-gray-900 min-w-[400px] sticky left-0 bg-white z-10">
                         <!--Nombre producto-->
                                 <input type="hidden" name="productos[{{$index}}][id]" value="{{$producto->id}}" required>
+                                <input type="hidden" name="productos[{{$index}}][generico_id]" value="{{$producto->pivot->generico_id}}" required>
                                 <input  
-                                    wire:model.defer="nombres_productos.{{ $producto->id }}" 
+                                    wire:model.defer="nombres_productos.{{ $producto->id .'_'.$producto->pivot->generico_id}}" 
                                     
                                     type="text" 
                                     class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm"
@@ -252,7 +296,7 @@ new class extends Component
                             @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
                             
                                 <td class="px-6 py-4 min-w-[125px]">
-                                    <input  wire:model.defer="contenido.{{ $producto->id }}" 
+                                    <input  wire:model.defer="contenido.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                     
                                     type="number" step="0.01" min="0.01" value="{{$producto->contenido}}"
                                     class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 contenido-input"
@@ -286,7 +330,7 @@ new class extends Component
                         @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
                         <!--Pedir-->
                             <td class="px-6 py-4 min-w-[125px]">
-                                <input  wire:model.defer="pedir_modificado.{{ $producto->id }}" 
+                                <input  wire:model.defer="pedir_modificado.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                 
                                 type="number" step="1" min="1" value="{{$producto->pivot->pedir_modificado}}"
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
@@ -307,7 +351,7 @@ new class extends Component
                         @if($producto->pivot->registrado != 1 && $reporte->status == 'aprobado' )
                         <!--Precio proveedor-->
                             <td class="px-6 py-4 min-w-[150px]">
-                                <input  wire:model.defer="precios.{{ $producto->id }}" 
+                                <input  wire:model.defer="precios.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                 
                                 type="number" step="0.01" min="0" value="{{$producto->precio_proveedor}}"
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 precio-proveedor-input"
@@ -321,7 +365,7 @@ new class extends Component
 
                         <!--Utilidad 1-->
                             <td class="px-6 py-4 min-w-[110px]">
-                                <input  wire:model.defer="producto_utilidad_1.{{ $producto->id }}" 
+                                <input  wire:model.defer="producto_utilidad_1.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                 
                                 type="number" step="1" min="0" value="{{$producto->utilidad_1}}"
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 utilidad-input"
@@ -335,7 +379,7 @@ new class extends Component
                             </td>
                         <!--Precio venta 1-->
                             <td class="px-6 py-4 min-w-[150px]">
-                                <input name="productos[{{$index}}][precio_venta_1]" wire:model.defer="precios_venta_1.{{ $producto->id }}" 
+                                <input name="productos[{{$index}}][precio_venta_1]" wire:model.defer="precios_venta_1.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                 
                                 type="number" step="0.01" min="0" value=""
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 precio-venta-input"
@@ -349,7 +393,7 @@ new class extends Component
 
                         <!--Utilidad 2-->
                             <td class="px-6 py-4 min-w-[110px]">
-                                <input  wire:model.defer="producto_utilidad_2.{{ $producto->id }}" 
+                                <input  wire:model.defer="producto_utilidad_2.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                 
                                 type="number" step="1" min="0" value="{{$producto->utilidad_2}}"
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 utilidad-input"
@@ -363,7 +407,7 @@ new class extends Component
                             </td>
                         <!--Precio venta 2-->
                             <td class="px-6 py-4 min-w-[150px]">
-                                <input name="productos[{{$index}}][precio_venta_2]" wire:model.defer="precios_venta_2.{{ $producto->id }}" 
+                                <input name="productos[{{$index}}][precio_venta_2]" wire:model.defer="precios_venta_2.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                 
                                 type="number" step="0.01" min="0" value=""
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 precio-venta-input"
@@ -377,7 +421,7 @@ new class extends Component
 
                         <!--Utilidad 3-->
                             <td class="px-6 py-4 min-w-[110px]">
-                                <input  wire:model.defer="producto_utilidad_3.{{ $producto->id }}" 
+                                <input  wire:model.defer="producto_utilidad_3.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                  
                                 type="number" step="1" min="0" value="{{$producto->utilidad_3}}"
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 utilidad-input"
@@ -392,7 +436,7 @@ new class extends Component
 
                         <!--Precio venta 3-->
                             <td class="px-6 py-4 min-w-[150px]">
-                                <input name="productos[{{$index}}][precio_venta_3]" wire:model.defer="precios_venta_3.{{ $producto->id }}" 
+                                <input name="productos[{{$index}}][precio_venta_3]" wire:model.defer="precios_venta_3.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                 
                                 type="number" step="0.01" min="0" value=""
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 precio-venta-input"
@@ -406,7 +450,7 @@ new class extends Component
 
                         <!--Utilidad 4-->
                             <td class="px-6 py-4 min-w-[110px]">
-                                <input  wire:model.defer="producto_utilidad_4.{{ $producto->id }}" 
+                                <input  wire:model.defer="producto_utilidad_4.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                 
                                 type="number" step="1" min="0" value="{{$producto->utilidad_4}}"
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 utilidad-input"
@@ -420,7 +464,7 @@ new class extends Component
                             </td>
                         <!--Precio venta 4-->
                             <td class="px-6 py-4 min-w-[150px]">
-                                <input name="productos[{{$index}}][precio_venta_4]" wire:model.defer="precios_venta_4.{{ $producto->id }}" 
+                                <input name="productos[{{$index}}][precio_venta_4]" wire:model.defer="precios_venta_4.{{ $producto->id }}_{{$producto->pivot->generico_id}}" 
                                 
                                 type="number" step="0.01" min="0" value=""
                                 class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 precio-venta-input"
@@ -483,7 +527,7 @@ new class extends Component
                                         </div>
                                     @else
                                         <div class="max-w-sm w-full space-y-3">
-                                            <input name="productos[{{$index}}][seleccionado]" wire:model="seleccionados.{{ $producto->id }}" type="checkbox" 
+                                            <input name="productos[{{$index}}][seleccionado]" wire:model="seleccionados.{{ $producto->id }}_{{$producto->pivot->generico_id}}" type="checkbox" 
                                             class="shrink-0 size-5 bg-transparent border-line-3 rounded-sm 
                                             shadow-2xs text-primary focus:ring-0 focus:ring-offset-0 
                                             checked:bg-primary-checked checked:border-primary-checked 
@@ -503,7 +547,7 @@ new class extends Component
                                             
                                             onclick="confirm('¿Estas seguro de continuar?')
                                             || event.stopImmediatePropagation()"
-                                            wire:click="eliminar_producto_reporte({{$producto->id}})"
+                                            wire:click="eliminar_producto_reporte({{$producto->id}}, {{$producto->pivot->generico_id}})"
                                             class="text-red-600 hover:text-red-800"
                                             title="Quitar">
                                             <i class="fa-solid fa-xl fa-circle-minus"></i>
@@ -526,7 +570,30 @@ new class extends Component
     <h3 class="font-semibold text-2xl text-gray-800 leading-tight text-center ">
         {{ __('No incluir') }}
     </h3>
+    @if(auth()->user()->isAdmin() && $reporte->de_recubrimiento == 1)
+        <div class="flex justify-end gap-4 text-sm">
+
+            <button 
+                type="button"
+                wire:click="agregar_recubrimiento_generico()"
+                class="
+                    my-5
+                    block mx-auto
+                    px-4 py-2 text-sm font-medium rounded
+                    text-white bg-sky-600
+                    hover:bg-sky-800
+                    transition
+                    disabled:opacity-50 hover:bg-sky-600 disabled:cursor-not-allowed
+                "
+                title="Agregar"
+                @if($reporte->status != 'aprobado') disabled @endif>
+                Agregar recubrimiento genérico
+            </button>
+        </div>
+    @endif
     <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
+
+        
         <table class="w-full text-sm text-left text-gray-700">
 
                     <thead class="bg-sky-400 text-black border-b">
@@ -555,7 +622,7 @@ new class extends Component
                     
                     @foreach ($productos_cero as $producto)
                         <tr 
-                            wire:key="producto-{{ $producto->id }}" 
+                            wire:key="producto-{{ $producto->id }}-{{$producto->pivot->generico_id}}" 
                             class="border-b hover:bg-gray-50"
                         >   
                             <td id=nombre class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
@@ -591,13 +658,12 @@ new class extends Component
                                         <button 
                                             type="button"
                                             
-                                            wire:click="incluir_producto_reporte({{$producto->id}})"
+                                            wire:click="incluir_producto_reporte({{$producto->id}}, {{$producto->pivot->generico_id}})"
                                             class="text-green-600 hover:text-green-800 block"
                                             title="Agregar">
                                             <i class="fa-solid fa-xl fa-circle-plus"></i>
                                         </button>
                                             
-                                   
                                         
                                     </div>
                                 @endif
