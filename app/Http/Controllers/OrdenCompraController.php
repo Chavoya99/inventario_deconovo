@@ -129,7 +129,7 @@ class OrdenCompraController extends Controller
                 'exclude_unless:productos.*.seleccionado,1',
                 'filled',
                 'numeric',
-                'min:0',
+                'min:0.01',
                 'max:999999'
             ],
 
@@ -238,7 +238,7 @@ class OrdenCompraController extends Controller
             'ruta_archivo_proveedor' => $this->generar_pdf($orden_compra, $productos, 'proveedor'),
         ]);
 
-        return redirect()->back()->with('success', 'Orden de compra generada con éxito');
+        return redirect()->back()->with('success', 'Orden de compra generada con éxito, folio '.str_pad($orden_compra->id, 3, "0", STR_PAD_LEFT));
     }
 
     public function generar_pdf($orden_compra, $productos, $tipo_orden){
