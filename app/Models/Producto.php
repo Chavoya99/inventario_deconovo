@@ -9,6 +9,7 @@ class Producto extends Model
 {
     use HasFactory;
     protected $fillable = [
+            'id',
             'producto',
             'proveedor',
             'unidad',
@@ -44,7 +45,7 @@ class Producto extends Model
             ->withPivot(['existencia', 'pedir_registrado', 'pedir_modificado', 'registrado', 'incluir', 
             'contenido', 'producto', 'unidad', 'precio_proveedor',
             'utilidad_1', 'utilidad_2', 'utilidad_3', 'utilidad_4', 
-            'precio_venta_1', 'precio_venta_2', 'precio_venta_3', 'precio_venta_4']);
+            'precio_venta_1', 'precio_venta_2', 'precio_venta_3', 'precio_venta_4', 'generico_id']);
     }
 
 }
