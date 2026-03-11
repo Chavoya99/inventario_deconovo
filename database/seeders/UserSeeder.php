@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'username' => 'oscar',
+            'username' => 'empleado',
             'tipo' => 'empleado',
         ]);
 
