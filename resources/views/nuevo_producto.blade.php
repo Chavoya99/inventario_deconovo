@@ -63,7 +63,7 @@
                         type="number"
                         id="contenido"
                         name="contenido"
-                        min="1"
+                        min="0.01"
                         value=0
                         step="0.01"
                         class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"

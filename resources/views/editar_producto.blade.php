@@ -63,7 +63,7 @@
                         type="number"
                         name="contenido"
                         id="contenido"
-                        min="1"
+                        min="0.01"
                         step="0.01"
                         class="w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                         value="{{$producto->contenido}}"
