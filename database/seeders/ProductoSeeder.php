@@ -32,18 +32,8 @@ class ProductoSeeder extends Seeder
         ];
 
         $recubrimientoPrueba = [
-            ['producto' => "RECUBRIMIENTO 1", 'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO 2",'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO 3",'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO 4", 'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO 5",'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO 6",'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO 7", 'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO 8",'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO 9",'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO10", 'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO 11",'maximo' => 30000],
-            ['producto' => "RECUBRIMIENTO 12",'maximo' => 30000],
+            ['producto' => "RECUBRIMIENTO EJEMPLO 1", 'maximo' => 30000, 'unidad' => 'Tarima'],
+            ['producto' => "RECUBRIMIENTO EJEMPLO 2",'maximo' => 30000, 'unidad' => 'Saco'],
         ];
 
         foreach($productosPerdura as $producto){
@@ -53,6 +43,9 @@ class ProductoSeeder extends Seeder
                 'unidad' => 'Pza',
                 'existencia' => 0,
                 'utilidad_1' => $utilidad,
+                'utilidad_2' => $utilidad+1,
+                'utilidad_3' => $utilidad+2,
+                'utilidad_4' => $utilidad+3,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
@@ -64,7 +57,7 @@ class ProductoSeeder extends Seeder
             Producto::create([
                 'producto' => $producto['producto'],
                 'proveedor_id' => 1,
-                'unidad' => 'Pza',
+                'unidad' => $producto['unidad'],
                 'existencia' => 0,
                 'contenido' => 2.00,
                 'recubrimiento' => true,
@@ -112,6 +105,9 @@ class ProductoSeeder extends Seeder
                 'unidad' => 'Pza',
                 'existencia' => 0,
                 'utilidad_1' => $utilidad,
+                'utilidad_2' => $utilidad+1,
+                'utilidad_3' => $utilidad+2,
+                'utilidad_4' => $utilidad+3,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
@@ -206,6 +202,9 @@ class ProductoSeeder extends Seeder
                 'unidad' => 'Pza',
                 'existencia' => 0,
                 'utilidad_1' => $utilidad,
+                'utilidad_2' => $utilidad+1,
+                'utilidad_3' => $utilidad+2,
+                'utilidad_4' => $utilidad+3,
                 'maximo' => $producto['maximo'],
                 'pedir' => $producto['maximo'],
                 'precio_proveedor' => 100,
