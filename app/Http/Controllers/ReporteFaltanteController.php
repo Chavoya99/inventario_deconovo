@@ -33,8 +33,6 @@ class ReporteFaltanteController extends Controller
     }
 
     public function index_reporte(Request $request){
-        // $proveedores = Proveedor::whereHas('productos')->with('productos', 'reportes_faltantes')
-        // ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
 
         $proveedores = Proveedor::whereHas('productos', function ($query) {
         $query->where('recubrimiento', false);
@@ -60,15 +58,14 @@ class ReporteFaltanteController extends Controller
     }
 
     public function index_reporte_recubrimientos(Request $request){
-        // $proveedores = Proveedor::whereHas('productos')->with('productos', 'reportes_faltantes')
-        // ->withMax('ordenes_compra', 'fecha_generada')->orderBy('nombre')->get();
 
         $proveedores = Proveedor::whereHas('productos', function ($query) {
         $query->where('recubrimiento', true);
         })
         ->with([
             'productos' => function ($query) {
-                $query->where('recubrimiento', true);
+                $query->where('recubrimiento', true)
+                ->where('producto', '!=', 'RECUBRIMIENTO GENERICO');
             },
             'reportes_faltantes'
         ])
