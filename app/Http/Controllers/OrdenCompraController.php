@@ -185,7 +185,8 @@ class OrdenCompraController extends Controller
 
                 ]);
 
-                $generico = Producto::where('producto','RECUBRIMIENTO GENERICO')->first()->id;
+                $generico = Producto::where('producto','RECUBRIMIENTO GENERICO')->first();
+                $generico = ($generico) ? $generico->id : 0;
                 if($producto['id'] != $generico){
                     //Actualizar el registro de la base de datos del producto
                     $aux = Producto::find($producto['id']);
