@@ -9,7 +9,7 @@
     </x-slot>
     <div class="px-4 md:px-8 lg:px-12 py-4 md:px-8 lg:px-10">
         <x-back-button/>
-        <livewire-reporte-estatus :reporte="$reporte"/>
+        <livewire:reporte-estatus :reporte="$reporte"/>
         <form action="{{route('generar_orden_compra', ['reporte_id' => $reporte->id])}}" method="POST"
         onsubmit="return confirm('¿Generar orden de compra?')">
             @csrf
@@ -30,7 +30,7 @@
                 Generar orden de compra
             </button>
         
-            <livewire-revisar-reporte-tabla :productos=$productos :productos_cero=$productos_cero :reporte=$reporte :reporte_id="$reporte->id" :key="$reporte->id"/>
+            <livewire:revisar-reporte-tabla :productos=$productos :productos_cero=$productos_cero :reporte=$reporte :reporte_id="$reporte->id" :key="$reporte->id"/>
         </form>
     </div>
 </div>
